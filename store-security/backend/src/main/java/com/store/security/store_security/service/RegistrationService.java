@@ -31,7 +31,7 @@ public class RegistrationService implements IRegistrationService {
 
             if (userDto.getUsername() != null && userDto.getPassword() != null) {
                 UserEntity userCheck = userRepository.findByUsername(userDto.getUsername());
-                if (userCheck.getId() > 0) {
+                if (null!= userCheck && userCheck.getId() > 0) {
                     return Map.of("User already exists", false);
                 }
                 if (userDto.getAge() < 18) {

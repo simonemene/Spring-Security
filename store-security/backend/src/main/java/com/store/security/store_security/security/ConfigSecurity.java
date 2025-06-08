@@ -23,7 +23,8 @@ public class ConfigSecurity {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/registration").permitAll());
+                auth.requestMatchers("/api/auth/registration").permitAll()
+                        .anyRequest().authenticated());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
 
