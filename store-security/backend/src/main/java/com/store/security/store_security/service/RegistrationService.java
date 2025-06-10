@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -30,16 +31,16 @@ public class RegistrationService implements IRegistrationService {
         try {
 
             if (userDto.getUsername() != null && userDto.getPassword() != null) {
-                UserEntity userCheck = userRepository.findByUsername(userDto.getUsername());
-                if (null!= userCheck && userCheck.getId() > 0) {
+                Optional<UserEntity> userCheck = userRepository.findByUsername(userDto.getUsername());
+                if (userCheck.isPresent() && userCheck.get().getId()>0) {
                     return Map.of("User already exists", false);
                 }
                 if (userDto.getAge() < 18) {
                     return Map.of("Age must be at least 18", false);
                 }
                 userDto.setTmstInsert(LocalDateTime.now());
+                userDto.setAuthorities(Collections.singleton("ROLE_USER"));
                 UserEntity userEntity = userMapper.toEntity(userDto);
-                userEntity.setAuthorities(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")));
                 userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
                 userRegister = userRepository.save(userEntity);
             }
