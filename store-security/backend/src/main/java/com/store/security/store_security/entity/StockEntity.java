@@ -1,7 +1,11 @@
 package com.store.security.store_security.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Table(name = "stock")
 @Entity
 public class StockEntity {
