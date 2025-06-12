@@ -27,4 +27,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultRegistration.keySet().iterator().next());
     }
 
+
+    //@GetMapping("/user") implementation for angular
+
 }
