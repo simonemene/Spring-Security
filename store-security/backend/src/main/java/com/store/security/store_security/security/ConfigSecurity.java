@@ -23,16 +23,12 @@ public class ConfigSecurity {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
-                auth.requestMatchers("/api/auth/registration","/h2-console/**").permitAll()
-                        .anyRequest().authenticated());
+                        auth.requestMatchers("/api/article/addArticle").hasAnyRole("ADMIN", "USER")
+                               .requestMatchers("/api/auth/registration", "/h2-console/**").permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
 
         //autenticazione
-
-
-
-
 
 
         http.formLogin(Customizer.withDefaults());

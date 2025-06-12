@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -25,8 +26,10 @@ public class UserEntity {
 
     private int age;
 
-    private Set<GrantedAuthority> authorities;
-
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private List<AuthoritiesEntity> authoritiesList;
+
 }
