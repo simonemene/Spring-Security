@@ -19,7 +19,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String status = HttpStatus.UNAUTHORIZED.toString();
         String message = HttpStatus.UNAUTHORIZED.getReasonPhrase();
         String path = request.getRequestURI();
-        String jsonResponse = String.format("{\"timestamp\": \"error\": \"status\": \"message\": \"path\":", LocalDateTime.now(),exception,status,message,path);
+        String jsonResponse = String.format("\"timestamp\":\"%s\",\"error\":\"%s\",\"status\":\"%s\",\"message\":\"%s\",\"path\":\"%s\"", LocalDateTime.now(),exception,status,message,path);
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setHeader("security-app","unauthorized");
