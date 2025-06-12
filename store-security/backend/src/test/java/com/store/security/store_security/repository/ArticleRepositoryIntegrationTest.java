@@ -1,7 +1,6 @@
 package com.store.security.store_security.repository;
 
 import com.store.security.store_security.entity.ArticleEntity;
-import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +26,31 @@ public class ArticleRepositoryIntegrationTest {
         articleEntity.setPrice(new BigDecimal(1));
         articleEntity.setTmstInsert(LocalDateTime.now());
         //when
-        articoleRepository.save(articleEntity);
+        ArticleEntity article = articoleRepository.save(articleEntity);
         //then
-        Assertions.assertThat(articoleRepository.findById(1).isPresent()).isTrue();
-        Assertions.assertThat(articoleRepository.findById(1).get().getName()).isEqualTo("test");
-        Assertions.assertThat(articoleRepository.findById(1).get().getDescription()).isEqualTo("test");
-        Assertions.assertThat(articoleRepository.findById(1).get().getPrice()).isEqualTo(new BigDecimal(1));
-        Assertions.assertThat(articoleRepository.findById(1).get().getTmstInsert()).isBefore(LocalDateTime.now());
+        Integer id = Integer.parseInt(String.valueOf(article.getId()));
+        Assertions.assertThat(articoleRepository.findById(id).isPresent()).isTrue();
+        Assertions.assertThat(articoleRepository.findById(id).get().getName()).isEqualTo("test");
+        Assertions.assertThat(articoleRepository.findById(id).get().getDescription()).isEqualTo("test");
+        Assertions.assertThat(articoleRepository.findById(id).get().getPrice()).isEqualTo(new BigDecimal(1));
+        Assertions.assertThat(articoleRepository.findById(id).get().getTmstInsert()).isBefore(LocalDateTime.now());
+    }
+
+    @Test
+    public void deleteArticle()
+    {
+        //given
+        ArticleEntity articleEntity = new ArticleEntity();
+        articleEntity.setName("test");
+        articleEntity.setDescription("test");
+        articleEntity.setPrice(new BigDecimal(2));
+        articleEntity.setTmstInsert(LocalDateTime.now());
+        ArticleEntity article = articoleRepository.save(articleEntity);
+        Integer id = Integer.parseInt(String.valueOf(article.getId()));
+        //when
+        articoleRepository.deleteById(id);
+        //then
+        Assertions.assertThat(articoleRepository.findById(id).isPresent()).isFalse();
     }
 
 
