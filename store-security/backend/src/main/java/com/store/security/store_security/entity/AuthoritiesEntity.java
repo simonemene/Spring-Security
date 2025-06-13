@@ -1,11 +1,13 @@
 package com.store.security.store_security.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name="authorities")
 @Entity
 public class AuthoritiesEntity {

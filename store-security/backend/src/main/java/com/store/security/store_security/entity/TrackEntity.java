@@ -2,7 +2,13 @@ package com.store.security.store_security.entity;
 
 
 import jakarta.persistence.*;
+import lombok.*;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "track")
 @Entity
 public class TrackEntity {

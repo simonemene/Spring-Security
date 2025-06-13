@@ -1,6 +1,7 @@
 package com.store.security.store_security.repository;
 
 import com.store.security.store_security.entity.ArticleEntity;
+import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +16,11 @@ public class ArticleRepositoryIntegrationTest {
     @Autowired
     private ArticleRepository articoleRepository;
 
-
     @Test
     public void saveArticle()
     {
         //given
-        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+        ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
                 .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         //when
         ArticleEntity article = articoleRepository.save(articleEntity);
@@ -37,7 +37,7 @@ public class ArticleRepositoryIntegrationTest {
     public void deleteArticle()
     {
         //given
-        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(2))
+        ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(2))
                 .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         ArticleEntity article = articoleRepository.save(articleEntity);
         Integer id = Integer.parseInt(String.valueOf(article.getId()));

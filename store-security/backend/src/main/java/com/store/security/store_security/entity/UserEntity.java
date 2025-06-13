@@ -1,8 +1,7 @@
 package com.store.security.store_security.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDateTime;
@@ -11,6 +10,9 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
 @Entity
 public class UserEntity {

@@ -22,7 +22,7 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 	public void deleteArticle()
 	{
 		//given
-		ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
 				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
 		ArticleEntity savedArticle = articleRepository.save(articleEntity);
 		//when
@@ -35,7 +35,7 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 	public void savedArticle()
 	{
 		//given
-		ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
 				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
 		articleEntity.setTmstInsert(LocalDateTime.now());
 		//when
