@@ -17,9 +17,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @AutoConfigureMockMvc
 public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTests {
@@ -60,5 +63,19 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 		//then
 		Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
 		Assertions.assertThat(response.getBody()).isEqualTo("Article added");
+	}
+
+	@Test
+	@DisplayName("add article")
+	@WithMockUser(username="user@gmail.com",roles={"USER"})
+	public void addArticleNoAuth() throws Exception {
+		//given
+		Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(true);
+		//when
+		//then
+		mockMvc.perform(post("/api/article/addArticle").contentType("application/json")
+				.content(objectMapper.writeValueAsString(ArticleEntity.builder().description("descrizione").tmstInsert(LocalDateTime.now()).price(new BigDecimal(1))
+						.name("articolo").build())))
+				.andExpect(MockMvcResultMatchers.status().isForbidden());
 	}
 }
