@@ -1,7 +1,7 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.entity.ArticleEntity;
-import com.store.security.store_security.repository.ArticoleRepository;
+import com.store.security.store_security.repository.ArticleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ArticleService implements IArticleService {
 
-    private final ArticoleRepository articoleRepository;
+    private final ArticleRepository articoleRepository;
 
 
     @Override
@@ -27,5 +27,7 @@ public class ArticleService implements IArticleService {
         }
         return true;
     }
+
+
 
 }

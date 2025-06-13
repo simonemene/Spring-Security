@@ -1,7 +1,7 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.entity.ArticleEntity;
-import com.store.security.store_security.repository.ArticoleRepository;
+import com.store.security.store_security.repository.ArticleRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class ArticleServiceUnitTest {
     private ArticleService articleService;
 
     @Mock
-    private ArticoleRepository articoleRepository;
+    private ArticleRepository articoleRepository;
 
     @BeforeEach
     public void init()
@@ -42,6 +42,22 @@ public class ArticleServiceUnitTest {
         boolean result = articleService.saveArticle(articleEntity);
         //then
         Assertions.assertThat(result).isTrue();
+    }
 
+    @Test
+    public void deleteArticole()
+    {
+        //given
+        ArticleEntity articleEntity = new ArticleEntity();
+        articleEntity.setId(1);
+        articleEntity.setName("test");
+        articleEntity.setDescription("test");
+        articleEntity.setPrice(new BigDecimal(1));
+        articleEntity.setTmstInsert(LocalDateTime.now());
+        Mockito.when(articoleRepository.existsById(1)).thenReturn(true);
+        //when
+        boolean result = articleService.deleteArticle(1);
+        //then
+        Assertions.assertThat(result).isTrue();
     }
 }

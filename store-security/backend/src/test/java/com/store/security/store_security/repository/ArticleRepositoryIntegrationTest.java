@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class ArticleRepositoryIntegrationTest {
 
     @Autowired
-    private ArticoleRepository articoleRepository;
+    private ArticleRepository articoleRepository;
 
 
     @Test
