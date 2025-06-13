@@ -26,15 +26,12 @@ public class UserSecurityDetailService implements UserDetailsService {
 
         if(null != username)
         {
-           Optional<UserEntity> user = userRepository.findByUsername(username);
-           if(user.isPresent() && user.get().getId() > 0)
-           {
-               List<GrantedAuthority> authorities =
-                       user.get().getAuthoritiesList().stream()
-                               .map(auth->
-                                       new SimpleGrantedAuthority(auth.getAuthority())).collect(Collectors.toList());
-               return new User(user.get().getUsername(), user.get().getPassword(), authorities);
-           }
+            UserEntity user = userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("User not found"));
+            List<GrantedAuthority> authorities =
+                    user.getAuthoritiesList().stream()
+                            .map(auth->
+                                    new SimpleGrantedAuthority(auth.getAuthority())).collect(Collectors.toList());
+            return new User(user.getUsername(), user.getPassword(), authorities);
         }
         throw new UsernameNotFoundException("User not found");
     }
