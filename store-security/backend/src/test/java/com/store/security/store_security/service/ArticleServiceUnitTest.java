@@ -31,12 +31,9 @@ public class ArticleServiceUnitTest {
     public void savedArticle()
     {
         //given
-        ArticleEntity articleEntity = new ArticleEntity();
-        articleEntity.setId(1);
-        articleEntity.setName("test");
-        articleEntity.setDescription("test");
-        articleEntity.setPrice(new BigDecimal(1));
-        articleEntity.setTmstInsert(LocalDateTime.now());
+
+        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         Mockito.when(articoleRepository.save(articleEntity)).thenReturn(articleEntity);
         //when
         boolean result = articleService.saveArticle(articleEntity);
@@ -48,12 +45,8 @@ public class ArticleServiceUnitTest {
     public void deleteArticole()
     {
         //given
-        ArticleEntity articleEntity = new ArticleEntity();
-        articleEntity.setId(1);
-        articleEntity.setName("test");
-        articleEntity.setDescription("test");
-        articleEntity.setPrice(new BigDecimal(1));
-        articleEntity.setTmstInsert(LocalDateTime.now());
+        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         Mockito.when(articoleRepository.existsById(1)).thenReturn(true);
         //when
         boolean result = articleService.deleteArticle(1);

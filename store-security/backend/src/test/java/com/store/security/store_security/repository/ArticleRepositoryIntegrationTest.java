@@ -20,11 +20,8 @@ public class ArticleRepositoryIntegrationTest {
     public void saveArticle()
     {
         //given
-        ArticleEntity articleEntity = new ArticleEntity();
-        articleEntity.setName("test");
-        articleEntity.setDescription("test");
-        articleEntity.setPrice(new BigDecimal(1));
-        articleEntity.setTmstInsert(LocalDateTime.now());
+        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         //when
         ArticleEntity article = articoleRepository.save(articleEntity);
         //then
@@ -40,11 +37,8 @@ public class ArticleRepositoryIntegrationTest {
     public void deleteArticle()
     {
         //given
-        ArticleEntity articleEntity = new ArticleEntity();
-        articleEntity.setName("test");
-        articleEntity.setDescription("test");
-        articleEntity.setPrice(new BigDecimal(2));
-        articleEntity.setTmstInsert(LocalDateTime.now());
+        ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(2))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         ArticleEntity article = articoleRepository.save(articleEntity);
         Integer id = Integer.parseInt(String.valueOf(article.getId()));
         //when

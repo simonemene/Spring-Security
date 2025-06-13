@@ -21,7 +21,7 @@ public class ArticleController {
 
 
     @PostMapping("/addArticle")
-    public ResponseEntity<String> addOrder(@RequestBody ArticleEntity articleEntity) {
+    public ResponseEntity<String> addArticle(@RequestBody ArticleEntity articleEntity) {
         return articleService.saveArticle(articleEntity) ?
          ResponseEntity.ok("Article added"):
          ResponseEntity.badRequest().body("Article not added");

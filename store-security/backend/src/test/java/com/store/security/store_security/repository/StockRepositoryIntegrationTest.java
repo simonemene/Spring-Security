@@ -25,11 +25,8 @@ public class StockRepositoryIntegrationTest {
 	public void findArticleById()
 	{
 		//given
-		ArticleEntity articleEntity = new ArticleEntity();
-		articleEntity.setName("test");
-		articleEntity.setDescription("test");
-		articleEntity.setPrice(new BigDecimal(1));
-		articleEntity.setTmstInsert(LocalDateTime.now());
+		ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
 		articleRepository.save(articleEntity);
 		StockEntity stockEntity = new StockEntity();
 		stockEntity.setArticle(articleEntity);
