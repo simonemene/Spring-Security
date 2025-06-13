@@ -17,10 +17,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
         String status = String.valueOf(HttpStatus.FORBIDDEN.value());
         LocalDateTime localDateTime = LocalDateTime.now();
         String path = request.getRequestURI();
-        String message = (null != accessDeniedException && !accessDeniedException.getMessage().isEmpty()) ? accessDeniedException.getMessage() : "Access denied";
-        String error = HttpStatus.FORBIDDEN.getReasonPhrase();
+        String exception = (null != accessDeniedException && !accessDeniedException.getMessage().isEmpty()) ? accessDeniedException.getMessage() : "Access denied";
+        String message = HttpStatus.FORBIDDEN.getReasonPhrase();
         String jsonResponse = String.format("\"timestamp\":\"%s\",\"error\":\"%s\",\"status\":\"%s\"," +
-                "\"message\":\"%s\",\"path\":\"%s\"",localDateTime,error,status,message,path);
+                "\"message\":\"%s\",\"path\":\"%s\"",localDateTime,exception,status,message,path);
         response.setStatus(HttpStatus.FORBIDDEN.value());
         response.setHeader("security-app","access denied");
         response.setContentType("application/json");
