@@ -1,5 +1,7 @@
 package com.store.security.store_security.security;
 
+import com.store.security.store_security.exceptionhandle.CustomAccessDeniedHandler;
+import com.store.security.store_security.exceptionhandle.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -23,7 +25,7 @@ public class ConfigSecurity {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/article/addArticle").hasAnyRole("ADMIN", "USER")
+                        auth.requestMatchers("/api/article/addArticle","/deleteArticole/{id}","/decrementArticle").hasRole("ADMIN")
                                .requestMatchers("/api/auth/registration", "/h2-console/**").permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
@@ -32,7 +34,8 @@ public class ConfigSecurity {
 
 
         http.formLogin(Customizer.withDefaults());
-        http.httpBasic(Customizer.withDefaults());
+        http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
+        http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
 
     }

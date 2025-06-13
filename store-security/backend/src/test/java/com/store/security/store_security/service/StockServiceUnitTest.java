@@ -19,7 +19,7 @@ public class StockServiceUnitTest {
 
 
 	@Test
-	public void getStorckByArticle()
+	public void getStockByArticle()
 	{
 		//given
 		//when
