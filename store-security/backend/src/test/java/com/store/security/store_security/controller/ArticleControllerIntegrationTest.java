@@ -50,7 +50,7 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 	public void addArticle() throws Exception {
 		//given
 		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
-				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
+				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
 		String json = objectMapper.writeValueAsString(articleEntity);
 		//when
 		mockMvc.perform(post("/api/article/addArticle").contentType(MediaType.APPLICATION_JSON).content(json))
@@ -66,6 +66,9 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
             }
         }
 		Assertions.assertThat(result.getName()).isEqualTo("test");
+		Assertions.assertThat(result.getDescription()).isEqualTo("test");
+		Assertions.assertThat(result.getPrice().stripTrailingZeros()).isEqualTo(new BigDecimal(1));
+		Assertions.assertThat(result.getTmstInsert()).isEqualTo(LocalDateTime.of(2022, 1, 1, 1, 1));
 	}
 
 
