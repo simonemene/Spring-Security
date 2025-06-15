@@ -117,7 +117,7 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 		StockEntity stockEntity = StockEntity.builder().article(articleEntity).quantity(3).build();
 		ArticleEntity savedArticle = articleRepository.save(articleEntity);
 		stockRepository.save(stockEntity);
-		String json = objectMapper.writeValueAsString(articleEntity);
+		String json = objectMapper.writeValueAsString(savedArticle);
 
 		//when
 		mockMvc.perform(post("/api/article/decrementArticle").param("valueDecrement", "1")
@@ -128,6 +128,30 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 		StockEntity result = stockRepository.findByArticle(articleEntity).get();
 		Assertions.assertThat(result.getQuantity()).isEqualTo(2);
 		Assertions.assertThat(result.getArticle()).usingRecursiveComparison().ignoringFields("price").isEqualTo(articleEntity);
+	}
+
+	@Test
+	@WithMockUser(username = "admin@gmail.com",roles={"ADMIN"})
+	public void decrementArticleFailed() throws Exception {
+		//given
+
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
+				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
+		StockEntity stockEntity = StockEntity.builder().article(articleEntity).quantity(3).build();
+		ArticleEntity savedArticle = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		String json = objectMapper.writeValueAsString(savedArticle);
+
+		//when
+		mockMvc.perform(post("/api/article/decrementArticle").param("valueDecrement", "4")
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().string("Decrement failed"));
+		//then
+		StockEntity result = stockRepository.findByArticle(articleEntity).get();
+		Assertions.assertThat(result.getQuantity()).isEqualTo(3);
+		Assertions.assertThat(result.getArticle()).usingRecursiveComparison().ignoringFields("price").isEqualTo(articleEntity);
+
 	}
 
 
