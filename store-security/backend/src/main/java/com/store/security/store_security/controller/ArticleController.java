@@ -27,7 +27,7 @@ public class ArticleController {
          ResponseEntity.badRequest().body("Article not added");
     }
 
-    @DeleteMapping("/deleteArticole/{id}")
+    @DeleteMapping("/deleteArticle/{id}")
     public ResponseEntity<String> deleteArticole(@PathVariable("id") long id) {
         return articleService.deleteArticle(id) ?
          ResponseEntity.ok("Articole deleted"):
