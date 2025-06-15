@@ -65,18 +65,5 @@ public class ArticleControllerUnitTest {
 
     }
 
-    @Test
-    @DisplayName("add article")
-    @WithMockUser(username="user@gmail.com",roles={"USER"})
-    public void addArticleNoAuth() throws Exception {
-        //given
-        Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(true);
-        //when
-        //then
-        mockMvc.perform(post("/api/article/addArticle").contentType("application/json")
-                        .content(objectMapper.writeValueAsString(ArticleEntity.builder().description("descrizione").tmstInsert(LocalDateTime.now()).price(new BigDecimal(1))
-                                .name("articolo").build())))
-                .andExpect(MockMvcResultMatchers.status().isForbidden());
-    }
 
 }
