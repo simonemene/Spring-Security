@@ -2,7 +2,9 @@ package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.StockRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 
 	@Autowired
 	private ArticleRepository articleRepository;
+
+	@Autowired
+	private StockRepository stockRepository;
 
 	@Test
 	public void deleteArticle()
@@ -36,11 +41,39 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 	{
 		//given
 		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
-				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
-		articleEntity.setTmstInsert(LocalDateTime.now());
+				.tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
 		//when
 		boolean result = articleService.saveArticle(articleEntity);
 		//then
+
+
+		ArticleEntity resultArticle = null;
+		Iterable<ArticleEntity> article = articleRepository.findAll();
+		for (ArticleEntity entity : article) {
+			resultArticle = entity;
+			if (resultArticle.getName().equals("test")) {
+				break;
+			}
+		}
+
+		StockEntity resultStock = null;
+		Iterable<StockEntity> stock = stockRepository.findAll();
+		for (StockEntity entity : stock) {
+			resultStock = entity;
+			if (resultStock.getArticle().getName().equals(resultArticle.getName())) {
+				break;
+			}
+		}
+
 		Assertions.assertThat(result).isTrue();
+
+		Assertions.assertThat(resultArticle.getName()).isEqualTo("test");
+		Assertions.assertThat(resultArticle.getDescription()).isEqualTo("test");
+		Assertions.assertThat(resultArticle.getPrice().stripTrailingZeros()).isEqualTo(new BigDecimal(1));
+		Assertions.assertThat(resultArticle.getTmstInsert()).isEqualTo(LocalDateTime.of(2022, 1, 1, 1, 1));
+
+		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(resultArticle);
+		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(1);
+
 	}
 }

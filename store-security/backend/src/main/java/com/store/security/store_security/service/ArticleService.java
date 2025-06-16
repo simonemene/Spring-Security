@@ -1,7 +1,9 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +13,15 @@ public class ArticleService implements IArticleService {
 
     private final ArticleRepository articoleRepository;
 
+    private final StockRepository stockRepository;
+
 
     @Override
     public boolean saveArticle(ArticleEntity articleEntity) {
         ArticleEntity article = articoleRepository.save(articleEntity);
-        return article.getId() > 0;
+        StockEntity stockEntity = StockEntity.builder().article(article).quantity(1).build();
+        StockEntity resultStock = stockRepository.save(stockEntity);
+        return article.getId() > 0 && resultStock.getId() > 0;
     }
 
     @Override

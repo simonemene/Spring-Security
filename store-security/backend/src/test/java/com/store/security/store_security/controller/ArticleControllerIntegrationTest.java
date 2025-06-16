@@ -46,7 +46,6 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 	@Autowired
 	private ArticleRepository articleRepository;
 
-
 	@Autowired
 	private StockRepository stockRepository;
 
@@ -75,10 +74,23 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
                 break;
             }
         }
+
+		StockEntity resultStock = null;
+		Iterable<StockEntity> stock = stockRepository.findAll();
+		for (StockEntity entity : stock) {
+			resultStock = entity;
+			if (resultStock.getArticle().getName().equals(result.getName())) {
+				break;
+			}
+		}
+
 		Assertions.assertThat(result.getName()).isEqualTo("test");
 		Assertions.assertThat(result.getDescription()).isEqualTo("test");
 		Assertions.assertThat(result.getPrice().stripTrailingZeros()).isEqualTo(new BigDecimal(1));
 		Assertions.assertThat(result.getTmstInsert()).isEqualTo(LocalDateTime.of(2022, 1, 1, 1, 1));
+
+		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(result);
+		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(1);
 	}
 
 	@Test
