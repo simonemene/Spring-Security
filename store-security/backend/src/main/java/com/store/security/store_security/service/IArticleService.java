@@ -7,4 +7,6 @@ public interface IArticleService {
     public boolean saveArticle(ArticleEntity articleEntity);
 
     public boolean deleteArticle(long id);
+
+    public boolean saveArticleQuantity(long id, int quantity);
 }

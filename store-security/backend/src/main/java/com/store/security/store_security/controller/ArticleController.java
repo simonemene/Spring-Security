@@ -27,6 +27,13 @@ public class ArticleController {
          ResponseEntity.badRequest().body("Article not added");
     }
 
+    @PostMapping("/addArticle/{id}/{quantity}")
+    public ResponseEntity<String> addArticle(@PathVariable("id") long id, @PathVariable("quantity") int quantity) {
+        return articleService.saveArticleQuantity(id, quantity) ?
+                ResponseEntity.ok("Article quantity added"):
+                ResponseEntity.badRequest().body("Article quantity not added");
+    }
+
     @DeleteMapping("/deleteArticle/{id}")
     public ResponseEntity<String> deleteArticole(@PathVariable("id") long id) {
         return articleService.deleteArticle(id) ?
