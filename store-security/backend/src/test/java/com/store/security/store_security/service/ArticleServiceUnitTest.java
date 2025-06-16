@@ -1,7 +1,9 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.StockRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +23,9 @@ public class ArticleServiceUnitTest {
     @Mock
     private ArticleRepository articoleRepository;
 
+    @Mock
+    private StockRepository stockRepository;
+
     @BeforeEach
     public void init()
     {
@@ -34,7 +39,9 @@ public class ArticleServiceUnitTest {
 
         ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
                 .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
-        Mockito.when(articoleRepository.save(articleEntity)).thenReturn(articleEntity);
+        Mockito.when(articoleRepository.save(Mockito.any(ArticleEntity.class))).thenReturn(articleEntity);
+        StockEntity stockEntity = StockEntity.builder().id(1).article(articleEntity).quantity(1).build();
+        Mockito.when(stockRepository.save(Mockito.any(StockEntity.class))).thenReturn(stockEntity);
         //when
         boolean result = articleService.saveArticle(articleEntity);
         //then
