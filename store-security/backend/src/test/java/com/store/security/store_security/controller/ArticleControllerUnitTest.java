@@ -1,6 +1,7 @@
 package com.store.security.store_security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.service.IArticleService;
 import com.store.security.store_security.service.IStockService;
@@ -59,10 +60,11 @@ public class ArticleControllerUnitTest {
     public void addArticle()
     {
         //given
+        ArticleDto articleDto = ArticleDto.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
         Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(true);
         //when
-        ResponseEntity<String> response = controller.addArticle(ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
-                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build());
+        ResponseEntity<String> response = controller.addArticle(articleDto);
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertThat(response.getBody()).isEqualTo("Article added");
@@ -123,10 +125,11 @@ public class ArticleControllerUnitTest {
     public void addArticleFailed()
     {
         //given
+        ArticleDto articleDto = ArticleDto.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
         Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(false);
         //when
-        ResponseEntity<String> response = controller.addArticle(ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
-                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build());
+        ResponseEntity<String> response = controller.addArticle(articleDto);
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         Assertions.assertThat(response.getBody()).isEqualTo("Article not added");

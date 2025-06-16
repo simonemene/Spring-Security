@@ -1,12 +1,16 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
+import com.store.security.store_security.mapper.ArticleMapper;
+import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,11 +24,14 @@ public class ArticleService implements IArticleService {
 
     private final StockRepository stockRepository;
 
+    private final ArticleMapper articleMapper;
+
     @Transactional
     @Override
-    public boolean saveArticle(ArticleEntity article) {
+    public boolean saveArticle(ArticleDto articleDto) {
         try {
-            ArticleEntity savedArticle = articoleRepository.save(article);
+            ArticleEntity articleEntity = articleMapper.toEntity(articleDto);
+            ArticleEntity savedArticle = articoleRepository.save(articleEntity);
             StockEntity savedStock = stockRepository.save(
                     StockEntity.builder().article(savedArticle).quantity(1).build()
             );

@@ -1,5 +1,6 @@
 package com.store.security.store_security.controller;
 
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.service.IArticleService;
 import com.store.security.store_security.service.IStockService;
@@ -21,8 +22,8 @@ public class ArticleController {
 
 
     @PostMapping("/addArticle")
-    public ResponseEntity<String> addArticle(@RequestBody ArticleEntity articleEntity) {
-        return articleService.saveArticle(articleEntity) ?
+    public ResponseEntity<String> addArticle(@RequestBody ArticleDto articleDto) {
+        return articleService.saveArticle(articleDto) ?
          ResponseEntity.ok("Article added"):
          ResponseEntity.badRequest().body("Article not added");
     }

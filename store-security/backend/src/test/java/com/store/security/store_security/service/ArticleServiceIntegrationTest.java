@@ -1,6 +1,7 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
@@ -42,10 +43,10 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 	public void savedArticle()
 	{
 		//given
-		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
+		ArticleDto articleDto = ArticleDto.builder().name("test").description("test").price(new BigDecimal(1))
 				.tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
 		//when
-		boolean result = articleService.saveArticle(articleEntity);
+		boolean result = articleService.saveArticle(articleDto);
 		//then
 
 

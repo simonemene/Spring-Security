@@ -1,7 +1,9 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
+import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
 import org.assertj.core.api.Assertions;
@@ -26,24 +28,31 @@ public class ArticleServiceUnitTest {
     @Mock
     private StockRepository stockRepository;
 
+    @Mock
+    private ArticleMapper articleMapper;
+
     @BeforeEach
     public void init()
     {
+
         MockitoAnnotations.openMocks(this);
+        articleService = new ArticleService(articoleRepository, stockRepository, articleMapper);
     }
 
     @Test
     public void savedArticle()
     {
         //given
-
+        ArticleDto articleDto = ArticleDto.builder().name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
         ArticleEntity articleEntity = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
                 .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
+        Mockito.when(articleMapper.toEntity(articleDto)).thenReturn(articleEntity);
         Mockito.when(articoleRepository.save(Mockito.any(ArticleEntity.class))).thenReturn(articleEntity);
         StockEntity stockEntity = StockEntity.builder().id(1).article(articleEntity).quantity(1).build();
         Mockito.when(stockRepository.save(Mockito.any(StockEntity.class))).thenReturn(stockEntity);
         //when
-        boolean result = articleService.saveArticle(articleEntity);
+        boolean result = articleService.saveArticle(articleDto);
         //then
         Assertions.assertThat(result).isTrue();
     }
