@@ -1,35 +1,22 @@
 package com.store.security.store_security.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
-import com.store.security.store_security.service.IArticleService;
-import com.store.security.store_security.service.IStockService;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,6 +40,7 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 
 
 
+	//SUCCESS
 
 	@Test
 	@WithMockUser(username = "admin@gmail.com",roles={"ADMIN"})
@@ -144,6 +132,51 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 
 	@Test
 	@WithMockUser(username = "admin@gmail.com",roles={"ADMIN"})
+	public void addArticleQuantity() throws Exception {
+		//given
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
+				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
+		articleRepository.save(articleEntity);
+		StockEntity stockEntity = StockEntity.builder().article(articleEntity).quantity(1).build();
+		stockRepository.save(stockEntity);
+		String json = objectMapper.writeValueAsString(articleEntity);
+		//when
+		mockMvc.perform(post("/api/article/addArticle/{id}/{quantity}",articleEntity.getId(),3).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.content().string("Article quantity added"));
+		//then
+		ArticleEntity result = null;
+		Iterable<ArticleEntity> article = articleRepository.findAll();
+		for (ArticleEntity entity : article) {
+			result = entity;
+			if (result.getName().equals("test")) {
+				break;
+			}
+		}
+
+		StockEntity resultStock = null;
+		Iterable<StockEntity> stock = stockRepository.findAll();
+		for (StockEntity entity : stock) {
+			resultStock = entity;
+			if (resultStock.getArticle().getName().equals(result.getName())) {
+				break;
+			}
+		}
+
+		Assertions.assertThat(result.getName()).isEqualTo("test");
+		Assertions.assertThat(result.getDescription()).isEqualTo("test");
+		Assertions.assertThat(result.getPrice().stripTrailingZeros()).isEqualTo(new BigDecimal(1));
+		Assertions.assertThat(result.getTmstInsert()).isEqualTo(LocalDateTime.of(2022, 1, 1, 1, 1));
+
+		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(result);
+		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(4);
+	}
+
+
+	//FAILED
+
+	@Test
+	@WithMockUser(username = "admin@gmail.com",roles={"ADMIN"})
 	public void decrementArticleFailed() throws Exception {
 		//given
 
@@ -163,8 +196,24 @@ public class ArticleControllerIntegrationTest extends StoreSecurityApplicationTe
 		StockEntity result = stockRepository.findByArticle(articleEntity).get();
 		Assertions.assertThat(result.getQuantity()).isEqualTo(3);
 		Assertions.assertThat(result.getArticle()).usingRecursiveComparison().ignoringFields("price").isEqualTo(articleEntity);
-
 	}
+
+	@Test
+	@WithMockUser(username = "admin@gmail.com",roles={"ADMIN"})
+	public void addArticleQuantityFailed() throws Exception {
+		//given
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
+				.tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
+		StockEntity stockEntity = StockEntity.builder().article(articleEntity).quantity(1).build();
+		String json = objectMapper.writeValueAsString(articleEntity);
+		//when
+		mockMvc.perform(post("/api/article/addArticle/{id}/{quantity}",articleEntity.getId(),3).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().string("Article quantity not added"));
+		//then
+	}
+
+
 
 
 }

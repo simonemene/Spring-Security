@@ -25,7 +25,10 @@ public class ConfigSecurity {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/article/addArticle","/api/article/deleteArticle/{id}","/api/article/decrementArticle").hasRole("ADMIN")
+                        auth.requestMatchers("/api/article/addArticle",
+                                        "/api/article/addArticle/**",
+                                        "/api/article/deleteArticle/{id}",
+                                        "/api/article/decrementArticle").hasRole("ADMIN")
                                .requestMatchers("/api/auth/registration", "/h2-console/**").permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
