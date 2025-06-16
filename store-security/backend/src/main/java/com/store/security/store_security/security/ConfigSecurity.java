@@ -29,6 +29,7 @@ public class ConfigSecurity {
                                         "/api/article/addArticle/**",
                                         "/api/article/deleteArticle/{id}",
                                         "/api/article/decrementArticle").hasRole("ADMIN")
+                                .requestMatchers("/api/order/doOrder").hasAnyRole("ROLE","ADMIN")
                                .requestMatchers("/api/auth/registration", "/h2-console/**").permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
