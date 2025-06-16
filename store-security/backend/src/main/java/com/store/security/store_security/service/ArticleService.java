@@ -73,7 +73,6 @@ public class ArticleService implements IArticleService {
 
         }catch(Exception e)
         {
-            log.error(String.format("Error saving article: %s quantity: %s",id,quantity), e);
             return false;
         }
     }

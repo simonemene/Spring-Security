@@ -3,6 +3,8 @@ package com.store.security.store_security.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.exceptions.ArticleException;
+import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.service.IArticleService;
 import com.store.security.store_security.service.IStockService;
 import org.assertj.core.api.Assertions;
@@ -18,12 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class ArticleControllerUnitTest {
 
@@ -129,10 +128,10 @@ public class ArticleControllerUnitTest {
                 .tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
         Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(false);
         //when
-        ResponseEntity<String> response = controller.addArticle(articleDto);
         //then
-        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        Assertions.assertThat(response.getBody()).isEqualTo("Article not added");
+        Assertions.assertThatThrownBy(()->controller.addArticle(articleDto))
+                .isInstanceOf(ArticleException.class)
+                .hasMessageContaining("Article no added");
 
     }
 
@@ -144,10 +143,10 @@ public class ArticleControllerUnitTest {
         //given
         Mockito.when(articleService.deleteArticle(Mockito.any(Long.class))).thenReturn(false);
         //when
-        ResponseEntity<String> response = controller.deleteArticole(1);
         //then
-        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        Assertions.assertThat(response.getBody()).isEqualTo("Articole not deleted");
+        Assertions.assertThatThrownBy(()->controller.deleteArticole(1))
+                .isInstanceOf(ArticleException.class)
+                .hasMessageContaining("Article no deleted");
     }
 
     @Test
@@ -160,10 +159,10 @@ public class ArticleControllerUnitTest {
         ArticleEntity article = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
                 .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
         //when
-        ResponseEntity<String> response = controller.decrementArticle(article,1);
         //then
-        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        Assertions.assertThat(response.getBody()).isEqualTo("Decrement failed");
+        Assertions.assertThatThrownBy(()->controller.decrementArticle(article,1))
+                .isInstanceOf(StockException.class)
+                .hasMessageContaining("Decrement failed");
     }
 
 
@@ -176,10 +175,10 @@ public class ArticleControllerUnitTest {
         Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
                 Integer.class))).thenReturn(false);
         //when
-        ResponseEntity<String> response = controller.addArticleQuantity(1,1);
         //then
-        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-        Assertions.assertThat(response.getBody()).isEqualTo("Article quantity not added");
+        Assertions.assertThatThrownBy(()->controller.addArticleQuantity(1,1))
+                .isInstanceOf(ArticleException.class)
+                .hasMessageContaining("Article quantity not added");
 
     }
 

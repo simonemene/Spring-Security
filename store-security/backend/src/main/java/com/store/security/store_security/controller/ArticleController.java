@@ -2,6 +2,8 @@ package com.store.security.store_security.controller;
 
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.exceptions.ArticleException;
+import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.service.IArticleService;
 import com.store.security.store_security.service.IStockService;
 import lombok.RequiredArgsConstructor;
@@ -23,30 +25,36 @@ public class ArticleController {
 
     @PostMapping("/addArticle")
     public ResponseEntity<String> addArticle(@RequestBody ArticleDto articleDto) {
-        return articleService.saveArticle(articleDto) ?
-         ResponseEntity.ok("Article added"):
-         ResponseEntity.badRequest().body("Article not added");
+        if(articleService.saveArticle(articleDto)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Article added");
+        }
+         throw new ArticleException("Article no added");
     }
 
     @PostMapping("/addArticle/{id}/{quantity}")
     public ResponseEntity<String> addArticleQuantity(@PathVariable("id") long id, @PathVariable("quantity") int quantity) {
-        return articleService.saveArticleQuantity(id, quantity) ?
-                ResponseEntity.ok("Article quantity added"):
-                ResponseEntity.badRequest().body("Article quantity not added");
+        if(articleService.saveArticleQuantity(id, quantity)) {
+
+            return ResponseEntity.status(HttpStatus.OK).body("Article quantity added");
+        }
+        throw new ArticleException("Article quantity not added");
     }
 
     @DeleteMapping("/deleteArticle/{id}")
     public ResponseEntity<String> deleteArticole(@PathVariable("id") long id) {
-        return articleService.deleteArticle(id) ?
-         ResponseEntity.ok("Articole deleted"):
-         ResponseEntity.badRequest().body("Articole not deleted");
+        if(articleService.deleteArticle(id)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Articole deleted");
+        }
+        throw new ArticleException("Article no deleted");
     }
 
     @PostMapping("/decrementArticle")
     public ResponseEntity<String> decrementArticle(@RequestBody ArticleEntity article, @RequestParam("valueDecrement") int decrement) {
-        return stockService.decrementArticle(article, decrement) ?
-                ResponseEntity.status(HttpStatus.OK).body("Decrement success") :
-                ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Decrement failed");
+        if(stockService.decrementArticle(article, decrement))
+        {
+            return  ResponseEntity.status(HttpStatus.OK).body("Decrement success");
+        }
+        throw new StockException("Decrement failed");
 
     }
 }

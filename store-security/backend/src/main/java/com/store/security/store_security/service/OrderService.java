@@ -31,9 +31,10 @@ public class OrderService implements IOrderService{
 	public boolean addOrder(int articleId, String username) throws OrderException {
 
 		ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(()->
-			new ArticleException("Article not found"));
-		UserEntity user = userRepository.findByUsername(username).orElseThrow(()->new UserException("User not found"));
-		StockEntity stockEntity = stockRepository.findByArticle(articleEntity).orElseThrow(()->new StockException("Article not found in stock"));
+			new ArticleException(String.format("[USER: %s] Article not found %s",username,articleId)));
+		UserEntity user = userRepository.findByUsername(username).orElseThrow(()->new UserException(String.format("User not found: %s",username)));
+		StockEntity stockEntity = stockRepository.findByArticle(articleEntity).orElseThrow(()->
+				new StockException(String.format("[USER: %s] Article %s not found in stock",username,articleId)));
 		if(articleEntity.getId()>0 && user.getId()>0 && stockEntity.getId()>0) {
 			OrderEntity orderEntity = OrderEntity.builder().user(user)
 					.tmstInsert(LocalDateTime.now()).build();
@@ -45,7 +46,7 @@ public class OrderService implements IOrderService{
 				return result.getId() != null;
 			}else
 			{
-				throw new OrderException("Order not created");
+				throw new OrderException(String.format("[USER: %s] Order not created for article %s",username,articleId));
 			}
 		}
 		return false;

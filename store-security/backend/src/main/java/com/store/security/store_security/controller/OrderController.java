@@ -26,10 +26,11 @@ public class OrderController {
 			throws OrderException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String username = authentication.getName();
-		if(!orderService.addOrder(idArticle,username))
+		if(orderService.addOrder(idArticle,username))
 		{
-			throw new OrderException("Error, not add order");
+			return ResponseEntity.status(HttpStatus.OK).body("Add order");
 		}
-		return ResponseEntity.status(HttpStatus.OK).body("Add order");
+		throw new OrderException("Error, not add order");
+
 	}
 }
