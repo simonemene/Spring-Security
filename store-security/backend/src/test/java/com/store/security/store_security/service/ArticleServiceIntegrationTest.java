@@ -74,6 +74,5 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 
 		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(resultArticle);
 		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(1);
-
 	}
 }

@@ -50,6 +50,9 @@ public class ArticleControllerUnitTest {
         controller = new ArticleController(articleService, stockService);
     }
 
+
+    //SUCCESS
+
     @Test
     @DisplayName("add article")
     @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
@@ -63,6 +66,22 @@ public class ArticleControllerUnitTest {
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertThat(response.getBody()).isEqualTo("Article added");
+
+    }
+
+    @Test
+    @DisplayName("add quantity article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void addArticleQuantity()
+    {
+        //given
+        Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
+                Integer.class))).thenReturn(true);
+        //when
+        ResponseEntity<String> response = controller.addArticleQuantity(1,1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
+        Assertions.assertThat(response.getBody()).isEqualTo("Article quantity added");
 
     }
 
@@ -95,6 +114,8 @@ public class ArticleControllerUnitTest {
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertThat(response.getBody()).isEqualTo("Decrement success");
     }
+
+    //FAILED
 
     @Test
     @DisplayName("add article")
@@ -140,6 +161,23 @@ public class ArticleControllerUnitTest {
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         Assertions.assertThat(response.getBody()).isEqualTo("Decrement failed");
+    }
+
+
+    @Test
+    @DisplayName("add quantity article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void addArticleQuantityFailed()
+    {
+        //given
+        Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
+                Integer.class))).thenReturn(false);
+        //when
+        ResponseEntity<String> response = controller.addArticleQuantity(1,1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.getBody()).isEqualTo("Article quantity not added");
+
     }
 
 

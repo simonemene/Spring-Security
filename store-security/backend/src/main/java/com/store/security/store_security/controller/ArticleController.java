@@ -28,7 +28,7 @@ public class ArticleController {
     }
 
     @PostMapping("/addArticle/{id}/{quantity}")
-    public ResponseEntity<String> addArticle(@PathVariable("id") long id, @PathVariable("quantity") int quantity) {
+    public ResponseEntity<String> addArticleQuantity(@PathVariable("id") long id, @PathVariable("quantity") int quantity) {
         return articleService.saveArticleQuantity(id, quantity) ?
                 ResponseEntity.ok("Article quantity added"):
                 ResponseEntity.badRequest().body("Article quantity not added");
