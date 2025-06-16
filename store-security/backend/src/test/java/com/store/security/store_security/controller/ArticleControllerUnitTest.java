@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -63,6 +64,82 @@ public class ArticleControllerUnitTest {
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertThat(response.getBody()).isEqualTo("Article added");
 
+    }
+
+    @Test
+    @DisplayName("delete article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void deleteArticle()
+    {
+        //given
+        Mockito.when(articleService.deleteArticle(Mockito.any(Long.class))).thenReturn(true);
+        //when
+        ResponseEntity<String> response = controller.deleteArticole(1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
+        Assertions.assertThat(response.getBody()).isEqualTo("Articole deleted");
+    }
+
+    @Test
+    @DisplayName("decrement article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void decrement()
+    {
+        //given
+        Mockito.when(stockService.decrementArticle(Mockito.any(),Mockito.any(Integer.class))).thenReturn(true);
+        ArticleEntity article = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
+        //when
+        ResponseEntity<String> response = controller.decrementArticle(article,1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
+        Assertions.assertThat(response.getBody()).isEqualTo("Decrement success");
+    }
+
+    @Test
+    @DisplayName("add article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void addArticleFailed()
+    {
+        //given
+        Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(false);
+        //when
+        ResponseEntity<String> response = controller.addArticle(ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build());
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.getBody()).isEqualTo("Article not added");
+
+    }
+
+    @Test
+    @DisplayName("delete article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void deleteArticleFailed()
+    {
+        //given
+        Mockito.when(articleService.deleteArticle(Mockito.any(Long.class))).thenReturn(false);
+        //when
+        ResponseEntity<String> response = controller.deleteArticole(1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.getBody()).isEqualTo("Articole not deleted");
+    }
+
+    @Test
+    @DisplayName("decrement article")
+    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
+    public void decrementFailed()
+    {
+        //given
+        Mockito.when(stockService.decrementArticle(Mockito.any(),Mockito.any(Integer.class))).thenReturn(false);
+        ArticleEntity article = ArticleEntity.builder().id(1).name("test").description("test").price(new BigDecimal(1))
+                .tmstInsert(LocalDateTime.now()).tmstInsert(LocalDateTime.now()).build();
+        //when
+        ResponseEntity<String> response = controller.decrementArticle(article,1);
+        //then
+        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        Assertions.assertThat(response.getBody()).isEqualTo("Decrement failed");
     }
 
 
