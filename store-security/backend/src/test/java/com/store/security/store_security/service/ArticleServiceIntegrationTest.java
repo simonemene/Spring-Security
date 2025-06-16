@@ -23,6 +23,8 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 	@Autowired
 	private StockRepository stockRepository;
 
+	//SUCCESS
+
 	@Test
 	public void deleteArticle()
 	{
@@ -75,4 +77,60 @@ public class ArticleServiceIntegrationTest extends StoreSecurityApplicationTests
 		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(resultArticle);
 		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(1);
 	}
+
+	@Test
+	public void savedArticleQuantity()
+	{
+		//given
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1))
+				.tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
+		ArticleEntity articleRequest = articleRepository.save(articleEntity);
+		StockEntity stockEntity = StockEntity.builder().article(articleEntity).quantity(1).build();
+		stockRepository.save(stockEntity);
+		//when
+		boolean result = articleService.saveArticleQuantity(articleRequest.getId(),4);
+		//then
+
+
+		ArticleEntity resultArticle = null;
+		Iterable<ArticleEntity> article = articleRepository.findAll();
+		for (ArticleEntity entity : article) {
+			resultArticle = entity;
+			if (resultArticle.getName().equals("test")) {
+				break;
+			}
+		}
+
+		StockEntity resultStock = null;
+		Iterable<StockEntity> stock = stockRepository.findAll();
+		for (StockEntity entity : stock) {
+			resultStock = entity;
+			if (resultStock.getArticle().getName().equals(resultArticle.getName())) {
+				break;
+			}
+		}
+
+		Assertions.assertThat(result).isTrue();
+
+		Assertions.assertThat(resultArticle.getName()).isEqualTo("test");
+		Assertions.assertThat(resultArticle.getDescription()).isEqualTo("test");
+		Assertions.assertThat(resultArticle.getPrice().stripTrailingZeros()).isEqualTo(new BigDecimal(1));
+		Assertions.assertThat(resultArticle.getTmstInsert()).isEqualTo(LocalDateTime.of(2022, 1, 1, 1, 1));
+
+		Assertions.assertThat(resultStock.getArticle()).usingRecursiveComparison().isEqualTo(resultArticle);
+		Assertions.assertThat(resultStock.getQuantity()).isEqualTo(5);
+	}
+
+	//FAILED
+
+	@Test
+	public void savedArticleQuantityFailed()
+	{
+		//given
+		//when
+		boolean result = articleService.saveArticleQuantity(2,4);
+		//then
+		Assertions.assertThat(result).isFalse();
+	}
+
 }
