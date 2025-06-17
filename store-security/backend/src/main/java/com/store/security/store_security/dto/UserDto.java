@@ -18,10 +18,11 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int age;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<AuthoritiesEntity> authoritiesList;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime tmstInsert;
 }
