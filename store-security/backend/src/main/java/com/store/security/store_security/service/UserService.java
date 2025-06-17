@@ -13,14 +13,15 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService {
+public class UserService implements IUserService{
 
 	private final UserRepository userRepository;
 
 	private final UserMapper userMapper;
 
 	@Transactional(readOnly = true)
-	public UserDto userDetails(String username) {
+	@Override
+	public UserDto findUser(String username) {
 		Optional<UserEntity> userEntity = userRepository.findByUsername(username);
 		if(userEntity.isPresent())
 		{
