@@ -67,7 +67,13 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 		Iterable<OrderLineEntity> orderLineEntities = orderLineRepository.findAll();
 
-		orderLineEntities.iterator().next().getArticle()
+		List<OrderLineEntity> orderLine = new ArrayList<>();
+
+		for(OrderLineEntity orderLineEntity : orderLineEntities) {
+			orderLine.add(orderLineEntity);
+		}
+
+		Assertions.assertThat(orderLine).hasSize(1);
 
 		Optional<OrderLineEntity> orderLineEntity = orderLineRepository.findByArticle_IdAndOrder_User_Id(articleEntity.getId(), user.getId());
 		Optional<OrderEntity> orderEntity = orderRepository.findByUser(user);
