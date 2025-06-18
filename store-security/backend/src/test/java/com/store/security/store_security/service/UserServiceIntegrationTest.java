@@ -31,8 +31,6 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 	public void findUser()
 	{
 		//given
-
-
 		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
 		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
