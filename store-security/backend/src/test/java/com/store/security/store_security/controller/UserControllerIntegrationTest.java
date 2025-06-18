@@ -77,4 +77,27 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/getUserDetails/anakin@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
+
+	@Test
+	@WithMockUser(username = "prova@gmail.com", roles = "TRACKER")
+	public void userNoAccessRole() throws Exception {
+		//given
+
+		String username = "prova@gmail.com";
+		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
+				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
+		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		userRepository.save(userEntity);
+		UserDto userDto = UserDto.builder().username(username).age(21).build();
+		String json = objectMapper.writeValueAsString(userDto);
+		//when
+		//then
+		mockMvc.perform(get("/api/user/getUserDetails/{username}",username))
+				.andExpect(MockMvcResultMatchers.status().isForbidden())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Access Denied"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/getUserDetails/prova@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
+	}
 }
