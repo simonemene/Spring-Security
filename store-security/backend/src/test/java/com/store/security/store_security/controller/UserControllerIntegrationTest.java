@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.UserDto;
+import com.store.security.store_security.entity.AuthoritiesEntity;
+import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.repository.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +19,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,10 +35,23 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	private ObjectMapper objectMapper;
 
 	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
 	private MockMvc mockMvc;
 
-	@WithMockUser(username = "prova@gmail.com", roles = "USER")
+	@BeforeEach
+	public void init()
+	{
+		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
+				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
+		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		userRepository.save(userEntity);
+	}
+
 	@Test
+	@WithMockUser(username = "prova@gmail.com", roles = {"USER"})
 	public void userFound() throws Exception {
 		//given
 		String username = "prova@gmail.com";
