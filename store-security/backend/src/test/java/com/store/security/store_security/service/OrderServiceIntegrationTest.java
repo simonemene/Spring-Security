@@ -3,6 +3,7 @@ package com.store.security.store_security.service;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.entity.*;
+import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.repository.*;
@@ -85,12 +86,21 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	}
 
 	@Test
-	public void getOrders()
-	{
+	public void getOrders() throws OrderException {
 		//given
-
+        UserEntity userEntity = UserEntity.builder().age(21).username("test").password("test").tmstInsert(LocalDateTime.of(2021, 1, 1, 1, 1)).build();
+		userRepository.save(userEntity);
+		OrderEntity orderEntity = OrderEntity.builder().user(userEntity).tmstInsert(LocalDateTime.of(2021, 1, 1, 1, 1)).build();
+		orderRepository.save(orderEntity);
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(10)).tmstInsert(
+				LocalDateTime.of(2021, 1, 1, 1, 1)).build();
+		articleRepository.save(articleEntity);
+		OrderLineKeyEmbeddable orderLineKeyEmbeddable = OrderLineKeyEmbeddable.builder().idOrder(orderEntity.getId()).idOrder(articleEntity.getId()).build();
+		OrderLineEntity orderLineEntity = OrderLineEntity.builder().id(orderLineKeyEmbeddable).order(orderEntity).article(articleEntity).quantity(1).build();
+		orderLineRepository.save(orderLineEntity);
 		//when
-
+        List<ArticleDto> article = orderService.getOrders(userEntity.getUsername());
 		//then
+		Assertions.assertThat(article).hasSize(1);
 	}
 }
