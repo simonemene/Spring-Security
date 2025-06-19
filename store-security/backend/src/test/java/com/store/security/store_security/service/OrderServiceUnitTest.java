@@ -1,5 +1,10 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.OrderEntity;
+import com.store.security.store_security.entity.OrderLineEntity;
+import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,6 +12,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.time.LocalDateTime;
 
 public class OrderServiceUnitTest {
 
@@ -43,7 +50,18 @@ public class OrderServiceUnitTest {
 	public void getOrder()
 	{
 		//given
+		UserEntity user = UserEntity.builder().age(21).username("test").build();
+		OrderEntity order = OrderEntity.builder().user(user).tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
+		ArticleEntity article = ArticleEntity.builder().name("test").description("test").build();
+		OrderLineKeyEmbeddable orderLineKey = OrderLineKeyEmbeddable.builder().idOrder(order.getId()).idArticle(article.getId()).build();
+		OrderLineEntity orderLine = OrderLineEntity.builder().id(orderLineKey).article(article).order(order).build();
+
+		userRepository.save(user);
+		articleRepository.save(article);
+		orderRepository.save(order);
+		orderLineRepository.save(orderLine);
 		//when
+
 		//then
 	}
 }
