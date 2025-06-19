@@ -24,7 +24,7 @@ public class AuthenticationController {
         {
             return ResponseEntity.ok(resultRegistration.keySet().iterator().next());
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultRegistration.keySet().iterator().next());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed");
     }
 
 

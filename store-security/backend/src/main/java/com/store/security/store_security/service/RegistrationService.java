@@ -4,6 +4,7 @@ import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
@@ -34,15 +35,15 @@ public class RegistrationService implements IRegistrationService {
     public Map<String, Boolean> registrationUser(UserDto userDto) {
 
         UserEntity userRegister = null;
-        try {
 
-            if (userDto.getUsername() != null && userDto.getPassword() != null) {
+
+            if (userDto.getUsername() != null && userDto.getPassword() != null && !userDto.getUsername().isEmpty()) {
                 Optional<UserEntity> userCheck = userRepository.findByUsername(userDto.getUsername());
                 if (userCheck.isPresent() && userCheck.get().getId()>0) {
-                    return Map.of("User already exists", false);
+                    throw new UserException("User already exist");
                 }
                 if (userDto.getAge() < 18) {
-                    return Map.of("Age must be at least 18", false);
+                    throw new UserException("User must be at least 18 years old");
                 }
                 userDto.setTmstInsert(LocalDateTime.now());
                 Optional<AuthoritiesEntity> authorities = authoritiesRepository.findByAuthority(RoleConstants.USER.getRole());
@@ -51,9 +52,11 @@ public class RegistrationService implements IRegistrationService {
                 userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
                 userRegister = userRepository.save(userEntity);
             }
-        } catch (Exception e) {
-            return Map.of("Registration failed", false);
-        }
+            else
+            {
+                throw new UserException("Registration failed");
+            }
+
         return null != userRegister && userRegister.getId() > 0 ? Map.of("Registration successful", true) : Map.of("Registration failed", false);
     }
 }

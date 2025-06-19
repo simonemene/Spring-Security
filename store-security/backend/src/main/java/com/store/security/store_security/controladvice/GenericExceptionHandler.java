@@ -35,7 +35,7 @@ public class GenericExceptionHandler {
 	}
 
 	@ExceptionHandler(UserException.class)
-	public ResponseEntity<String> controlStockFailed(UserException userException)
+	public ResponseEntity<String> controlUserFailed(UserException userException)
 	{
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userException.getMessage());
 	}
