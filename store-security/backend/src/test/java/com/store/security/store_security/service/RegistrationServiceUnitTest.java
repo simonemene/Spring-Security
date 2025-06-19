@@ -3,6 +3,7 @@ package com.store.security.store_security.service;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
@@ -76,9 +77,9 @@ public class RegistrationServiceUnitTest {
 				LocalDateTime.now()).authoritiesList(
 				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
 		//when
-		Map<String,Boolean> registration = registrationService.registrationUser(userDto);
 		//then
-		Assertions.assertThat(registration.get("Age must be at least 18")).isFalse();
+		Assertions.assertThatThrownBy(()->registrationService.registrationUser(userDto)).isInstanceOf(
+				UserException.class).hasMessageContaining("User must be at least 18 years old");
 	}
 
 	@Test
@@ -95,9 +96,9 @@ public class RegistrationServiceUnitTest {
 
 		Mockito.when(userRepository.findByUsername("username1")).thenReturn(userEntityOptional);
 		//when
-		Map<String,Boolean> registration = registrationService.registrationUser(userDto);
 		//then
-		Assertions.assertThat(registration.get("User already exists")).isFalse();
+		Assertions.assertThatThrownBy(()->registrationService.registrationUser(userDto)).isInstanceOf(
+				UserException.class).hasMessageContaining("User already exist");
 	}
 
 
