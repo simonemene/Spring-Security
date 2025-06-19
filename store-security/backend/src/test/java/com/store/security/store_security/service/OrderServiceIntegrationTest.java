@@ -82,7 +82,15 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(orderEntity.isPresent()).isTrue();
 		Assertions.assertThat(orderLineEntity.get().getArticle()).usingRecursiveComparison().ignoringFields("price").isEqualTo(articleEntity);
 		Assertions.assertThat(orderLineEntity.get().getOrder()).usingRecursiveComparison().isEqualTo(orderEntity.get());
+	}
 
+	@Test
+	public void getOrders()
+	{
+		//given
 
+		//when
+
+		//then
 	}
 }
