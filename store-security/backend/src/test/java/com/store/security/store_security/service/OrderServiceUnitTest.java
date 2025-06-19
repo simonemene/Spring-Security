@@ -56,10 +56,7 @@ public class OrderServiceUnitTest {
 		OrderLineKeyEmbeddable orderLineKey = OrderLineKeyEmbeddable.builder().idOrder(order.getId()).idArticle(article.getId()).build();
 		OrderLineEntity orderLine = OrderLineEntity.builder().id(orderLineKey).article(article).order(order).build();
 
-		userRepository.save(user);
-		articleRepository.save(article);
-		orderRepository.save(order);
-		orderLineRepository.save(orderLine);
+		//TODO:MOCKITO
 		//when
 
 		//then
