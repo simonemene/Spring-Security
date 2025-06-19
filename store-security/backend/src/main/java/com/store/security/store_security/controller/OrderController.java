@@ -33,7 +33,8 @@ public class OrderController {
 
 	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
 	@GetMapping("/getOrder/{username}")
-	public ResponseEntity<List<ArticleDto>> getOrder(@PathVariable String username) {
-		return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrder(username));
+	public ResponseEntity<List<ArticleDto>> getOrder(@PathVariable String username)
+			throws OrderException {
+		return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(username));
 	}
 }
