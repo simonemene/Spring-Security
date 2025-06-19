@@ -65,4 +65,19 @@ public class OrderService implements IOrderService{
 		}
 		return true;
 	}
+
+	@Override
+	public List<ArticleDto> getOrders(String username) throws OrderException {
+		if(null != username && !username.isEmpty()) {
+			UserEntity user = userRepository.findByUsername(username)
+					.orElseThrow(()->new UserException(String.format("User not found: %s",username)));
+			OrderEntity orderEntity = orderRepository.findByUser(user).orElseThrow(()->
+					new OrderException(String.format("[USER: %s] Order not found",username)));
+			List<OrderLineEntity> orderLineEntities = orderLineRepository.findByOrder_Id(orderEntity.getId());
+            return orderLineEntities.stream().map(order-> articleMapper.toDto(order.getArticle())).toList();
+		}else
+		{
+			throw new OrderException("User not found");
+		}
+	}
 }

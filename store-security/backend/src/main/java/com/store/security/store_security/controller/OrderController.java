@@ -6,6 +6,7 @@ import com.store.security.store_security.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +29,11 @@ public class OrderController {
 			return ResponseEntity.status(HttpStatus.OK).body("Add order");
 		}
 		throw new OrderException("Error, not add order");
+	}
+
+	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
+	@GetMapping("/getOrder/{username}")
+	public ResponseEntity<List<ArticleDto>> getOrder(@PathVariable String username) {
+		return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrder(username));
 	}
 }

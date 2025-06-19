@@ -8,4 +8,6 @@ import java.util.List;
 public interface IOrderService {
 
 	public boolean addOrder(List<ArticleDto> articleId,String username) throws OrderException;
+
+	public List<ArticleDto> getOrders(String username) throws OrderException;
 }
