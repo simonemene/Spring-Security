@@ -79,7 +79,7 @@ public class ArticleControllerUnitTest {
         Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
                 Integer.class))).thenReturn(true);
         //when
-        ResponseEntity<String> response = controller.addArticleQuantity(1,1);
+        ResponseEntity<String> response = controller.addArticleQuantity(1L,1);
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
         Assertions.assertThat(response.getBody()).isEqualTo("Article quantity added");
@@ -176,7 +176,7 @@ public class ArticleControllerUnitTest {
                 Integer.class))).thenReturn(false);
         //when
         //then
-        Assertions.assertThatThrownBy(()->controller.addArticleQuantity(1,1))
+        Assertions.assertThatThrownBy(()->controller.addArticleQuantity(1L,1))
                 .isInstanceOf(ArticleException.class)
                 .hasMessageContaining("Article quantity not added");
 

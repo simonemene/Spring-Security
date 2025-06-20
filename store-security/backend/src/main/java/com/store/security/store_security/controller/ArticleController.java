@@ -32,7 +32,7 @@ public class ArticleController {
     }
 
     @PostMapping("/addArticle/{id}/{quantity}")
-    public ResponseEntity<String> addArticleQuantity(@PathVariable("id") long id, @PathVariable("quantity") int quantity) {
+    public ResponseEntity<String> addArticleQuantity(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
         if(articleService.saveArticleQuantity(id, quantity)) {
 
             return ResponseEntity.status(HttpStatus.OK).body("Article quantity added");
@@ -49,7 +49,7 @@ public class ArticleController {
     }
 
     @PostMapping("/decrementArticle")
-    public ResponseEntity<String> decrementArticle(@RequestBody ArticleEntity article, @RequestParam("valueDecrement") int decrement) {
+    public ResponseEntity<String> decrementArticle(@RequestBody ArticleEntity article, @RequestParam("valueDecrement") Integer decrement) {
         if(stockService.decrementArticle(article, decrement))
         {
             return  ResponseEntity.status(HttpStatus.OK).body("Decrement success");
