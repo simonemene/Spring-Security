@@ -16,12 +16,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderController {
 
 	private final IOrderService orderService;
 
-	@PostMapping("/addMultipleOrder")
+	@PostMapping
 	public ResponseEntity<String> addMultipleOrder(@RequestBody List<ArticleDto> articleDto)
 			throws OrderException {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -33,7 +33,7 @@ public class OrderController {
 	}
 
 	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
-	@GetMapping("/getOrder/{username}")
+	@GetMapping("/order/{username}")
 	public ResponseEntity<ListArticleDto> getOrder(@PathVariable String username)
 			throws OrderException {
 		return ResponseEntity.status(HttpStatus.OK).body(ListArticleDto.builder().articles(orderService.getOrders(username)).build());
