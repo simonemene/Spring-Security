@@ -1,6 +1,7 @@
 package com.store.security.store_security.controller;
 
 import com.store.security.store_security.dto.ArticleDto;
+import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.service.IOrderService;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,8 @@ public class OrderController {
 
 	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
 	@GetMapping("/getOrder/{username}")
-	public ResponseEntity<List<ArticleDto>> getOrder(@PathVariable String username)
+	public ResponseEntity<ListArticleDto> getOrder(@PathVariable String username)
 			throws OrderException {
-		return ResponseEntity.status(HttpStatus.OK).body(orderService.getOrders(username));
+		return ResponseEntity.status(HttpStatus.OK).body(ListArticleDto.builder().articles(orderService.getOrders(username)).build());
 	}
 }
