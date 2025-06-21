@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Iterator;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Service
@@ -36,6 +37,8 @@ public class StockService implements IStockService{
 	private final StockMapper stockMapper;
 
 	private final StockArticleMapper stockArticleMapper;
+
+	private final ArticleMapper articleMapper;
 
 
 	@Override
@@ -66,23 +69,29 @@ public class StockService implements IStockService{
 
 	@Transactional
 	@Override
-	public StockDto loadArticle(StockArticleDto stock) {
-		stockArticleRepository.findByArticle_Id(stock.getArticle().getId())
-						.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article exists",stock.getArticle().getId()))).getStock();
-		StockEntity stockEntity = stockRepository.findById(stock.getId())
-				.orElseThrow(()->new StockException(String.format("[STOCK: %s] Stock not exists",stock.getId())));
-		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(stock.getArticle()).stock(stockEntity).build();
-		StockArticleEntity savedStockArticle = stockArticleRepository.save(stockArticleEntity);
-		if(savedStockArticle.getId()<=0)
+	public ArticleDto loadArticle(ArticleDto articleDto) {
+		stockArticleRepository.findByArticle_Name(articleDto.getName())
+						.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article exists",articleDto.getName())));
+		Optional<StockEntity> stockOptional = Optional.ofNullable(StreamSupport.stream(stockRepository.findAll().spliterator(), false)
+				.findFirst().orElseThrow(() -> new StockException("Stock not found")));
+		if(stockOptional.isPresent())
 		{
-			throw new StockException(String.format("[ARTICLE: %s] Article not saved",stock.getArticle().getId()));
+			throw new StockException("Stock not found");
 		}
-		ArticleEntity savedArticle = articleRepository.save(stock.getArticle());
-		if(savedArticle.getId()<=0)
+		ArticleEntity article = articleMapper.toEntity(articleDto);
+		article = articleRepository.save(article);
+		if(article.getId()<=0)
 		{
-			throw new ArticleException(String.format("[ARTICLE: %s] Article not saved",stock.getArticle().getId()));
+			throw new ArticleException(String.format("[ARTICLE: %s] Article not saved",article.getId()));
 		}
-		return stockMapper.toDto(stockEntity);
+		StockArticleEntity stockArticleEntity = stockArticleRepository.save(StockArticleEntity.builder()
+				.article(article).stock(stockOptional.get()).build());
+		if(stockArticleEntity.getId()<=0)
+		{
+			throw new StockException(String.format("[ARTICLE: %s] Stock not saved",article.getId()));
+		}
+		return articleMapper.toDto(article);
+
 	}
 
 	@Transactional

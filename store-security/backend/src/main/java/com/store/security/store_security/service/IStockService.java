@@ -1,6 +1,7 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.dto.AllStockDto;
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
@@ -15,7 +16,7 @@ public interface IStockService {
 
 	public StockDto getStockByArticle(Long idArticle);
 
-	public StockDto loadArticle(StockArticleDto stockDto);
+	public ArticleDto loadArticle(ArticleDto articleDto);
 
 	public StockArticleDto decrementArticle(Long id, Integer quantity);
 

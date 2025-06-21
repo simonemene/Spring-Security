@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface StockArticleRepository extends CrudRepository<StockArticleEntity, Long> {
 
     public Optional<StockArticleEntity> findByArticle_Id(Long articleId);
+
+    public Optional<StockArticleEntity> findByArticle_Name(String name);
 }
