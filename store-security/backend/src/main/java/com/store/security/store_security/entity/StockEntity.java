@@ -19,17 +19,6 @@ public class StockEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER)
-    private List<ArticleEntity> article;
-
-    private int quantity;
-
-    private boolean addArticle(ArticleEntity articleEntity)
-    {
-        if(null == article)
-        {
-            article = new ArrayList<>();
-        }
-        return article.add(articleEntity);
-    }
+    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    private List<StockArticleEntity> stockArticles;
 }

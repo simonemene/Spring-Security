@@ -2,14 +2,18 @@ package com.store.security.store_security.service;
 
 import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
+import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.mapper.ArticleMapper;
+import com.store.security.store_security.mapper.StockArticleMapper;
 import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -27,9 +31,11 @@ public class StockService implements IStockService{
 
 	private final ArticleRepository articleRepository;
 
+	private final StockArticleRepository stockArticleRepository;
+
 	private final StockMapper stockMapper;
 
-	private final ArticleMapper articleMapper;
+	private final StockArticleMapper stockArticleMapper;
 
 
 	@Override
@@ -48,67 +54,87 @@ public class StockService implements IStockService{
 
 	@Override
 	public StockDto getStockByArticle(Long idArticle) {
-		StockEntity stock = articleRepository.findById(idArticle)
-				.orElseThrow(()->new ArticleException(
-						String.format("[ARTICLE: %s] Article not found",idArticle))).getStock();
-		return stockMapper.toDto(stock);
-	}
-
-	@Transactional
-	@Override
-	public StockDto loadArticle(StockDto stock) {
-		articleRepository.findById(stock.getArticle().getFirst().getId())
-				.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article exists",stock.getArticle().getFirst().getId())));
-       StockEntity stockEntity = stockRepository.findById(stock.getId())
-			   .orElseThrow(()->new StockException(String.format("[STOCK: %s] Stock not exists",stock.getId())));
-		if(stock.getArticle().size()==1)
+		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(idArticle)
+				.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article not found",idArticle)));
+		StockEntity stockEntity = stockArticleEntity.getStock();
+		if(null != stockEntity && stockEntity.getId()>0)
 		{
-			ArticleDto articleDto = stock.getArticle().getFirst();
-			ArticleEntity articleEntity = articleRepository.save(articleMapper.toEntity(articleDto));
-			stockEntity.getArticle().add(articleEntity);
-			StockEntity savedStock = stockRepository.save(stockEntity);
-			return stockMapper.toDto(savedStock);
+			return stockMapper.toDto(stockEntity);
 		}
-		throw new StockException("Stock not updated");
+		throw new StockException(String.format("[ARTICLE: %s] Stock not found",idArticle));
 	}
 
 	@Transactional
 	@Override
-	public StockDto decrementArticle(Long id,Integer quantity) {
-		ArticleEntity article = articleRepository.findById(id)
-				.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article not found",id)));
-		if(null != article.getStock() && article.getStock().getQuantity()>0 && (article.getStock().getQuantity() - quantity)>0) {
-			StockEntity stockEntity = article.getStock();
-			stockEntity.setQuantity(stockEntity.getQuantity()-quantity);
-			stockEntity = stockRepository.save(stockEntity);
-			if(stockEntity.getId()>0)
-			{
-				return stockMapper.toDto(stockEntity);
-			}else
-			{
-				throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
-			}
+	public StockDto loadArticle(StockArticleDto stock) {
+		stockArticleRepository.findByArticle_Id(stock.getArticle().getId())
+						.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article exists",stock.getArticle().getId()))).getStock();
+		StockEntity stockEntity = stockRepository.findById(stock.getId())
+				.orElseThrow(()->new StockException(String.format("[STOCK: %s] Stock not exists",stock.getId())));
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(stock.getArticle()).stock(stockEntity).build();
+		StockArticleEntity savedStockArticle = stockArticleRepository.save(stockArticleEntity);
+		if(savedStockArticle.getId()<=0)
+		{
+			throw new StockException(String.format("[ARTICLE: %s] Article not saved",stock.getArticle().getId()));
+		}
+		ArticleEntity savedArticle = articleRepository.save(stock.getArticle());
+		if(savedArticle.getId()<=0)
+		{
+			throw new ArticleException(String.format("[ARTICLE: %s] Article not saved",stock.getArticle().getId()));
+		}
+		return stockMapper.toDto(stockEntity);
+	}
+
+	@Transactional
+	@Override
+	public StockArticleDto decrementArticle(Long id,Integer quantity) {
+		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
+				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
+		int calculatedQuantity = stockArticleEntity.getQuantity() - quantity;
+		if(stockArticleEntity.getQuantity() <= 0 || calculatedQuantity < 0)
+		{
+			throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
+		}
+		stockArticleEntity.setQuantity(calculatedQuantity);
+		stockArticleEntity = stockArticleRepository.save(stockArticleEntity);
+		if(stockArticleEntity.getId()>0)
+		{
+			return stockArticleMapper.toDto(stockArticleEntity);
 		}
 		throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
 	}
 
 	@Transactional
 	@Override
-	public StockDto saveArticleQuantity(Long id, Integer quantity) {
-		ArticleEntity article = articleRepository.findById(id)
-				.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article not found",id)));
-		if(null != article.getStock() && article.getStock().getQuantity()>0 && (article.getStock().getQuantity() - quantity)>0) {
-			StockEntity stockEntity = article.getStock();
-			stockEntity.setQuantity(stockEntity.getQuantity()+quantity);
-			stockEntity = stockRepository.save(stockEntity);
-			if(stockEntity.getId()>0)
-			{
-				return stockMapper.toDto(stockEntity);
-			}else
-			{
-				throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
-			}
+	public StockArticleDto saveArticleQuantity(Long id, Integer quantity) {
+		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
+				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
+		int calculatedQuantity = stockArticleEntity.getQuantity() + quantity;
+		if(stockArticleEntity.getQuantity() <= 0 || calculatedQuantity <= 0)
+		{
+			throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
+		}
+		stockArticleEntity.setQuantity(calculatedQuantity);
+		stockArticleEntity = stockArticleRepository.save(stockArticleEntity);
+		if(stockArticleEntity.getId()>0)
+		{
+			return stockArticleMapper.toDto(stockArticleEntity);
 		}
 		throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
+	}
+
+	@Transactional
+	@Override
+	public boolean deleteArticle(Long id) {
+		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
+				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
+		ArticleEntity articleEntity = stockArticleEntity.getArticle();
+		articleRepository.delete(articleEntity);
+		stockArticleRepository.delete(stockArticleEntity);
+		if(stockArticleRepository.findByArticle_Id(id).isPresent())
+		{
+			return true;
+		}
+		throw new StockException(String.format("[ARTICLE: %s] Article not deleted",id));
 	}
 }

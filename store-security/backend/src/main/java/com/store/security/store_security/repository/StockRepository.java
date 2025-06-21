@@ -11,6 +11,4 @@ import java.util.Optional;
 @Repository
 public interface StockRepository extends CrudRepository<StockEntity, Long> {
 
-    Optional<StockEntity> findByIdArticle(ArticleEntity articleEntity);
-
 }

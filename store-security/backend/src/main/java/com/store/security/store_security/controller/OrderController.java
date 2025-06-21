@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/*
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/orders")
@@ -39,3 +39,4 @@ public class OrderController {
 		return ResponseEntity.status(HttpStatus.OK).body(ListArticleDto.builder().articles(orderService.getOrders(username)).build());
 	}
 }
+*/

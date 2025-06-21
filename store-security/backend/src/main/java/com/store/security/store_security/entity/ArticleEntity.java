@@ -29,8 +29,8 @@ public class ArticleEntity {
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
 
-    @ManyToOne
-    @JoinColumn(name = "id_stock", nullable = false)
-    private StockEntity stock;
+    @OneToMany(mappedBy = "article")
+    private List<StockArticleEntity> stockArticles;
+
 
 }

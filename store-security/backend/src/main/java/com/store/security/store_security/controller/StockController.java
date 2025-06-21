@@ -1,5 +1,6 @@
 package com.store.security.store_security.controller;
 
+import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.service.IStockService;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +20,12 @@ public class StockController {
 
 
     @PatchMapping("/{id}/{quantity}")
-    public ResponseEntity<StockDto> addArticleQuantity(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
+    public ResponseEntity<StockArticleDto> addArticleQuantity(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
         return ResponseEntity.status(HttpStatus.OK).body(stockService.saveArticleQuantity(id, quantity));
     }
 
     @PatchMapping("{id}/decrement/{quantity}")
-    public ResponseEntity<StockDto> decrementArticle(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
+    public ResponseEntity<StockArticleDto> decrementArticle(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
         return ResponseEntity.status(HttpStatus.OK).body(stockService.decrementArticle(id, quantity));
     }
 
