@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/article")
+@RequestMapping("/api/v1/article")
 public class ArticleController {
 
     private final IArticleService articleService;
@@ -23,21 +23,12 @@ public class ArticleController {
     private final IStockService stockService;
 
 
-    @PostMapping("/addArticle")
-    public ResponseEntity<String> addArticle(@RequestBody ArticleDto articleDto) {
+    @PostMapping
+    public ResponseEntity<ArticleDto> addArticle(@RequestBody ArticleDto articleDto) {
         if(articleService.saveArticle(articleDto)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Article added");
+            return ResponseEntity.status(HttpStatus.OK).body(articleDto);
         }
          throw new ArticleException("Article no added");
-    }
-
-    @PostMapping("/addArticle/{id}/{quantity}")
-    public ResponseEntity<String> addArticleQuantity(@PathVariable("id") Long id, @PathVariable("quantity") Integer quantity) {
-        if(articleService.saveArticleQuantity(id, quantity)) {
-
-            return ResponseEntity.status(HttpStatus.OK).body("Article quantity added");
-        }
-        throw new ArticleException("Article quantity not added");
     }
 
     @DeleteMapping("/deleteArticle/{id}")
@@ -48,13 +39,5 @@ public class ArticleController {
         throw new ArticleException("Article no deleted");
     }
 
-    @PostMapping("/decrementArticle")
-    public ResponseEntity<String> decrementArticle(@RequestBody ArticleEntity article, @RequestParam("valueDecrement") Integer decrement) {
-        if(stockService.decrementArticle(article, decrement))
-        {
-            return  ResponseEntity.status(HttpStatus.OK).body("Decrement success");
-        }
-        throw new StockException("Decrement failed");
 
-    }
 }

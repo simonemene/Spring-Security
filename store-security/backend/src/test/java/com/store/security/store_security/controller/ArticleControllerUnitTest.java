@@ -63,26 +63,10 @@ public class ArticleControllerUnitTest {
                 .tmstInsert(LocalDateTime.of(2022, 1, 1, 1, 1)).build();
         Mockito.when(articleService.saveArticle(Mockito.any())).thenReturn(true);
         //when
-        ResponseEntity<String> response = controller.addArticle(articleDto);
+        ResponseEntity<ArticleDto> response = controller.addArticle(articleDto);
         //then
         Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
-        Assertions.assertThat(response.getBody()).isEqualTo("Article added");
-
-    }
-
-    @Test
-    @DisplayName("add quantity article")
-    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
-    public void addArticleQuantity()
-    {
-        //given
-        Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
-                Integer.class))).thenReturn(true);
-        //when
-        ResponseEntity<String> response = controller.addArticleQuantity(1L,1);
-        //then
-        Assertions.assertThat(response.getStatusCode().value()).isEqualTo(200);
-        Assertions.assertThat(response.getBody()).isEqualTo("Article quantity added");
+        Assertions.assertThat(response.getBody()).usingRecursiveComparison().isEqualTo(articleDto);
 
     }
 
@@ -164,23 +148,5 @@ public class ArticleControllerUnitTest {
                 .isInstanceOf(StockException.class)
                 .hasMessageContaining("Decrement failed");
     }
-
-
-    @Test
-    @DisplayName("add quantity article")
-    @WithMockUser(username="admin@gmail.com",roles={"ADMIN"})
-    public void addArticleQuantityFailed()
-    {
-        //given
-        Mockito.when(articleService.saveArticleQuantity(Mockito.any(Long.class),Mockito.any(
-                Integer.class))).thenReturn(false);
-        //when
-        //then
-        Assertions.assertThatThrownBy(()->controller.addArticleQuantity(1L,1))
-                .isInstanceOf(ArticleException.class)
-                .hasMessageContaining("Article quantity not added");
-
-    }
-
 
 }

@@ -3,6 +3,9 @@ package com.store.security.store_security.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -14,11 +17,19 @@ public class StockEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="id_article",nullable = false)
-    private ArticleEntity article;
+    @OneToMany(mappedBy = "stock", fetch = FetchType.EAGER)
+    private List<ArticleEntity> article;
 
     private int quantity;
+
+    private boolean addArticle(ArticleEntity articleEntity)
+    {
+        if(null == article)
+        {
+            article = new ArrayList<>();
+        }
+        return article.add(articleEntity);
+    }
 }

@@ -1,11 +1,14 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
+import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.mapper.ArticleMapper;
+import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +23,7 @@ import java.util.Optional;
 public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
-	private UserRepository userRepository;
+	private IStockService stockService;
 
 	@Autowired
 	private StockRepository stockRepository;
@@ -28,78 +31,42 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	@Autowired
 	private ArticleRepository articleRepository;
 
-	@Autowired
-	private OrderLineRepository orderLineRepository;
-
-	@Autowired
-	private OrderRepository orderRepository;
-
-	@Autowired
-	private IOrderService orderService;
-
-	@Autowired
-	private ArticleMapper articleMapper;
 
 	@Test
-	public void addOrder() throws OrderException {
+	public void getAllStock()
+	{
 		//given
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").build();
-		UserEntity user = UserEntity.builder().age(21).username("test").password("test").authoritiesList(
-				List.of(authoritiesEntity)).tmstInsert(LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		userRepository.save(user);
-		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(10)).tmstInsert(
-				LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		ArticleEntity articleEntity1 = ArticleEntity.builder().name("test1").description("test1").price(new BigDecimal(10)).tmstInsert(
-				LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		articleRepository.save(articleEntity);
-		StockEntity stockEntity = stockRepository.save(StockEntity.builder().article(articleEntity).quantity(2).build());
-		stockRepository.save(stockEntity);
+		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(1)).build();
+		ArticleEntity articleEntity1 = ArticleEntity.builder().name("test1").description("test1").price(new BigDecimal(4)).build();
+		ArticleEntity articleEntity2 = ArticleEntity.builder().name("test2").description("test2").price(new BigDecimal(3)).build();
+        articleRepository.save(articleEntity);
+		articleRepository.save(articleEntity1);
+		articleRepository.save(articleEntity2);
 
-		Iterable<ArticleEntity> articleEntities = articleRepository.findAll();
-		List<ArticleDto> articleDtos = new ArrayList<>();
-		for(ArticleEntity article : articleEntities) {
-			articleDtos.add(articleMapper.toDto(article));
-		}
+		ArticleEntity articleEntity3 = ArticleEntity.builder().name("test3").description("test3").price(new BigDecimal(1)).build();
+		ArticleEntity articleEntity4 = ArticleEntity.builder().name("test4").description("test4").price(new BigDecimal(2)).build();
+		ArticleEntity articleEntity5 = ArticleEntity.builder().name("test5").description("test5").price(new BigDecimal(9)).build();
+		articleRepository.save(articleEntity3);
+		articleRepository.save(articleEntity4);
+		articleRepository.save(articleEntity5);
+
+		StockEntity stockEntity = StockEntity.builder().article(List.of(articleEntity,articleEntity1)).quantity(1).build();
+		StockEntity stockEntity1 = StockEntity.builder().article(List.of(articleEntity3,articleEntity4)).quantity(1).build();
+		StockEntity stockEntitySaved = stockRepository.save(stockEntity);
+		StockEntity stockEntity1Saved = stockRepository.save(stockEntity1);
+		stockEntitySaved.getArticle().add(articleEntity2);
+		stockEntitySaved.setQuantity(5);
+		stockEntity1Saved.getArticle().add(articleEntity5);
+		stockEntity1Saved.setQuantity(5);
+		stockRepository.save(stockEntitySaved);
+		stockRepository.save(stockEntity1Saved);
+
 		//when
-		boolean result = orderService.addOrder(articleDtos, user.getUsername());
+		AllStockDto allStock = stockService.getAllStock();
 		//then
-		Assertions.assertThat(result).isTrue();
-
-		Iterable<OrderLineEntity> orderLineEntities = orderLineRepository.findAll();
-
-		List<OrderLineEntity> orderLine = new ArrayList<>();
-
-		for(OrderLineEntity orderLineEntity : orderLineEntities) {
-			orderLine.add(orderLineEntity);
-		}
-
-		Assertions.assertThat(orderLine).hasSize(1);
-
-		Optional<OrderLineEntity> orderLineEntity = orderLineRepository.findByArticle_IdAndOrder_User_Id(articleEntity.getId(), user.getId());
-		Optional<OrderEntity> orderEntity = orderRepository.findByUser(user);
-
-		Assertions.assertThat(orderLineEntity.isPresent()).isTrue();
-		Assertions.assertThat(orderEntity.isPresent()).isTrue();
-		Assertions.assertThat(orderLineEntity.get().getArticle()).usingRecursiveComparison().ignoringFields("price").isEqualTo(articleEntity);
-		Assertions.assertThat(orderLineEntity.get().getOrder()).usingRecursiveComparison().isEqualTo(orderEntity.get());
+		Assertions.assertThat(allStock.getStock().size()).isEqualTo(2);
 	}
 
-	@Test
-	public void getOrders() throws OrderException {
-		//given
-        UserEntity userEntity = UserEntity.builder().age(21).username("test").password("test").tmstInsert(LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		userRepository.save(userEntity);
-		OrderEntity orderEntity = OrderEntity.builder().user(userEntity).tmstInsert(LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		orderRepository.save(orderEntity);
-		ArticleEntity articleEntity = ArticleEntity.builder().name("test").description("test").price(new BigDecimal(10)).tmstInsert(
-				LocalDateTime.of(2021, 1, 1, 1, 1)).build();
-		articleRepository.save(articleEntity);
-		OrderLineKeyEmbeddable orderLineKeyEmbeddable = OrderLineKeyEmbeddable.builder().idOrder(orderEntity.getId()).idOrder(articleEntity.getId()).build();
-		OrderLineEntity orderLineEntity = OrderLineEntity.builder().id(orderLineKeyEmbeddable).order(orderEntity).article(articleEntity).quantity(1).build();
-		orderLineRepository.save(orderLineEntity);
-		//when
-        List<ArticleDto> article = orderService.getOrders(userEntity.getUsername());
-		//then
-		Assertions.assertThat(article).hasSize(1);
-	}
+
+
 }

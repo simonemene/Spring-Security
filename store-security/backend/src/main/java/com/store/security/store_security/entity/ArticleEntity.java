@@ -18,7 +18,7 @@ public class ArticleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String name;
 
@@ -28,5 +28,9 @@ public class ArticleEntity {
 
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
+
+    @ManyToOne
+    @JoinColumn(name = "id_stock", nullable = false)
+    private StockEntity stock;
 
 }
