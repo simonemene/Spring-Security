@@ -16,9 +16,9 @@ import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Iterator;
 import java.util.Optional;
@@ -41,6 +41,7 @@ public class StockService implements IStockService{
 	private final ArticleMapper articleMapper;
 
 
+	@Transactional(readOnly = true)
 	@Override
 	public AllStockDto getAllStock() {
 		Iterable<StockEntity> allStock  = stockRepository.findAll();
@@ -55,6 +56,7 @@ public class StockService implements IStockService{
 		throw new StockException("Stock not found");
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public StockDto getStockByArticle(Long idArticle) {
 		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(idArticle)

@@ -1,6 +1,7 @@
 package com.store.security.store_security.controller;
 
 import com.store.security.store_security.dto.AllStockDto;
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.service.IStockService;
@@ -38,6 +39,9 @@ public class StockController {
     }
 
     @PostMapping
+    public ResponseEntity<ArticleDto> addArticle(@RequestBody ArticleDto articleDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(stockService.loadArticle(articleDto));
+    }
 
 
 }
