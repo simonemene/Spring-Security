@@ -73,11 +73,14 @@ public class StockService implements IStockService{
 	@Transactional
 	@Override
 	public ArticleDto loadArticle(ArticleDto articleDto) {
-		stockArticleRepository.findByArticle_Name(articleDto.getName())
-						.orElseThrow(()->new ArticleException(String.format("[ARTICLE: %s] Article exists",articleDto.getName())));
+		Optional<StockArticleEntity> stockArticleEntityCheck = stockArticleRepository.findByArticle_Name(articleDto.getName());
+		if(stockArticleEntityCheck.isPresent())
+		{
+			throw new ArticleException(String.format("[ARTICLE: %s] Article exists",articleDto.getName()));
+		}
 		Optional<StockEntity> stockOptional = Optional.ofNullable(StreamSupport.stream(stockRepository.findAll().spliterator(), false)
 				.findFirst().orElseThrow(() -> new StockException("Stock not found")));
-		if(stockOptional.isPresent())
+		if(stockOptional.isEmpty())
 		{
 			throw new StockException("Stock not found");
 		}
