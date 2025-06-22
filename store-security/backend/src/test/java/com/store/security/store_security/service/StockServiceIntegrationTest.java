@@ -219,6 +219,6 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThatThrownBy(()->stockService.decrementArticle(article.getId(),11))
 				.isInstanceOf(StockException.class)
 				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",article.getId(),11));
-
+        //TODO:CHECK POST
 	}
 }
