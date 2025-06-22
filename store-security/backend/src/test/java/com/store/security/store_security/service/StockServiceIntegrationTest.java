@@ -9,6 +9,7 @@ import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.StockException;
+import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.StockArticleMapper;
 import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
@@ -42,6 +43,9 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
 	private StockArticleMapper stockArticleMapper;
+
+	@Autowired
+	private ArticleMapper articleMapper;
 
 	//METHOD ALL STOCK
 
@@ -150,6 +154,27 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(result.getId()).isGreaterThan(0L);
 		Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("id")
 				.isEqualTo(articleDto);
+	}
+
+	@Test
+	@Transactional
+	public void loadArticleExistArticle()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->stockService.loadArticle(articleMapper.toDto(articleEntity)))
+				.isInstanceOf(ArticleException.class)
+				.hasMessageContaining("[ARTICLE: car] Article exists");
 	}
 
 }
