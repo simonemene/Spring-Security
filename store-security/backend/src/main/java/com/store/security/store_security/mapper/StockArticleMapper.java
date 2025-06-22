@@ -6,7 +6,7 @@ import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",uses = {StockMapper.class,ArticleMapper.class})
 public interface StockArticleMapper {
 
     StockArticleEntity toEntity(StockArticleDto stockDto);

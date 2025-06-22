@@ -2,14 +2,20 @@ package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.AllStockDto;
+import com.store.security.store_security.dto.StockArticleDto;
+import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
+import com.store.security.store_security.mapper.StockArticleMapper;
+import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,7 +35,14 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 	@Autowired
 	private StockArticleRepository stockArticleRepository;
 
+	@Autowired
+	private StockMapper stockMapper;
+
+	@Autowired
+	private StockArticleMapper stockArticleMapper;
+
 	@Test
+	@Transactional
 	public void getAllStock()
 	{
 		//given
@@ -40,12 +53,19 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		stockEntity.setStockArticles(List.of(stockArticleEntity));
 		stockArticleEntity.setStock(stockEntity);
 		articleRepository.save(articleEntity);
-		stockRepository.save(stockEntity);
-		stockArticleRepository.save(stockArticleEntity);
+		stockEntity = stockRepository.save(stockEntity);
+		stockArticleEntity = stockArticleRepository.save(stockArticleEntity);
 		//when
 		AllStockDto allStockDto = stockService.getAllStock();
 
 		//then
+		Assertions.assertThat(allStockDto).isNotNull();
+		Assertions.assertThat(allStockDto.getStock()).hasSize(1);
+		stockEntity = stockRepository.findById(stockEntity.getId()).orElseThrow();
+		StockDto expectedDto = stockMapper.toDto(stockEntity);
+		Assertions.assertThat(allStockDto.getStock().getFirst()).usingRecursiveComparison()
+				.isEqualTo(expectedDto);
+
 	}
 
 }

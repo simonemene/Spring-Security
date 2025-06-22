@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -46,7 +47,8 @@ public class StockService implements IStockService{
 		Iterable<StockEntity> allStock  = stockRepository.findAll();
 		AllStockDto allStockDto = AllStockDto.builder().stock(new ArrayList<>()).build();
         for (StockEntity stock : allStock) {
-            allStockDto.getStock().add(stockMapper.toDto(stock));
+			StockDto stockDto = stockMapper.toDto(stock);
+            allStockDto.getStock().add(stockDto);
         }
 		if(!allStockDto.getStock().isEmpty())
 		{
