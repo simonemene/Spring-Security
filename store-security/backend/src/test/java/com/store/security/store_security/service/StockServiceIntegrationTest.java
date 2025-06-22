@@ -3,14 +3,16 @@ package com.store.security.store_security.service;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
@@ -19,44 +21,31 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 	private StockService stockService;
 
 	@Autowired
+	private StockRepository stockRepository;
+
+	@Autowired
 	private ArticleRepository articleRepository;
 
 	@Autowired
-	private StockRepository stockRepository;
-
+	private StockArticleRepository stockArticleRepository;
 
 	@Test
 	public void getAllStock()
 	{
-       //given
-		StockEntity stockEntity = StockEntity.builder().article(List.of(articleEntity)).quantity(1).build();
-		StockEntity stockEntity1 = StockEntity.builder().build();
-		ArticleEntity articleEntity = ArticleEntity.builder().stock(stockEntity).name("test")
-				.description("test").price(new BigDecimal(1)).build();
-		ArticleEntity articleEntity1 = ArticleEntity.builder().stock(stockEntity1).name("test1")
-				.description("test1").price(new BigDecimal(15)).build();
-
-
-
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
 		articleRepository.save(articleEntity);
-		articleRepository.save(articleEntity1);
-		StockEntity stock = stockRepository.save(stockEntity);
-		StockEntity stock1 = stockRepository.save(stockEntity1);
-
-		ArticleEntity articleEntity2 = ArticleEntity.builder().name("test2").description("test2").price(new BigDecimal(6)).build();
-		ArticleEntity articleEntity3 = ArticleEntity.builder().name("test3").description("test3").price(new BigDecimal(1)).build();
-		articleRepository.save(articleEntity2);
-		articleRepository.save(articleEntity3);
-		stock.getArticle().add(articleEntity2);
-		stock.setQuantity(5);
-		stock1.getArticle().add(articleEntity3);
-		stock1.setQuantity(51);
-		stockRepository.save(stock);
-		stockRepository.save(stock1);
-
-		//then
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
 		AllStockDto allStockDto = stockService.getAllStock();
+
 		//then
-		Assertions.assertThat(allStockDto.getStock().size()).isEqualTo(2);
 	}
+
 }

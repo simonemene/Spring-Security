@@ -15,12 +15,11 @@ import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -45,7 +44,7 @@ public class StockService implements IStockService{
 	@Override
 	public AllStockDto getAllStock() {
 		Iterable<StockEntity> allStock  = stockRepository.findAll();
-		AllStockDto allStockDto = AllStockDto.builder().build();
+		AllStockDto allStockDto = AllStockDto.builder().stock(new ArrayList<>()).build();
         for (StockEntity stock : allStock) {
             allStockDto.getStock().add(stockMapper.toDto(stock));
         }

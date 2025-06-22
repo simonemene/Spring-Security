@@ -1,8 +1,8 @@
 DELETE FROM order_line;
-DELETE FROM ORDERS;
+DELETE FROM orders;
+DELETE FROM stock_article;
 DELETE FROM stock;
 DELETE FROM article;
-DELETE FROM TRACK;
+DELETE FROM track;
 DELETE FROM authorities;
-DELETE FROM USERS;
-
+DELETE FROM users;

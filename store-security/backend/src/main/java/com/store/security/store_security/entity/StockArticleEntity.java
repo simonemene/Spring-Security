@@ -1,13 +1,14 @@
 package com.store.security.store_security.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Table(name = "stock_article")
 @Entity
 public class StockArticleEntity {
     @Id
