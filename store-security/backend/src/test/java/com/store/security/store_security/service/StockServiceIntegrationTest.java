@@ -3,6 +3,7 @@ package com.store.security.store_security.service;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
+import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.StockArticleEntity;
@@ -177,4 +178,47 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 				.hasMessageContaining("[ARTICLE: car] Article exists");
 	}
 
+
+	//METHOD DECREMENT ARTICLE
+
+	@Test
+	public void decrementArticle()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		ArticleEntity article = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		StockArticleDto result = stockService.decrementArticle(article.getId(),1);
+		//then
+		Assertions.assertThat(result).isNotNull();
+		Assertions.assertThat(result.getQuantity()).isEqualTo(9);
+	}
+
+	@Test
+	public void decrementArticleFailed()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		ArticleEntity article = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->stockService.decrementArticle(article.getId(),11))
+				.isInstanceOf(StockException.class)
+				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",article.getId(),11));
+
+	}
 }
