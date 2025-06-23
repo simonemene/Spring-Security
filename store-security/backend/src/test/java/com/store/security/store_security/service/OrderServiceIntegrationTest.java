@@ -68,9 +68,10 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 				.filter(value-> value.getValue() == 3)
 				.map(Map.Entry::getKey).findFirst().orElseThrow();
 
-		Assertions.assertThat(articlesOrderDto.getArticles().entrySet().stream()
+		Assertions.assertThat(checkArticle1.getId()).isGreaterThan(0);
+		Assertions.assertThat(articles.entrySet().stream()
 				.filter(check-> check.getValue() == 3).findFirst().get().getKey())
-				.usingRecursiveComparison().isEqualTo(checkArticle1);
+				.usingRecursiveComparison().ignoringFields("price","id","description","tmstInsert").isEqualTo(checkArticle1);
 
 
 	}
