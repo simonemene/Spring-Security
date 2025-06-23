@@ -26,7 +26,5 @@ public class OrderLineEntity {
     @JoinColumn(name = "id_article")
     private ArticleEntity article;
 
-    private int price;
-
     private int quantity;
 }
