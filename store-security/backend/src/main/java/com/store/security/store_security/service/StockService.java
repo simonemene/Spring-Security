@@ -91,7 +91,7 @@ public class StockService implements IStockService{
 			throw new ArticleException(String.format("[ARTICLE: %s] Article not saved",article.getId()));
 		}
 		StockArticleEntity stockArticleEntity = stockArticleRepository.save(StockArticleEntity.builder()
-				.article(article).stock(stockOptional.get()).build());
+				.article(article).stock(stockOptional.get()).quantity(0).build());
 		if(stockArticleEntity.getId()<=0)
 		{
 			throw new StockException(String.format("[ARTICLE: %s] Stock not saved",article.getId()));
