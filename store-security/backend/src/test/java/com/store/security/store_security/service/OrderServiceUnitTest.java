@@ -2,10 +2,7 @@ package com.store.security.store_security.service;
 
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
-import com.store.security.store_security.entity.ArticleEntity;
-import com.store.security.store_security.entity.OrderEntity;
-import com.store.security.store_security.entity.OrderLineEntity;
-import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
@@ -124,6 +121,35 @@ public class OrderServiceUnitTest {
 		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
 				.isInstanceOf(OrderException.class)
 				.hasMessageContaining(String.format("[ORDER: %s ARTICLES: %s] ORDER LINE NOT SAVED","1","car"));
+	}
+
+	@Test
+	public void orderTrackFailed() throws OrderException {
+		//given
+		UserEntity user = UserEntity.builder().username("username").build();
+		Mockito.when(userRepository.findByUsername("username")).thenReturn(
+				Optional.ofNullable(user));
+
+		ArticleDto articleDto = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
+		Map<ArticleDto,Integer> articles = new HashMap<>();
+		articles.put(articleDto,2);
+		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
+		Mockito.when(articleRepository.findByName("car")).thenReturn(
+				ArticleEntity.builder().name("car").id(1L).build());
+
+		Mockito.when(orderRepository.save(Mockito.any()))
+				.thenReturn(OrderEntity.builder().id(1L).build());
+
+		OrderLineKeyEmbeddable idLine = OrderLineKeyEmbeddable.builder().idArticle(1L).idOrder(1L).build();
+		Mockito.when(orderLineRepository.save(Mockito.any())).thenReturn(OrderLineEntity.builder().id(idLine).build());
+
+		Mockito.when(trackRepository.save(Mockito.any())).thenReturn(TrackEntity.builder().id(0L).build());
+
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
+				.isInstanceOf(OrderException.class)
+				.hasMessageContaining(String.format("[ORDER: %s] TRACK NOT SAVED","1"));
 	}
 
 }
