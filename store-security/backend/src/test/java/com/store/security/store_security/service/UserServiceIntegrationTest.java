@@ -45,7 +45,7 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
 		for(String auth: user.getAuthoritiesList())
 		{
-			Assertions.assertThat(auth).isEqualTo(userEntity.getAuthoritiesList().getFirst());
+			Assertions.assertThat(auth).isEqualTo(userEntity.getAuthoritiesList().getFirst().getAuthority());
 
 		}
 		Assertions.assertThat(user.getAge()).isEqualTo(userEntity.getAge());

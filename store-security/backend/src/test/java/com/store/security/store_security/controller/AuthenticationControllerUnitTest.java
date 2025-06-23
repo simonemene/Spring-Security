@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -47,7 +48,8 @@ public class AuthenticationControllerUnitTest {
 		ResponseEntity<UserDto> responseEntity = authenticationController.registration(userDto);
 		//then
 		Mockito.verify(registrationService,Mockito.times(1)).registrationUser(Mockito.any());
-		Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
+		Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(
+				HttpStatus.CREATED.value());
 		Assertions.assertThat(responseEntity.getBody()).usingRecursiveComparison().ignoringFields("id").isEqualTo(userDto);
 		Assertions.assertThat(Objects.requireNonNull(responseEntity.getBody()).getId()).isGreaterThan(0);
 
