@@ -1,19 +1,17 @@
 package com.store.security.store_security.controller;
 
-import com.store.security.store_security.dto.ArticleDto;
-import com.store.security.store_security.dto.ListArticleDto;
+import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-/*
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/orders")
@@ -21,22 +19,12 @@ public class OrderController {
 
 	private final IOrderService orderService;
 
+	@PreAuthorize("#articlesOrderDto.username == authentication.name && (hasRole('ROLE_USER') || hasRole('ROLE_ADMIN'))")
 	@PostMapping
-	public ResponseEntity<String> addMultipleOrder(@RequestBody List<ArticleDto> articleDto)
+	public ResponseEntity<ArticlesOrderDto> createOrder(@RequestBody ArticlesOrderDto articlesOrderDto)
 			throws OrderException {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if(orderService.addOrder(articleDto,authentication.getName()))
-		{
-			return ResponseEntity.status(HttpStatus.OK).body("Add order");
-		}
-		throw new OrderException("Error, not add order");
+		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.orderArticles(articlesOrderDto));
 	}
 
-	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
-	@GetMapping("/order/{username}")
-	public ResponseEntity<ListArticleDto> getOrder(@PathVariable String username)
-			throws OrderException {
-		return ResponseEntity.status(HttpStatus.OK).body(ListArticleDto.builder().articles(orderService.getOrders(username)).build());
-	}
+
 }
-*/
