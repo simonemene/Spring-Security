@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ArticleDto {
 
-    private long id;
+    private Long id;
 
     private String name;
 

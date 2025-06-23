@@ -9,7 +9,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring",uses = {StockArticleMapper.class})
 public interface ArticleMapper {
 
-	@Mapping(target = "id", ignore = true)
 	ArticleEntity toEntity(ArticleDto articleDto);
 
 	ArticleDto toDto(ArticleEntity articleEntity);
