@@ -114,6 +114,39 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	}
 
 
+	@Test
+	public void addOrderFailedArticlesQuantity() throws OrderException {
+		//given
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
+		UserEntity user = UserEntity.builder().username("username").password("1234")
+				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(new ArrayList<>()).build();
+		userRepository.save(user);
+
+		Map<ArticleDto,Integer> articles = new HashMap<>();
+
+		ArticleDto article1 = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.now())
+				.description("test").price(new BigDecimal(10)).build();
+		ArticleDto article2 = ArticleDto.builder().name("table").tmstInsert(LocalDateTime.now())
+				.description("test1").price(new BigDecimal(15)).build();
+		articles.put(article1,null);
+		articles.put(article2,31);
+		articleRepository.save(articleMapper.toEntity(article1));
+		articleRepository.save(articleMapper.toEntity(article2));
+
+		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articles).username("username").build();
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
+				.isInstanceOf(OrderException.class)
+				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] INVALID","car",null));
+
+		Iterable<OrderEntity> order = orderRepository.findAll();
+		Assertions.assertThat(order).hasSize(0);
+		Iterable<OrderLineEntity> orderLine = orderLineRepository.findAll();
+		Assertions.assertThat(orderLine).hasSize(0);
+	}
+
+
 
 
 

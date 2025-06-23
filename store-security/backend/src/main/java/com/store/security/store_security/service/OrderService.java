@@ -48,9 +48,9 @@ public class OrderService implements IOrderService{
 		Map<ArticleDto, Integer> result = new HashMap<>();
 
 		for(Map.Entry<ArticleDto, Integer> article : articlesOrderDto.getArticles().entrySet()) {
-            if(null == article.getKey() || article.getValue() <= 0)
+            if(null == article.getValue() || null == article.getKey() || article.getValue() <= 0)
 			{
-				throw new OrderException(String.format("[ARTICLE: %s QUANTITY: %s] INVALID", article.getKey(), article.getValue()));
+				throw new OrderException(String.format("[ARTICLE: %s QUANTITY: %s] INVALID", article.getKey().getName(), article.getValue()));
 			}
 		}
 
