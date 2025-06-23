@@ -107,7 +107,7 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	}
 
 	@Test
-	public void addOrderFailedNoUser() throws OrderException {
+	public void addOrderFailedNoUser(){
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
 
@@ -137,7 +137,7 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 
 	@Test
-	public void addOrderFailedArticlesQuantity() throws OrderException {
+	public void addOrderFailedArticlesQuantity(){
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
 		UserEntity user = UserEntity.builder().username("username").password("1234")
