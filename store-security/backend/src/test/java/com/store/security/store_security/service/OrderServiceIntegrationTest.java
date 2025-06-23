@@ -7,6 +7,7 @@ import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
+import com.store.security.store_security.enums.StatusTrackEnum;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
@@ -81,6 +82,24 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(articles.entrySet().stream()
 				.filter(check-> check.getValue() == 3).findFirst().get().getKey())
 				.usingRecursiveComparison().ignoringFields("price","id","description","tmstInsert").isEqualTo(checkArticle1);
+
+		Iterable<OrderEntity> order = orderRepository.findAll();
+		Assertions.assertThat(order).hasSize(1);
+		OrderEntity orderEntity = order.iterator().next();
+		Assertions.assertThat(orderEntity.getUser()).isEqualTo("username");
+
+
+		Iterable<OrderLineEntity> orderLine = orderLineRepository.findAll();
+		Assertions.assertThat(orderLine).hasSize(2);
+		ArrayList<OrderLineEntity> orderLineEntity = Arrays.asList(orderLine.iterator().next());
+		orderLineEntity.add(orderLine.iterator().next());
+		Assertions.assertThat().isEqualTo("username");
+
+		Iterable<TrackEntity> trackLine = trackRepository.findAll();
+		Assertions.assertThat(trackLine).hasSize(1);
+		TrackEntity trackEntity = trackLine.iterator().next();
+		Assertions.assertThat(trackEntity.getStatus()).isEqualTo(
+				StatusTrackEnum.ORDER_PLACED);
 
 	}
 
