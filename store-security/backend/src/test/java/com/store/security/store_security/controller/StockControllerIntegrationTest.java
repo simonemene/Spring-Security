@@ -1,4 +1,7 @@
 package com.store.security.store_security.controller;
 
-public class StockControllerIntegrationTest {
+import com.store.security.store_security.StoreSecurityApplicationTests;
+
+public class StockControllerIntegrationTest extends StoreSecurityApplicationTests
+{
 }
