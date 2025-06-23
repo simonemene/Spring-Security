@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 
@@ -176,6 +177,8 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThatThrownBy(()->stockService.loadArticle(articleMapper.toDto(articleEntity)))
 				.isInstanceOf(ArticleException.class)
 				.hasMessageContaining("[ARTICLE: car] Article exists");
+		Iterable<ArticleEntity> article = articleRepository.findAll();
+		Assertions.assertThat(article).hasSize(1);
 	}
 
 
@@ -219,6 +222,10 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThatThrownBy(()->stockService.decrementArticle(article.getId(),11))
 				.isInstanceOf(StockException.class)
 				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",article.getId(),11));
-        //TODO:CHECK POST
+        Optional<StockArticleEntity> check = stockArticleRepository.findByArticle_Id(article.getId());
+		StockArticleEntity checkResult = check.stream().filter(articleCheck->
+				articleCheck.getArticle().getName().equals("car")).findFirst().get();
+		Assertions.assertThat(checkResult.getQuantity()).isEqualTo(10);
+
 	}
 }
