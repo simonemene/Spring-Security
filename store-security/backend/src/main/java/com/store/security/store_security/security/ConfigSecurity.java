@@ -31,7 +31,13 @@ public class ConfigSecurity {
                                         "/api/article/decrementArticle").hasRole("ADMIN")
                                 .requestMatchers("/api/user/getUserDetails/{username}").hasRole("USER")
                                 .requestMatchers("/api/orders").hasAnyRole("ROLE","ADMIN")
-                               .requestMatchers("/api/auth/registration", "/h2-console/**").permitAll());
+                               .requestMatchers("/api/auth/registration",
+                                       "/v3/api-docs",
+                                       "/h2-console/**",
+                                       "/v3/api-docs/**",
+                                       "/swagger-ui/**",
+                                       "/swagger-ui.html",
+                                       "/swagger-ui/index.html").permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
 
