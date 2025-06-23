@@ -4,7 +4,9 @@ import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.entity.OrderEntity;
+import com.store.security.store_security.entity.OrderLineEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.mapper.ArticleMapper;
@@ -74,7 +76,7 @@ public class OrderServiceUnitTest {
 	}
 
 	@Test
-	public void orderArticles() throws OrderException {
+	public void orderFailOrderSave() throws OrderException {
 		//given
 		UserEntity user = UserEntity.builder().username("username").build();
 		Mockito.when(userRepository.findByUsername("username")).thenReturn(
@@ -95,6 +97,33 @@ public class OrderServiceUnitTest {
 		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
 				.isInstanceOf(OrderException.class)
 				.hasMessageContaining(String.format("[USER: %s ARTICLES: %s] ORDER NOT SAVED","username","[car]"));
+	}
+
+	@Test
+	public void orderLineFailed() throws OrderException {
+		//given
+		UserEntity user = UserEntity.builder().username("username").build();
+		Mockito.when(userRepository.findByUsername("username")).thenReturn(
+				Optional.ofNullable(user));
+
+		ArticleDto articleDto = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
+		Map<ArticleDto,Integer> articles = new HashMap<>();
+		articles.put(articleDto,2);
+		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
+		Mockito.when(articleRepository.findByName("car")).thenReturn(
+				ArticleEntity.builder().name("car").id(1L).build());
+
+		Mockito.when(orderRepository.save(Mockito.any()))
+				.thenReturn(OrderEntity.builder().id(1L).build());
+
+		OrderLineKeyEmbeddable idLine = OrderLineKeyEmbeddable.builder().idArticle(0L).idOrder(1L).build();
+		Mockito.when(orderLineRepository.save(Mockito.any())).thenReturn(OrderLineEntity.builder().id(idLine).build());
+
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
+				.isInstanceOf(OrderException.class)
+				.hasMessageContaining(String.format("[ORDER: %s ARTICLES: %s] ORDER LINE NOT SAVED","1","car"));
 	}
 
 }
