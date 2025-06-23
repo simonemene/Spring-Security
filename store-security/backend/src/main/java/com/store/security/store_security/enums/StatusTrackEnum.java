@@ -1,5 +1,8 @@
 package com.store.security.store_security.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum StatusTrackEnum {
 
 	ORDER_PLACED("ORDER PLACED"),

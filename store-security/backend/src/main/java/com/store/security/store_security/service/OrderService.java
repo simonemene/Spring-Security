@@ -106,7 +106,7 @@ public class OrderService implements IOrderService{
 		}
 
 		TrackEntity trackEntity = TrackEntity.builder().order(order).status(
-				StatusTrackEnum.ORDER_PLACED.name()).build();
+				StatusTrackEnum.ORDER_PLACED.getTrack()).build();
 		trackEntity = trackRepository.save(trackEntity);
 		if(trackEntity.getId() <= 0)
 		{

@@ -86,20 +86,23 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Iterable<OrderEntity> order = orderRepository.findAll();
 		Assertions.assertThat(order).hasSize(1);
 		OrderEntity orderEntity = order.iterator().next();
-		Assertions.assertThat(orderEntity.getUser()).isEqualTo("username");
+		Assertions.assertThat(orderEntity.getUser().getUsername()).isEqualTo("username");
 
 
 		Iterable<OrderLineEntity> orderLine = orderLineRepository.findAll();
 		Assertions.assertThat(orderLine).hasSize(2);
-		ArrayList<OrderLineEntity> orderLineEntity = Arrays.asList(orderLine.iterator().next());
-		orderLineEntity.add(orderLine.iterator().next());
-		Assertions.assertThat().isEqualTo("username");
+		ArrayList<OrderLineEntity> orderLineEntity = new ArrayList<>();
+		Iterator<OrderLineEntity> iterator = orderLine.iterator();
+		orderLineEntity.add(iterator.next());
+		orderLineEntity.add(iterator.next());
+		Assertions.assertThat(orderLineEntity.stream().filter(el->el.getArticle().getName().equals("car")).findFirst().get().getQuantity()).isEqualTo(3);
+		Assertions.assertThat(orderLineEntity.stream().filter(el->el.getArticle().getName().equals("table")).findFirst().get().getQuantity()).isEqualTo(31);
 
 		Iterable<TrackEntity> trackLine = trackRepository.findAll();
 		Assertions.assertThat(trackLine).hasSize(1);
 		TrackEntity trackEntity = trackLine.iterator().next();
 		Assertions.assertThat(trackEntity.getStatus()).isEqualTo(
-				StatusTrackEnum.ORDER_PLACED);
+				StatusTrackEnum.ORDER_PLACED.getTrack());
 
 	}
 
