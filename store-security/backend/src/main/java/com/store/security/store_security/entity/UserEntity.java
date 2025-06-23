@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<AuthoritiesEntity> authoritiesList;
 
 }

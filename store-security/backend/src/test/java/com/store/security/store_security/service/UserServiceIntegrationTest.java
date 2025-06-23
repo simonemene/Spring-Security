@@ -36,6 +36,7 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
 		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
 		userRepository.save(userEntity);
+		authoritiesRepository.save(authoritiesEntity);
 
 		//when
 		UserDto user = userService.findUser(userEntity.getUsername());

@@ -3,6 +3,7 @@ package com.store.security.store_security.service;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,6 +26,9 @@ public class UserSecurityDetailsServiceIntegrationTest extends
 	@Autowired
 	private UserRepository userRepository;
 
+	@Autowired
+	private AuthoritiesRepository authoritiesRepository;
+
 
 	@Test
 	public void userFound()
@@ -37,7 +42,9 @@ public class UserSecurityDetailsServiceIntegrationTest extends
 		user.setTmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0));
 		user.setAuthoritiesList(List.of(authoritiesEntity));
 		authoritiesEntity.setUser(user);
+
 		UserEntity savedUser = userRepository.save(user);
+		authoritiesRepository.save(authoritiesEntity);
 		//when
 		UserDetails userDetails = userSecurityDetailsService.loadUserByUsername("username");
 		//then

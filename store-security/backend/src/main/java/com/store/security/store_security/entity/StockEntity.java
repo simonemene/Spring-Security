@@ -19,6 +19,6 @@ public class StockEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "stock", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stock")
     private List<StockArticleEntity> stockArticles;
 }
