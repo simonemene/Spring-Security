@@ -18,13 +18,9 @@ public class AuthenticationController {
     private final IRegistrationService registrationService;
 
     @PostMapping("/registration")
-    public ResponseEntity<String> registration(@RequestBody UserDto userDto) {
-        Map<String,Boolean> resultRegistration = registrationService.registrationUser(userDto);
-        if(resultRegistration.values().iterator().next())
-        {
-            return ResponseEntity.ok(resultRegistration.keySet().iterator().next());
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Registration failed");
+    public ResponseEntity<UserDto> registration(@RequestBody UserDto userDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registrationUser(userDto));
+
     }
 
 

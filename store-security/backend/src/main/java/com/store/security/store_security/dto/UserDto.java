@@ -13,6 +13,8 @@ import java.util.Set;
 @Builder
 public class UserDto {
 
+    private Long id;
+
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -20,8 +22,7 @@ public class UserDto {
 
     private int age;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private List<AuthoritiesEntity> authoritiesList;
+    private List<String> authoritiesList;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime tmstInsert;

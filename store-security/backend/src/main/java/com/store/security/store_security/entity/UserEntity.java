@@ -19,7 +19,7 @@ public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(unique = true)
     private String username;
@@ -31,7 +31,7 @@ public class UserEntity {
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<AuthoritiesEntity> authoritiesList;
 
 }

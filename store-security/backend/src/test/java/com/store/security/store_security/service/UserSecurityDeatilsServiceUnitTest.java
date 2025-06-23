@@ -44,7 +44,7 @@ public class UserSecurityDeatilsServiceUnitTest {
 		AuthoritiesEntity authoritiesEntity = new AuthoritiesEntity();
 		authoritiesEntity.setAuthority("ROLE_USER");
 		UserEntity user = new UserEntity();
-		user.setId(1);
+		user.setId(1L);
 		user.setUsername("username");
 		user.setPassword("fsdfgdgfgdf");
 		user.setAuthoritiesList(List.of(authoritiesEntity));
@@ -68,7 +68,7 @@ public class UserSecurityDeatilsServiceUnitTest {
 		AuthoritiesEntity authoritiesEntity = new AuthoritiesEntity();
 		authoritiesEntity.setAuthority("ROLE_USER");
 		UserEntity user = new UserEntity();
-		user.setId(1);
+		user.setId(1L);
 		user.setUsername("username");
 		user.setPassword("fsdfgdgfgdf");
 		user.setAuthoritiesList(List.of(authoritiesEntity));

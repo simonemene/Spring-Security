@@ -14,10 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,7 +30,7 @@ public class RegistrationService implements IRegistrationService {
     private final AuthoritiesRepository authoritiesRepository;
 
     @Override
-    public Map<String, Boolean> registrationUser(UserDto userDto) {
+    public UserDto registrationUser(UserDto userDto) {
 
         UserEntity userRegister = null;
 
@@ -47,9 +45,14 @@ public class RegistrationService implements IRegistrationService {
                 }
                 userDto.setTmstInsert(LocalDateTime.now());
                 Optional<AuthoritiesEntity> authorities = authoritiesRepository.findByAuthority(RoleConstants.USER.getRole());
-                userDto.setAuthoritiesList(authorities.map(Collections::singletonList).orElse(Collections.emptyList()));
+                userDto.setAuthoritiesList(authorities.stream().map(Object::toString).collect(
+                        Collectors.toList()));
+
                 UserEntity userEntity = userMapper.toEntity(userDto);
                 userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                if (userEntity.getAuthoritiesList() != null) {
+                    userEntity.getAuthoritiesList().forEach(auth -> auth.setUser(userEntity));
+                }
                 userRegister = userRepository.save(userEntity);
             }
             else
@@ -57,6 +60,6 @@ public class RegistrationService implements IRegistrationService {
                 throw new UserException("Registration failed");
             }
 
-        return null != userRegister && userRegister.getId() > 0 ? Map.of("Registration successful", true) : Map.of("Registration failed", false);
+        return userMapper.toDto(userRegister);
     }
 }

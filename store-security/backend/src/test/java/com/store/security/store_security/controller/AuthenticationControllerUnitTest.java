@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AuthenticationControllerUnitTest {
 
@@ -38,14 +39,17 @@ public class AuthenticationControllerUnitTest {
 		//given
 		UserDto userDto = UserDto.builder().password("1234").age(21).username("username").tmstInsert(
 				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
-		Map<String,Boolean> response = Map.of("Registration successful",true);
-		Mockito.when(registrationService.registrationUser(userDto)).thenReturn(response);
+				List.of("ROLE_USER")).build();
+		userDto.setId(1L);
+		Mockito.when(registrationService.registrationUser(userDto)).thenReturn(userDto);
 		//when
-		ResponseEntity<String> responseEntity = authenticationController.registration(userDto);
+
+		ResponseEntity<UserDto> responseEntity = authenticationController.registration(userDto);
 		//then
 		Mockito.verify(registrationService,Mockito.times(1)).registrationUser(Mockito.any());
 		Assertions.assertThat(responseEntity.getStatusCode().value()).isEqualTo(200);
-		Assertions.assertThat(responseEntity.getBody()).isEqualTo("Registration successful");
+		Assertions.assertThat(responseEntity.getBody()).usingRecursiveComparison().ignoringFields("id").isEqualTo(userDto);
+		Assertions.assertThat(Objects.requireNonNull(responseEntity.getBody()).getId()).isGreaterThan(0);
+
 	}
 }

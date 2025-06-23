@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface IRegistrationService {
 
-    public Map<String,Boolean> registrationUser(UserDto userDto);
+    public UserDto registrationUser(UserDto userDto);
 }

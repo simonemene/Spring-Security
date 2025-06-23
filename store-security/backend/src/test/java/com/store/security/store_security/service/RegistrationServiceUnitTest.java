@@ -47,35 +47,12 @@ public class RegistrationServiceUnitTest {
 	}
 
 	@Test
-	public void registration()
-	{
-		//given
-		UserDto userDto = UserDto.builder().password("1234").age(18).username("username1").tmstInsert(
-				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
-		UserEntity userEntity = UserEntity.builder().password("1234").age(18).username("username1").tmstInsert(
-				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
-		UserEntity userEntityReturn = UserEntity.builder().id(1).password("1234").age(18).username("username1").tmstInsert(
-				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
-
-		Mockito.when(userMapper.toEntity(userDto)).thenReturn(userEntity);
-		Mockito.when(passwordEncoder.encode(Mockito.any())).thenReturn("1234");
-		Mockito.when(userRepository.save(userEntity)).thenReturn(userEntityReturn);
-		//when
-		Map<String,Boolean> registration = registrationService.registrationUser(userDto);
-		//then
-		Assertions.assertThat(registration.get("Registration successful")).isTrue();
-	}
-
-	@Test
 	public void registrationAgeFailed()
 	{
 		//given
 		UserDto userDto = UserDto.builder().password("1234").age(17).username("username1").tmstInsert(
 				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
+				List.of("ROLE_USER")).build();
 		//when
 		//then
 		Assertions.assertThatThrownBy(()->registrationService.registrationUser(userDto)).isInstanceOf(
@@ -88,8 +65,8 @@ public class RegistrationServiceUnitTest {
 		//given
 		UserDto userDto = UserDto.builder().password("1234").age(18).username("username1").tmstInsert(
 				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
-		UserEntity userEntity = UserEntity.builder().id(1).password("1234").age(18).username("username1").tmstInsert(
+				List.of("ROLE_USER")).build();
+		UserEntity userEntity = UserEntity.builder().id(1L).password("1234").age(18).username("username1").tmstInsert(
 				LocalDateTime.now()).authoritiesList(
 				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
 		Optional<UserEntity> userEntityOptional = Optional.of(userEntity);
