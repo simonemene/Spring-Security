@@ -228,4 +228,87 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(checkResult.getQuantity()).isEqualTo(10);
 
 	}
+
+	//METHOD SAVE ARTICLE QUANTITY
+
+	@Test
+	public void saveArticleQuantity()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		ArticleEntity article = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		StockArticleDto result = stockService.saveArticleQuantity(article.getId(),1);
+		//then
+		Assertions.assertThat(result).isNotNull();
+		Assertions.assertThat(result.getQuantity()).isEqualTo(11);
+	}
+
+	@Test
+	public void saveArticleQuantityFailed()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(0).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		ArticleEntity article = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->stockService.saveArticleQuantity(article.getId(),0))
+				.isInstanceOf(StockException.class)
+				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",article.getId(),0));
+		Optional<StockArticleEntity> check = stockArticleRepository.findByArticle_Id(article.getId());
+		StockArticleEntity checkResult = check.stream().filter(articleCheck->
+				articleCheck.getArticle().getName().equals("car")).findFirst().get();
+		Assertions.assertThat(checkResult.getQuantity()).isEqualTo(0);
+
+	}
+
+	//METHOD DELETE ARTICLE
+
+	@Test
+	public void deleteArticle()
+	{
+		//given
+		StockEntity stockEntity = StockEntity.builder().build();
+		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
+				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleEntity).quantity(10).build();
+		stockEntity.setStockArticles(List.of(stockArticleEntity));
+		stockArticleEntity.setStock(stockEntity);
+		ArticleEntity article = articleRepository.save(articleEntity);
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		//when
+		boolean result = stockService.deleteArticle(article.getId());
+		//then
+		Assertions.assertThat(result).isTrue();
+		Optional<StockArticleEntity> check = stockArticleRepository.findByArticle_Id(article.getId());
+		Assertions.assertThat(check.isPresent()).isFalse();
+	}
+
+	@Test
+	public void deleteArticleFailed()
+	{
+		//given
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->stockService.deleteArticle(2L))
+				.isInstanceOf(ArticleException.class)
+				.hasMessageContaining(String.format("[ARTICLE %s] Article not found",2L));
+	}
+
+
 }

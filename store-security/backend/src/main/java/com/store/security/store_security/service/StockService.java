@@ -143,10 +143,8 @@ public class StockService implements IStockService{
 	public boolean deleteArticle(Long id) {
 		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
 				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
-		ArticleEntity articleEntity = stockArticleEntity.getArticle();
-		articleRepository.delete(articleEntity);
 		stockArticleRepository.delete(stockArticleEntity);
-		if(stockArticleRepository.findByArticle_Id(id).isPresent())
+		if(stockArticleRepository.findByArticle_Id(id).isEmpty())
 		{
 			return true;
 		}
