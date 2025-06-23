@@ -47,12 +47,15 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
-		String json = objectMapper.writeValueAsString(userDto);
 		//whe
 		//then
 		mockMvc.perform(get("/api/user/getUserDetails/{username}",username))
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().string(json));
+				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("prova@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.age").value(21))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.password").doesNotExist())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.tmstInsert").doesNotExist())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.authoritiesList").value("ROLE_USER"));
 	}
 
 	@Test
