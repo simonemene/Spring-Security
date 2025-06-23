@@ -45,8 +45,11 @@ public class RegistrationService implements IRegistrationService {
                 }
                 userDto.setTmstInsert(LocalDateTime.now());
                 Optional<AuthoritiesEntity> authorities = authoritiesRepository.findByAuthority(RoleConstants.USER.getRole());
-                userDto.setAuthoritiesList(authorities.stream().map(Object::toString).collect(
-                        Collectors.toList()));
+                if(authorities.isPresent()) {
+                    userDto.setAuthoritiesList(List.of(authorities.get().getAuthority()));
+                }else {
+                    throw new UserException("Authorization USER not found");
+                }
 
                 UserEntity userEntity = userMapper.toEntity(userDto);
                 userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));

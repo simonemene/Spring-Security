@@ -2,16 +2,21 @@ package com.store.security.store_security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.controladvice.GenericExceptionHandler;
+import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.mapper.UserMapper;
+import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @AutoConfigureMockMvc
+@Import(GenericExceptionHandler.class)
 public class AuthenticationControllerIntegrationTest extends
 		StoreSecurityApplicationTests {
 
@@ -27,28 +32,43 @@ public class AuthenticationControllerIntegrationTest extends
 	@Autowired
 	private UserMapper userMapper;
 
+	@Autowired
+	private AuthoritiesRepository authoritiesRepository;
+
 
 	@Test
 	public void registration() throws Exception {
 		//given
-		String json = "{\"username\": \"username\",\n" + "  \"password\": \"1234\",\n" + "  \"age\": 21,\n"
-				+ "  \"authoritiesList\": [\n" + "    {\n"
-				+ "      \"authority\": \"ROLE_USER\"\n" + "    }\n" + "  ],\n"
-				+ "  \"tmstInsert\": \"2025-06-18T00:00:00\"}";
+		authoritiesRepository.save(AuthoritiesEntity.builder().authority("ROLE_USER").build());
+		String json = "{"
+				+ "\"username\": \"username\","
+				+ "\"password\": \"1234\","
+				+ "\"age\": 21,"
+				+ "\"tmstInsert\": \"2025-06-18T00:00:00\""
+				+ "}";
+
+
 		//when
 		//then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration").contentType("application/json").content(json))
-				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().string("Registration successful"));
+				.andExpect(MockMvcResultMatchers.status().isCreated())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.password").doesNotExist())
+				.andExpect(MockMvcResultMatchers.jsonPath("$.age").value(21))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.authoritiesList").value("ROLE_USER"));
 	}
 
 	@Test
 	public void registrationAgeFailed() throws Exception {
 		//given
-		String json = "{\"username\": \"username\",\n" + "  \"password\": \"1234\",\n" + "  \"age\": 17,\n"
-				+ "  \"authoritiesList\": [\n" + "    {\n"
-				+ "      \"authority\": \"ROLE_USER\"\n" + "    }\n" + "  ],\n"
-				+ "  \"tmstInsert\": \"2025-06-18T00:00:00\"}";
+		String json = "{"
+				+ "\"username\": \"username\","
+				+ "\"password\": \"1234\","
+				+ "\"age\": 17,"
+				+ "\"authoritiesList\": [\"ROLE_USER\"],"
+				+ "\"tmstInsert\": \"2025-06-18T00:00:00\""
+				+ "}";
+
 		//when
 		//then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration").contentType("application/json").content(json))
@@ -59,10 +79,14 @@ public class AuthenticationControllerIntegrationTest extends
 	@Test
 	public void registrationFailed() throws Exception {
 		//given
-		String json = "{\"username\": \"\",\n" + "  \"password\": \"1234\",\n" + "  \"age\": 21,\n"
-				+ "  \"authoritiesList\": [\n" + "    {\n"
-				+ "      \"authority\": \"ROLE_USER\"\n" + "    }\n" + "  ],\n"
-				+ "  \"tmstInsert\": \"2025-06-18T00:00:00\"}";
+		String json = "{"
+				+ "\"username\": \"\","
+				+ "\"password\": \"1234\","
+				+ "\"age\": 21,"
+				+ "\"authoritiesList\": [\"ROLE_USER\"],"
+				+ "\"tmstInsert\": \"2025-06-18T00:00:00\""
+				+ "}";
+
 		//when
 		//then
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration").contentType("application/json").content(json))

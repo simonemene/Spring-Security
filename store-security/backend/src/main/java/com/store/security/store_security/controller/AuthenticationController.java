@@ -19,7 +19,8 @@ public class AuthenticationController {
 
     @PostMapping("/registration")
     public ResponseEntity<UserDto> registration(@RequestBody UserDto userDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(registrationService.registrationUser(userDto));
+        UserDto result = registrationService.registrationUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
 
     }
 
