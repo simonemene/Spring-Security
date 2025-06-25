@@ -120,6 +120,7 @@ public class StockService implements IStockService{
 		throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
 	}
 
+	//TODO:DA MODIFICARE PER IDEMPOTENZA (passaggio già quantità calcolato)
 	@Transactional
 	@Override
 	public StockArticleDto saveArticleQuantity(Long id, Integer quantity) {
