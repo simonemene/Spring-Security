@@ -39,5 +39,11 @@ public class GenericExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userException.getMessage());
 	}
 
+	@ExceptionHandler(Throwable.class)
+	public ResponseEntity<String> genericException(Throwable throwable)
+	{
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(throwable.getCause().getMessage());
+	}
+
 
 }
