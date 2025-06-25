@@ -100,6 +100,7 @@ public class StockService implements IStockService{
 
 	}
 
+	//TODO:DA MODIFICARE PER IDEMPOTENZA (passaggio già quantità calcolato)
 	@Transactional
 	@Override
 	public StockArticleDto decrementArticle(Long id,Integer quantity) {
