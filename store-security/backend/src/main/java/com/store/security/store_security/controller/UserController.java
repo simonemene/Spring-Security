@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,14 @@ public class UserController {
 	public ResponseEntity<UserDto> userDetails(@PathVariable("username") String username)
 	{
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findUser(username));
+	}
+
+	@GetMapping("/user-auth")
+	public ResponseEntity<UserDto> userAuth()
+	{
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		UserDto userDto = userService.findUser(username);
+		return ResponseEntity.status(HttpStatus.OK).body(userDto);
 	}
 
 }
