@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserDto } from '../model/UserDto'
+import { URL } from '../contants/app.constants';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,9 @@ export class AuthenticationService {
   constructor(private http:HttpClient) { }
 
 
-  authentication(): Observable<UserDto>
+  authentication(user:UserDto)
   {
-    return this.http.get<UserDto>(this.urlBase + "/user");
+    window.sessionStorage.setItem("user-details",JSON.stringify(user));
+    return this.http.get(this.urlBase + URL.AUTH,{observe:'response',withCredentials:true});
   }
 }
