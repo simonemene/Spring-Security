@@ -27,7 +27,12 @@ export class LoginComponent {
   }
 
   onSubmit()
-  {}
+  {
+    console.log(this.storeForm.value.password);
+    console.log(this.storeForm.value.email);
+    
+    
+  }
 
 
 }
