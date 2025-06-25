@@ -1,16 +1,15 @@
 package com.store.security.store_security.controladvice;
 
-import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.exceptions.UserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GenericExceptionHandler {
 
 	@ExceptionHandler(OrderException.class)
