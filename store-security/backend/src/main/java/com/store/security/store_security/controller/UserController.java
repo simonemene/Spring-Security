@@ -27,12 +27,6 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findUser(username));
 	}
 
-	@GetMapping("/user-auth")
-	public ResponseEntity<UserDto> userAuth()
-	{
-		String username = SecurityContextHolder.getContext().getAuthentication().getName();
-		UserDto userDto = userService.findUser(username);
-		return ResponseEntity.status(HttpStatus.OK).body(userDto);
-	}
+
 
 }

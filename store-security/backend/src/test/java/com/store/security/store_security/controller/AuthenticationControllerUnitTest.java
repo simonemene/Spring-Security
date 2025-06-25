@@ -3,9 +3,11 @@ package com.store.security.store_security.controller;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.service.IRegistrationService;
+import com.store.security.store_security.service.IUserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -23,6 +25,10 @@ public class AuthenticationControllerUnitTest {
 	@Mock
 	private IRegistrationService registrationService;
 
+    @Mock
+	private IUserService userService;
+
+	@InjectMocks
 	private AuthenticationController authenticationController;
 
 
@@ -30,7 +36,7 @@ public class AuthenticationControllerUnitTest {
 	public void init()
 	{
 		MockitoAnnotations.openMocks(this);
-		authenticationController = new AuthenticationController(registrationService);
+		authenticationController = new AuthenticationController(registrationService,userService);
 	}
 
 
