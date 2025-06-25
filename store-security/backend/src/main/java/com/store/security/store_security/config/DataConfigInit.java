@@ -32,8 +32,10 @@ public class DataConfigInit implements CommandLineRunner {
         authorities.setAuthority(RoleConstants.ADMIN.getRole());
         authorities.setUser(user);
 
+
         user.setAuthoritiesList(List.of(authorities));
 
         userRepository.save(user);
+        authoritiesRepository.save(authorities);
     }
 }
