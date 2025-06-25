@@ -49,7 +49,7 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		//whe
 		//then
-		mockMvc.perform(get("/api/user/getUserDetails/{username}",username))
+		mockMvc.perform(get("/api/user/{username}",username))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("prova@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.age").value(21))
@@ -73,11 +73,11 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String json = objectMapper.writeValueAsString(userDto);
 		//when
 		//then
-		mockMvc.perform(get("/api/user/getUserDetails/{username}",username))
+		mockMvc.perform(get("/api/user/{username}",username))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Access Denied"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/getUserDetails/anakin@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/anakin@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
 
@@ -96,11 +96,11 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String json = objectMapper.writeValueAsString(userDto);
 		//when
 		//then
-		mockMvc.perform(get("/api/user/getUserDetails/{username}",username))
+		mockMvc.perform(get("/api/user/{username}",username))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Access Denied"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/getUserDetails/prova@gmail.com"))
+				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/prova@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
 }

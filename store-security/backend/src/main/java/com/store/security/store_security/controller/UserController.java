@@ -20,9 +20,10 @@ public class UserController {
 
 
 	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
-	@GetMapping("/getUserDetails/{username}")
+	@GetMapping("/{username}")
 	public ResponseEntity<UserDto> userDetails(@PathVariable("username") String username)
 	{
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findUser(username));
 	}
+
 }

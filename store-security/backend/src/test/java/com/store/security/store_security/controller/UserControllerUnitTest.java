@@ -35,7 +35,7 @@ public class UserControllerUnitTest {
 		Mockito.when(userService.findUser(username)).thenThrow(new UserException("User admin not found"));
 		//when
 		//then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/user/getUserDetails/{username}",username))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{username}",username))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().string("User admin not found"));
 	}
