@@ -1,7 +1,9 @@
-<div class="h-screen">
-<app-header class="sticky top-0"></app-header>
-<div class="overflow-auto h-screen">
-<router-outlet></router-outlet>
-</div>
-<app-footer></app-footer>
+<div class="h-screen flex flex-col">
+  <app-header class="sticky top-0 z-10"></app-header>
+
+  <div class="flex-1 overflow-auto">
+    <router-outlet></router-outlet>
+  </div>
+
+  <app-footer></app-footer>
 </div>
