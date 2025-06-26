@@ -2,6 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../service/authentication.service';
 import { SessionStorageService } from '../../service/session-storage.service';
 import { UserDto } from '../../model/UserDto';
+import { HttpClientModule } from '@angular/common/http';
+import { StockService } from '../../service/stock.service';
+import { StockDto } from '../../model/StockDto';
 
 @Component({
   selector: 'app-welcome',
@@ -24,8 +27,6 @@ export class WelcomeComponent implements OnInit{
     if(this.sessionStorageAuth.isAuthenticated())
     {
       this.username = this.sessionStorageAuth.getUser()!;
-      console.log(this.username);
-      
     }
   }
 
