@@ -2,15 +2,20 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './component/home/home.component';
 import { WelcomeComponent } from './component/welcome/welcome.component';
 import { LoginComponent } from './component/login/login.component';
+import { LogoutComponent } from './component/logout/logout.component';
+import { authenticationGuard } from './guard/authentication.guard';
 
 export const routes: Routes = [
     {
         path:'', component:HomeComponent, pathMatch:'full'
     },
     {
-        path:'welcome',component:WelcomeComponent
+        path:'welcome',component:WelcomeComponent,canActivate:[authenticationGuard]
     },
     {
         path:'login', component:LoginComponent
+    },
+    {
+        path:'logout', component:LogoutComponent,canActivate:[authenticationGuard]
     }
 ];

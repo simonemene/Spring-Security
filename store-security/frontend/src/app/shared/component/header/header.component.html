@@ -4,11 +4,22 @@
             <img class="h-10 w-auto object-cover" src="assets/shop.svg" alt="image">
      </a>       
     </div>
+    @if(!authenticated())
+    {
     <div class="col-start-6 text-gray-950 font-sans self-center font-bold cursor-pointer">
      <a routerLink="/login">
          Login
          </a>
     </div>
+    }
+    @else
+    {
+     <div class="col-start-6 text-gray-950 font-sans self-center font-bold cursor-pointer">
+     <a routerLink="/logout">
+         Logout
+         </a>
+    </div>
+    }
     <div class="col-start-7 text-gray-950 font-sans self-center font-bold cursor-pointer">
          About
     </div>

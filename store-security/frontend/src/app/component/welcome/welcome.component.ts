@@ -1,5 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../service/authentication.service';
+import { SessionStorageService } from '../../service/session-storage.service';
+import { UserDto } from '../../model/UserDto';
 
 @Component({
   selector: 'app-welcome',
@@ -10,8 +12,8 @@ import { AuthenticationService } from '../../service/authentication.service';
 })
 export class WelcomeComponent implements OnInit{
 
-  prova:string = "";
-  authService = inject(AuthenticationService);
+  username:UserDto = new UserDto();
+  sessionStorageAuth = inject(SessionStorageService);
 
   constructor()
   {
@@ -19,7 +21,10 @@ export class WelcomeComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.prova = JSON.parse(window.sessionStorage.getItem('user-details')!);
+    if(this.sessionStorageAuth.isAuthenticated())
+    {
+      this.username = this.sessionStorageAuth.getUser()!;
+    }
   }
 
 }

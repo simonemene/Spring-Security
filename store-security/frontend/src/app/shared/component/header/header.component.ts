@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { SessionStorageService } from '../../../service/session-storage.service';
 
 @Component({
   selector: 'app-header',
@@ -9,5 +10,9 @@ import { RouterModule } from '@angular/router';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+
+  sessionStorageAuth = inject(SessionStorageService);
+
+  authenticated = this.sessionStorageAuth.isAuthenticated;
 
 }

@@ -4,6 +4,5 @@ export class UserDto
     username!:string;
     age!:number;
     authoritiesList!:string[];
-    auth!:string;
     password!:string;
 }

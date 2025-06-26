@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthenticationService } from '../../service/authentication.service';
 import { UserDto } from '../../model/UserDto';
 import { FormControl, FormGroup, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Route, Router, RouterModule } from '@angular/router';
+import { SessionStorageService } from '../../service/session-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ export class LoginComponent {
 
   user!:UserDto;
   storeForm!:FormGroup;
+  sessionStorageAuth = inject(SessionStorageService);
 
   constructor(private auth:AuthenticationService,private router:Router)
   {
@@ -36,8 +38,7 @@ export class LoginComponent {
       responseData=>
       {
         this.user = <any> responseData.body;
-        this.user.auth='AUTH';
-        window.sessionStorage.setItem('user-details',JSON.stringify(this.user));
+        this.sessionStorageAuth.login(this.user);
         this.router.navigate(['/welcome']);
       }
     )
