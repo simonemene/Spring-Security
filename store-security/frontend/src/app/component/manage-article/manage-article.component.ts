@@ -22,7 +22,15 @@ export class ManageArticleComponent implements OnInit{
   
 
   ngOnInit(): void {
-    
+    this.stockService.allArticleInStock().subscribe(
+      {
+        next:(stock:StockDto[])=>
+        {
+          this.allStock = stock;
+        },
+        error:(err)=>console.error(err)
+      }
+    )
   }
 
 
