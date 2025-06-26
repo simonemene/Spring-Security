@@ -4,19 +4,25 @@ import { WelcomeComponent } from './component/welcome/welcome.component';
 import { LoginComponent } from './component/login/login.component';
 import { LogoutComponent } from './component/logout/logout.component';
 import { authenticationGuard } from './guard/authentication.guard';
+import { roleGuard } from './guard/role.guard';
+import { ROLE } from './constant/role.constants';
 
 export const routes: Routes = [
     {
         path:'', component:HomeComponent, pathMatch:'full'
     },
     {
-        path:'welcome',component:WelcomeComponent,canActivate:[authenticationGuard]
+        path:'welcome',component:WelcomeComponent,
+        canActivate:[authenticationGuard,roleGuard],
+        data:{roles:[ROLE.USER,ROLE.ADMIN]}
     },
     {
         path:'login', component:LoginComponent
     },
     {
-        path:'logout', component:LogoutComponent,canActivate:[authenticationGuard]
+        path:'logout', component:LogoutComponent,
+        canActivate:[authenticationGuard,roleGuard],
+        data:{roles:[ROLE.USER,ROLE.ADMIN]}
     },
     {
         path:'**', component:HomeComponent

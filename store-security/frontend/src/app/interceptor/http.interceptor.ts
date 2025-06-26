@@ -14,16 +14,11 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   if(window.sessionStorage.getItem('user-details'))
   {
-   console.log("credenziali esistenti");
-   
      user = JSON.parse(window.sessionStorage.getItem('user-details')!);
   }
-  console.log(user);
   
   if(user.username && user.password)
   {
-   console.log("dentro auth");
-   
      httpHeaders = httpHeaders.append('Authorization','Basic ' + window.btoa(user.username + ":" + user.password));
   }
 

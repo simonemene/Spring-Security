@@ -31,9 +31,7 @@ export class SessionStorageService {
    }
 
    login(user:UserDto)
-   {
-    console.log(JSON.stringify(this.user));
-    
+   {    
       window.sessionStorage.setItem('user-details',JSON.stringify(user));
       this.user.set(user);
    }

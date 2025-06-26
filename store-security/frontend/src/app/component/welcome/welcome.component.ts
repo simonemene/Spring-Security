@@ -24,6 +24,8 @@ export class WelcomeComponent implements OnInit{
     if(this.sessionStorageAuth.isAuthenticated())
     {
       this.username = this.sessionStorageAuth.getUser()!;
+      console.log(this.username);
+      
     }
   }
 
