@@ -15,14 +15,7 @@ export class WelcomeComponent {
 
   constructor()
   {
-      this.authService.authentication().subscribe(
-        {
-          next:(prova:string)=>this.prova = prova
-        ,
-        error:err=>console.error(err)
-        }
-        
-      );
+      
   }
 
 }

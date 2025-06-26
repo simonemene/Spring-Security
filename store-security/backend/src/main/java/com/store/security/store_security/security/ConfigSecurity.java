@@ -10,6 +10,7 @@ import org.springframework.security.authentication.password.CompromisedPasswordC
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -33,6 +34,7 @@ public class ConfigSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
+        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/article/addArticle",
                                         "/api/article/addArticle/**",
@@ -40,14 +42,15 @@ public class ConfigSecurity {
                                         "/api/article/decrementArticle").hasRole("ADMIN")
                                 .requestMatchers("/api/user/{username}").hasRole("USER")
                                 .requestMatchers("/api/orders").hasAnyRole("ROLE","ADMIN")
+                                .requestMatchers("/api/auth/user").authenticated()
                                .requestMatchers("/api/auth/registration",
                                        "/v3/api-docs",
                                        "/h2-console/**",
                                        "/v3/api-docs/**",
                                        "/swagger-ui/**",
                                        "/swagger-ui.html",
-                                       "/swagger-ui/index.html",
-                                       "/prova").permitAll());
+                                       "/swagger-ui/index.html"
+                                       ).permitAll());
 
         http.headers(AbstractHttpConfigurer::disable); //H2
         http.cors(cors->cors.configurationSource(
@@ -69,7 +72,7 @@ public class ConfigSecurity {
         //autenticazione
 
 
-        http.formLogin(Customizer.withDefaults());
+        http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();

@@ -1,8 +1,13 @@
-import { HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders, HttpInterceptorFn } from '@angular/common/http';
 import { UserDto } from '../model/UserDto';
+import { tap } from 'rxjs';
+import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
+
+   const router=inject(Router);
 
   let user = new UserDto();
   let httpHeaders = new HttpHeaders();
@@ -16,8 +21,24 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
   {
      httpHeaders = httpHeaders.append('Authorization','Basic ' + window.btoa(user.username + ":" + user.password));
   }
-   
 
+  const handleHeader = req.clone(
+   {
+      headers:httpHeaders
+   }
+  )
 
-  return next(req);
+   return next(handleHeader).pipe(tap(
+      (err:any)=>
+      {
+         if(err instanceof HttpErrorResponse)
+         {
+            if(err.status !== 401)
+            {
+               return;
+            }
+            router.navigate(['']);
+         }
+      }
+   ));
 };
