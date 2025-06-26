@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 
 
 export const httpInterceptor: HttpInterceptorFn = (req, next) => {
-
+   
    const router=inject(Router);
 
   let user = new UserDto();
@@ -14,11 +14,16 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   if(window.sessionStorage.getItem('user-details'))
   {
+   console.log("credenziali esistenti");
+   
      user = JSON.parse(window.sessionStorage.getItem('user-details')!);
   }
-
-  if(user.username!= '' && user.password != '')
+  console.log(user);
+  
+  if(user.username && user.password)
   {
+   console.log("dentro auth");
+   
      httpHeaders = httpHeaders.append('Authorization','Basic ' + window.btoa(user.username + ":" + user.password));
   }
 
@@ -28,16 +33,13 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
    }
   )
 
+
    return next(handleHeader).pipe(tap(
       (err:any)=>
       {
-         if(err instanceof HttpErrorResponse)
+         if(err instanceof HttpErrorResponse && err.status !== 401)
          {
-            if(err.status !== 401)
-            {
-               return;
-            }
-            router.navigate(['']);
+            router.navigate(['/error']);
          }
       }
    ));

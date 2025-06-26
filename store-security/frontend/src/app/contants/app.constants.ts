@@ -1,4 +1,4 @@
 export const URL=
 {
-    AUTH : "/user"
+    AUTH : "/api/auth/user"
 }

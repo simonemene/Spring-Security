@@ -24,7 +24,7 @@ public class DataConfigInit implements CommandLineRunner {
     public void run(String... args) throws Exception {
         UserEntity user = new UserEntity();
         user.setUsername("admin@gmail.com");
-        user.setPassword("{bcrypt}$2a$12$iJm0Yh1KkHVdZne/Qhd.yuUl/zJYuDie340oLwPNCPcndbh1LfQ6C");
+        user.setPassword("{bcrypt}$2a$12$jl2ifkyae8I/Tkg9OvnaK.rc.qkjX.N9CXrRkrOJmcW8BG5LAWJwq");
         user.setAge(20);
         user.setTmstInsert(LocalDateTime.now());
 

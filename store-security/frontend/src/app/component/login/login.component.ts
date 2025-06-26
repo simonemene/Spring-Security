@@ -29,8 +29,6 @@ export class LoginComponent {
 
   onSubmit()
   {
-    console.log(this.storeForm.value.password);
-    console.log(this.storeForm.value.email);
     this.user.username=this.storeForm.value.email;
     this.user.password=this.storeForm.value.password;
 
@@ -39,7 +37,7 @@ export class LoginComponent {
       {
         this.user = <any> responseData.body;
         this.user.auth='AUTH';
-        window.sessionStorage.setItem('user-detail',JSON.stringify(this.user));
+        window.sessionStorage.setItem('user-details',JSON.stringify(this.user));
         this.router.navigate(['/welcome']);
       }
     )

@@ -41,9 +41,9 @@ public class ConfigSecurity {
                                         "/api/article/deleteArticle/{id}",
                                         "/api/article/decrementArticle").hasRole("ADMIN")
                                 .requestMatchers("/api/user/{username}").hasRole("USER")
-                                .requestMatchers("/api/orders").hasAnyRole("ROLE","ADMIN")
+                                .requestMatchers("/api/orders").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()
-                               .requestMatchers("/api/auth/registration",
+                                .requestMatchers("/api/auth/registration",
                                        "/v3/api-docs",
                                        "/h2-console/**",
                                        "/v3/api-docs/**",
