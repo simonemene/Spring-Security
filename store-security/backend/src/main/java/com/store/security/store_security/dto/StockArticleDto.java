@@ -11,9 +11,9 @@ public class StockArticleDto {
 
     private Long id;
 
-    private StockDto stock;
+    private Long stockId;
 
     private ArticleDto article;
 
-    private int quantity;
+    private Integer quantity;
 }
