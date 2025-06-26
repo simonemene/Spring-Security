@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserDto } from '../model/UserDto'
-import { URL } from '../contants/app.constants';
+import { URL } from '../constant/url.constants';
 import { SessionStorageService } from './session-storage.service';
 
 @Injectable({
