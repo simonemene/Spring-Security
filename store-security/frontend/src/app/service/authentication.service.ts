@@ -18,8 +18,6 @@ export class AuthenticationService {
 
   authentication(user:UserDto)
   {
-    console.log(user);
-    
     this.sessioneStorageAuth.login(user);
     return this.http.get(this.urlBase + URL.AUTH,{observe:'response',withCredentials:true});
   }

@@ -1,5 +1,7 @@
 package com.store.security.store_security.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +20,7 @@ public class ArticleDto {
 
     private BigDecimal price;
 
+    @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     private LocalDateTime tmstInsert;
 
 }
