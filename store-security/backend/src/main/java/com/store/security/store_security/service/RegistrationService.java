@@ -9,6 +9,7 @@ import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class RegistrationService implements IRegistrationService {
@@ -31,6 +33,7 @@ public class RegistrationService implements IRegistrationService {
 
     @Override
     public UserDto registrationUser(UserDto userDto) {
+        log.info("registration {}", userDto.getUsername());
 
         UserEntity userRegister = null;
 
