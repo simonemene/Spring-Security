@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { UserDto } from '../model/UserDto'
 import { URL } from '../contants/app.constants';
+import { SessionStorageService } from './session-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,14 @@ export class AuthenticationService {
 
   urlBase = environment.apiBaseUrl;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient,private sessioneStorageAuth:SessionStorageService) { }
 
 
   authentication(user:UserDto)
   {
-    window.sessionStorage.setItem("user-details",JSON.stringify(user));
+    console.log(user);
+    
+    this.sessioneStorageAuth.login(user);
     return this.http.get(this.urlBase + URL.AUTH,{observe:'response',withCredentials:true});
   }
 }
