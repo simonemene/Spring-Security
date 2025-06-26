@@ -16,6 +16,7 @@ export class LoginComponent {
 
   user!:UserDto;
   storeForm!:FormGroup;
+  errorAuthentication:boolean=false;
   sessionStorageAuth = inject(SessionStorageService);
 
   constructor(private auth:AuthenticationService,private router:Router)
@@ -35,11 +36,22 @@ export class LoginComponent {
     this.user.password=this.storeForm.value.password;
 
     this.auth.authentication(this.user).subscribe(
-      responseData=>
       {
-        this.user = <any> responseData.body;
-        this.sessionStorageAuth.login(this.user);
-        this.router.navigate(['/welcome']);
+        next:(responseData)=>
+        {
+          this.errorAuthentication=false;
+          this.user = <any> responseData.body;
+          this.sessionStorageAuth.login(this.user);
+          this.router.navigate(['/welcome']);
+        },
+        error:(err)=>
+        {
+          if(err.status === 401)
+          {
+            console.log("Authentication error");
+            this.errorAuthentication=true;
+          }
+        }
       }
     )
   }

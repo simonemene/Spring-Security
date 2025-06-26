@@ -17,5 +17,8 @@ export const routes: Routes = [
     },
     {
         path:'logout', component:LogoutComponent,canActivate:[authenticationGuard]
+    },
+    {
+        path:'**', component:HomeComponent
     }
 ];
