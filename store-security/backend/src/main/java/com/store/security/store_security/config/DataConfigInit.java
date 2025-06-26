@@ -1,9 +1,12 @@
 package com.store.security.store_security.config;
 
 import com.store.security.store_security.constants.RoleConstants;
+import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
+import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.repository.AuthoritiesRepository;
+import com.store.security.store_security.repository.StockRepository;
 import com.store.security.store_security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -19,6 +22,7 @@ public class DataConfigInit implements CommandLineRunner {
 
     private final AuthoritiesRepository authoritiesRepository;
     private final UserRepository userRepository;
+    private final StockRepository stockRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -35,6 +39,9 @@ public class DataConfigInit implements CommandLineRunner {
 
         user.setAuthoritiesList(List.of(authorities));
 
+        StockEntity stock = StockEntity.builder().build();
+
+        stockRepository.save(stock);
         userRepository.save(user);
         authoritiesRepository.save(authorities);
     }
