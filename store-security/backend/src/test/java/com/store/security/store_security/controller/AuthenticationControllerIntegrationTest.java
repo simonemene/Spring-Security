@@ -39,7 +39,6 @@ public class AuthenticationControllerIntegrationTest extends
 	@Test
 	public void registration() throws Exception {
 		//given
-		authoritiesRepository.save(AuthoritiesEntity.builder().authority("ROLE_USER").build());
 		String json = "{"
 				+ "\"username\": \"username\","
 				+ "\"password\": \"1234\","
