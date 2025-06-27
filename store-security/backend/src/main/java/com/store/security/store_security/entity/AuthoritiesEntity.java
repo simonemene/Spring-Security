@@ -3,6 +3,8 @@ package com.store.security.store_security.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -18,8 +20,7 @@ public class AuthoritiesEntity {
 
     private String authority;
 
-    @ManyToOne
-    @JoinColumn(name = "id_user")
-    private UserEntity user;
+    @ManyToMany(mappedBy = "authoritiesList")
+    private Set<UserEntity> users;
 
 }

@@ -34,10 +34,9 @@ public class DataConfigInit implements CommandLineRunner {
 
         AuthoritiesEntity authorities = new AuthoritiesEntity();
         authorities.setAuthority(RoleConstants.ADMIN.getRole());
-        authorities.setUser(user);
 
 
-        user.setAuthoritiesList(List.of(authorities));
+        user.setAuthoritiesList(Set.of(authorities));
 
         StockEntity stock = StockEntity.builder().build();
 
