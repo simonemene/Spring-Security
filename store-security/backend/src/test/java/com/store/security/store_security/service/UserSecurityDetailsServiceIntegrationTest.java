@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class UserSecurityDetailsServiceIntegrationTest extends
 		StoreSecurityApplicationTests {
@@ -40,7 +41,7 @@ public class UserSecurityDetailsServiceIntegrationTest extends
 		user.setUsername("username");
 		user.setPassword("password");
 		user.setTmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0));
-		user.setAuthoritiesList(List.of(authoritiesEntity));
+		user.setAuthoritiesList(Set.of(authoritiesEntity));
 		authoritiesEntity.setUser(user);
 
 		UserEntity savedUser = userRepository.save(user);

@@ -47,7 +47,7 @@ public class UserSecurityDeatilsServiceUnitTest {
 		user.setId(1L);
 		user.setUsername("username");
 		user.setPassword("fsdfgdgfgdf");
-		user.setAuthoritiesList(List.of(authoritiesEntity));
+		user.setAuthoritiesList(Set.of(authoritiesEntity));
 		Mockito.when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
 		//when
 		UserDetails result = service.loadUserByUsername(username);
@@ -71,7 +71,7 @@ public class UserSecurityDeatilsServiceUnitTest {
 		user.setId(1L);
 		user.setUsername("username");
 		user.setPassword("fsdfgdgfgdf");
-		user.setAuthoritiesList(List.of(authoritiesEntity));
+		user.setAuthoritiesList(Set.of(authoritiesEntity));
 		Mockito.when(userRepository.findByUsername(username)).thenThrow(new UsernameNotFoundException("User not found"));
 		//when
 		//then

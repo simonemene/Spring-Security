@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 
@@ -39,11 +40,11 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		UserEntity userEntity1 = UserEntity.builder().username("username1").age(22).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		userEntity1.setAuthoritiesList(List.of(authoritiesEntity));
+		userEntity1.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity1);
 		userRepository.save(userEntity);
 		authoritiesRepository.save(authoritiesEntity);
@@ -64,8 +65,8 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		authoritiesRepository.save(authoritiesEntity);
 
@@ -91,8 +92,8 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		//when
 		//then
 		Assertions.assertThatThrownBy(()->userService.findUser(userEntity.getUsername()))

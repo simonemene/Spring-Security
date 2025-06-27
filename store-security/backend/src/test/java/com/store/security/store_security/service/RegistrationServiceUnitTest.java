@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 public class RegistrationServiceUnitTest {
 
@@ -68,7 +69,7 @@ public class RegistrationServiceUnitTest {
 				List.of("ROLE_USER")).build();
 		UserEntity userEntity = UserEntity.builder().id(1L).password("1234").age(18).username("username1").tmstInsert(
 				LocalDateTime.now()).authoritiesList(
-				List.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
+				Set.of(AuthoritiesEntity.builder().authority("ROLE_USER").build())).build();
 		Optional<UserEntity> userEntityOptional = Optional.of(userEntity);
 
 		Mockito.when(userRepository.findByUsername("username1")).thenReturn(userEntityOptional);

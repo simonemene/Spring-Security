@@ -52,7 +52,7 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
 		UserEntity user = UserEntity.builder().username("username").password("1234")
-				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(new ArrayList<>()).build();
+				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(Set.of()).build();
 		userRepository.save(user);
 
 		Map<ArticleDto,Integer> articles = new HashMap<>();
@@ -141,7 +141,7 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
 		UserEntity user = UserEntity.builder().username("username").password("1234")
-				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(new ArrayList<>()).build();
+				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(Set.of()).build();
 		userRepository.save(user);
 
 		Map<ArticleDto,Integer> articles = new HashMap<>();

@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -52,8 +53,8 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String username = "prova@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		//whe
@@ -75,8 +76,8 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String username = "anakin@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		//when
 		//then
@@ -96,8 +97,8 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String username = "prova@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		String json = objectMapper.writeValueAsString(userDto);
@@ -117,8 +118,8 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		//given
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
-		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
+		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		//whe
 		//then
