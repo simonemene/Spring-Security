@@ -41,7 +41,7 @@ public class ConfigSecurity {
 
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
         http.csrf(csrf->csrf.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                .ignoringRequestMatchers("/api/auth/registration")
+                .ignoringRequestMatchers("/api/auth/registration","/h2-console/**")
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
         http.authorizeHttpRequests(auth ->
