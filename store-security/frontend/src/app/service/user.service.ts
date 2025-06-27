@@ -16,6 +16,6 @@ export class UserService {
 
   allUser():Observable<AllUserDto>
   {
-    return this.http.get<AllUserDto>(this.baseUrl + URL.ALLUSER);
+    return this.http.get<AllUserDto>(this.baseUrl + URL.ALLUSER,{withCredentials:true});
   }
 }
