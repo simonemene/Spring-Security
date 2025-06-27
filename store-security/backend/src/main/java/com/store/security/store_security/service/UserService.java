@@ -1,5 +1,6 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.exceptions.UserException;
@@ -9,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -29,4 +32,22 @@ public class UserService implements IUserService{
 		}
 		throw new UserException(String.format("User %s not found", username));
 	}
+
+	@Transactional(readOnly = true)
+	@Override
+	public AllUserDto allUser() {
+		List<UserEntity> users = userRepository.findAll();
+		AllUserDto allUser = AllUserDto.builder().build();
+		if (!users.isEmpty()) {
+			for(UserEntity user : users)
+			{
+				allUser.addUser(userMapper.toDto(user));
+			}
+		}else
+		{
+			throw new UserException("No user found");
+		}
+		return allUser;
+	}
+
 }

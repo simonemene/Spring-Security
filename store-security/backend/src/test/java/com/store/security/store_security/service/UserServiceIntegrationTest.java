@@ -1,16 +1,19 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.exceptions.UserException;
+import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,6 +28,34 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
 	private AuthoritiesRepository authoritiesRepository;
+
+	@Autowired
+	private UserMapper userMapper;
+
+	@Transactional
+	@Test
+	public void allUser()
+	{
+		//given
+		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
+				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
+		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		UserEntity userEntity1 = UserEntity.builder().username("username1").age(22).password("1234").tmstInsert(
+				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
+		userEntity1.setAuthoritiesList(List.of(authoritiesEntity));
+		userRepository.save(userEntity1);
+		userRepository.save(userEntity);
+		authoritiesRepository.save(authoritiesEntity);
+		//when
+		AllUserDto user = userService.allUser();
+		//then
+		//admin is always present for class DataConfigInit
+		Assertions.assertThat(user.getUsers().size()).isEqualTo(3);
+		UserDto username = user.getUsers().stream().filter(u->u.getUsername().equals("username")).findAny()
+				.get();
+		Assertions.assertThat(username).usingRecursiveComparison().isEqualTo(userMapper.toDto(userEntity));
+	}
 
 
 	@Test

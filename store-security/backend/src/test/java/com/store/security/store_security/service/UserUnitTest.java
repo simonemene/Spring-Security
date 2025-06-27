@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserUnitTest {
@@ -61,6 +62,18 @@ public class UserUnitTest {
 		Assertions.assertThatThrownBy(()->userService.findUser("username"))
 				.isInstanceOf(UserException.class)
 				.hasMessageContaining("User username not found");
+	}
+
+	@Test
+	public void allUserNotFound()
+	{
+		//given
+		Mockito.when(userRepository.findAll()).thenReturn(new ArrayList<>());
+		//when
+		//then
+		Assertions.assertThatThrownBy(()->userService.allUser())
+				.isInstanceOf(UserException.class)
+				.hasMessageContaining("No user found");
 	}
 
 }
