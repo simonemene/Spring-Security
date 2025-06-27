@@ -1,6 +1,7 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
@@ -51,7 +52,8 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	public void addOrder() throws OrderException {
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
-		UserEntity user = UserEntity.builder().username("username").password("1234")
+		UserEntity user = UserEntity.builder().authoritiesList(Set.of(AuthoritiesEntity.builder()
+				.authority(RoleConstants.USER.getRole()).build())).username("username").password("1234")
 				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(Set.of()).build();
 		userRepository.save(user);
 

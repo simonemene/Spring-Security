@@ -67,8 +67,8 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
 		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
 		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
-		userRepository.save(userEntity);
 		authoritiesRepository.save(authoritiesEntity);
+		userRepository.save(userEntity);
 
 		//when
 		UserDto user = userService.findUser(userEntity.getUsername());
@@ -77,7 +77,8 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
 		for(String auth: user.getAuthoritiesList())
 		{
-			Assertions.assertThat(auth).isEqualTo(userEntity.getAuthoritiesList().getFirst().getAuthority());
+			AuthoritiesEntity firstAuthority = userEntity.getAuthoritiesList().iterator().next();
+			Assertions.assertThat(auth).isEqualTo(firstAuthority.getAuthority());
 
 		}
 		Assertions.assertThat(user.getAge()).isEqualTo(userEntity.getAge());

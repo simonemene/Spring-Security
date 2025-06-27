@@ -3,11 +3,14 @@ package com.store.security.store_security.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
+import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
@@ -40,6 +43,9 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	private UserRepository userRepository;
 
 	@Autowired
+	private AuthoritiesRepository authoritiesRepository;
+
+	@Autowired
 	private MockMvc mockMvc;
 
 	@Autowired
@@ -49,12 +55,10 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	@WithMockUser(username = "prova@gmail.com", roles = "USER")
 	public void userFound() throws Exception {
 		//given
-
 		String username = "prova@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
-		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
+		userEntity.setAuthoritiesList(Set.of(AuthoritiesEntity.builder().users(Set.of(userEntity)).authority(RoleConstants.USER.getRole()).build()));
 		userRepository.save(userEntity);
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		//whe
@@ -72,12 +76,12 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	@WithMockUser(username = "prova@gmail.com", roles = "USER")
 	public void userNoAccess() throws Exception {
 		//given
-
 		String username = "anakin@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
-		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
+		userEntity.setAuthoritiesList(
+				Set.of(AuthoritiesEntity.builder().authority(RoleConstants.USER.getRole()).users(Set.of(userEntity)).build()
+				));
 		userRepository.save(userEntity);
 		//when
 		//then
@@ -93,12 +97,12 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	@WithMockUser(username = "prova@gmail.com", roles = "TRACKER")
 	public void userNoAccessRole() throws Exception {
 		//given
-
 		String username = "prova@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
-		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
+		userEntity.setAuthoritiesList(
+				Set.of(AuthoritiesEntity.builder().authority(RoleConstants.USER.getRole()).users(Set.of(userEntity)).build()
+				));
 		userRepository.save(userEntity);
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		String json = objectMapper.writeValueAsString(userDto);
@@ -116,9 +120,11 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	@WithMockUser(username = "prova@gmail.com", roles = "ADMIN")
 	public void allUser() throws Exception {
 		//given
+		AuthoritiesEntity authoritiesEntity = authoritiesRepository
+				.findByAuthority(RoleConstants.USER.getRole())
+				.orElseThrow(() -> new UserException("Authorization USER not found"));
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
 		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		userRepository.save(userEntity);
 		//whe

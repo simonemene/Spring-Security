@@ -1,8 +1,10 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class RegistrationServiceIntegrationTest extends StoreSecurityApplicationTests {
 
@@ -28,7 +31,7 @@ public class RegistrationServiceIntegrationTest extends StoreSecurityApplication
 	{
 		//given
 		authoritiesRepository.save(AuthoritiesEntity.builder().authority("ROLE_USER").build());
-		UserDto userDto = UserDto.builder().username("username").age(29).tmstInsert(
+		UserDto userDto = UserDto.builder().authoritiesList(List.of(RoleConstants.USER.getRole())).username("username").age(29).tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 1, 1)).password("1234").build();
 		//when
 		UserDto result = registrationService.registrationUser(userDto);

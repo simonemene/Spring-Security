@@ -26,27 +26,26 @@ public class DataConfigInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        UserEntity user = new UserEntity();
-        user.setUsername("admin@gmail.com");
-        user.setPassword("{bcrypt}$2a$12$jl2ifkyae8I/Tkg9OvnaK.rc.qkjX.N9CXrRkrOJmcW8BG5LAWJwq");
-        user.setAge(20);
-        user.setTmstInsert(LocalDateTime.now());
-
         AuthoritiesEntity authorities = new AuthoritiesEntity();
         authorities.setAuthority(RoleConstants.ADMIN.getRole());
+        authorities = authoritiesRepository.save(authorities);  // salva PRIMA
 
-
+        UserEntity user = new UserEntity();
+        user.setUsername("admin@gmail.com");
+        user.setPassword(
+                "{bcrypt}$2a$12$jl2ifkyae8I/Tkg9OvnaK.rc.qkjX.N9CXrRkrOJmcW8BG5LAWJwq");
+        user.setAge(20);
+        user.setTmstInsert(LocalDateTime.now());
         user.setAuthoritiesList(Set.of(authorities));
 
         StockEntity stock = StockEntity.builder().build();
-
         stockRepository.save(stock);
         userRepository.save(user);
-        authoritiesRepository.save(authorities);
 
+        // Altra autorità USER
         AuthoritiesEntity authoritiesUser = new AuthoritiesEntity();
         authoritiesUser.setAuthority(RoleConstants.USER.getRole());
         authoritiesRepository.save(authoritiesUser);
-
     }
 }
+

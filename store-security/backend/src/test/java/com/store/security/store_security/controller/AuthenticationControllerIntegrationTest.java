@@ -2,8 +2,10 @@ package com.store.security.store_security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.controladvice.GenericExceptionHandler;
 import com.store.security.store_security.entity.AuthoritiesEntity;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
@@ -39,6 +41,9 @@ public class AuthenticationControllerIntegrationTest extends
 	@Test
 	public void registration() throws Exception {
 		//given
+		AuthoritiesEntity authoritiesEntity = authoritiesRepository
+				.findByAuthority(RoleConstants.USER.getRole())
+				.orElseThrow(() -> new UserException("Authorization USER not found"));
 		String json = "{"
 				+ "\"username\": \"username\","
 				+ "\"password\": \"1234\","

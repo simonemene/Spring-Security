@@ -42,10 +42,9 @@ public class UserSecurityDetailsServiceIntegrationTest extends
 		user.setPassword("password");
 		user.setTmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0));
 		user.setAuthoritiesList(Set.of(authoritiesEntity));
-		authoritiesEntity.setUser(user);
-
-		UserEntity savedUser = userRepository.save(user);
 		authoritiesRepository.save(authoritiesEntity);
+		UserEntity savedUser = userRepository.save(user);
+
 		//when
 		UserDetails userDetails = userSecurityDetailsService.loadUserByUsername("username");
 		//then
@@ -53,7 +52,9 @@ public class UserSecurityDetailsServiceIntegrationTest extends
 		Assertions.assertThat(savedUser.getPassword()).isEqualTo(userDetails.getPassword());
 		Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
 		String ruolo = authorities.stream().findFirst().get().getAuthority();
-		Assertions.assertThat(savedUser.getAuthoritiesList().getFirst().getAuthority()).isEqualTo(ruolo);
+		Assertions.assertThat(savedUser.getAuthoritiesList())
+				.extracting(AuthoritiesEntity::getAuthority)
+				.contains(ruolo);
 
 	}
 

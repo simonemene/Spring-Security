@@ -1,19 +1,23 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.StockException;
+import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.StockArticleMapper;
 import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
+import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
 import org.assertj.core.api.Assertions;
@@ -30,6 +34,9 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
 	private StockService stockService;
+
+	@Autowired
+	private AuthoritiesRepository authoritiesRepository;
 
 	@Autowired
 	private StockRepository stockRepository;
@@ -234,6 +241,9 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 	public void saveArticleQuantity()
 	{
 		//given
+		AuthoritiesEntity authoritiesEntity = authoritiesRepository
+				.findByAuthority(RoleConstants.USER.getRole())
+				.orElseThrow(() -> new UserException("Authorization USER not found"));
 		StockEntity stockEntity = StockEntity.builder().build();
 		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
 				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();
