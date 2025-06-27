@@ -56,9 +56,8 @@ public class RegistrationService implements IRegistrationService {
 
                 UserEntity userEntity = userMapper.toEntity(userDto);
                 userEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
-                if (userEntity.getAuthoritiesList() != null) {
-                    userEntity.getAuthoritiesList().forEach(auth -> auth.setUser(userEntity));
-                }
+                AuthoritiesEntity authoritiesEntity = authoritiesRepository.findByAuthority(RoleConstants.USER.getRole()).orElseThrow(() -> new UserException("Authorization USER not found"));
+                userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
                 userRegister = userRepository.save(userEntity);
             }
             else

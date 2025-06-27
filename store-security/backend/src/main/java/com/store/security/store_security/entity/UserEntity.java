@@ -32,7 +32,7 @@ public class UserEntity {
     @Column(name = "tmst_insert", nullable = false)
     private LocalDateTime tmstInsert;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_authorities",
             joinColumns = @JoinColumn(name = "user_id"),
