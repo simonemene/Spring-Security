@@ -39,4 +39,19 @@ public class UserControllerUnitTest {
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().string("User admin not found"));
 	}
+
+	@Test
+	@WithMockUser(username = "admin@gmail.com", roles = "USER")
+	public void allUserNotFound() throws Exception {
+		//given
+		String username = "admin@gmail.com";
+		Mockito.when(userService.allUser()).thenThrow(new UserException("All user not found"));
+		//when
+		//then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/user"))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().string("All user not found"));
+	}
+
+
 }

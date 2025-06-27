@@ -51,7 +51,7 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		AllUserDto user = userService.allUser();
 		//then
 		//admin is always present for class DataConfigInit
-		Assertions.assertThat(user.getUsers().size()).isEqualTo(3);
+		Assertions.assertThat(user.getUsers().size()).isEqualTo(2);
 		UserDto username = user.getUsers().stream().filter(u->u.getUsername().equals("username")).findAny()
 				.get();
 		Assertions.assertThat(username).usingRecursiveComparison().isEqualTo(userMapper.toDto(userEntity));

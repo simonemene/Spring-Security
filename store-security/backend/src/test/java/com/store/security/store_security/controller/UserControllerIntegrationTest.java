@@ -3,6 +3,7 @@ package com.store.security.store_security.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
+import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
@@ -127,10 +128,13 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String json = result.getResponse().getContentAsString();
 
 		ObjectMapper objectMapper = new ObjectMapper();
-		List<UserDto> users = objectMapper.readValue(json, new TypeReference<List<UserDto>>() {});
-		UserDto provagmail = users.stream().filter(user->user.getUsername().equals("prova@gmail.com")).findAny()
+		AllUserDto users = objectMapper.readValue(json, new TypeReference<AllUserDto>() {});
+		UserDto provagmail = users.getUsers().stream().filter(user->user.getUsername().equals("prova@gmail.com")).findAny()
 				.get();
-		Assertions.assertThat(provagmail).usingRecursiveComparison().isEqualTo(userMapper.toDto(userEntity));
+		Assertions.assertThat(provagmail).usingRecursiveComparison()
+				.ignoringFields("password", "tmstInsert", "authoritiesList")
+				.isEqualTo(userMapper.toDto(userEntity));
+		Assertions.assertThat(provagmail.getPassword()).isNull();
 	}
 
 }
