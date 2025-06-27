@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -39,9 +40,9 @@ public class ConfigSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
-        http.csrf(csrf->csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
-                .ignoringRequestMatchers("/api/auth/login","api/auth/registration"));
+        http.csrf(csrf->csrf.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
+                .ignoringRequestMatchers("/api/auth/registration")
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
         http.authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/article/addArticle",
@@ -62,7 +63,6 @@ public class ConfigSecurity {
                                        ).permitAll());
         //set custom filter
         http.addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
-
         http.headers(AbstractHttpConfigurer::disable); //H2
         http.cors(cors->cors.configurationSource(
                 new CorsConfigurationSource() {
@@ -81,7 +81,7 @@ public class ConfigSecurity {
         ));
 
         //authentication
-        http.formLogin(AbstractHttpConfigurer::disable);
+        http.formLogin(Customizer.withDefaults());
         http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();

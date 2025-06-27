@@ -24,7 +24,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
 
   let csrf = sessionStorage.getItem('XSRF-TOKEN');
   if(csrf)
-  {
+  {   
       httpHeaders = httpHeaders.append('X-XSRF-TOKEN',csrf);
   }
   httpHeaders = httpHeaders.append('X-Requested-With','XMLHttpRequest');

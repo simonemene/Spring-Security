@@ -15,7 +15,11 @@ public class CsrfCustomFilter extends OncePerRequestFilter {
 			HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-		csrfToken.getToken();
+		if(csrfToken != null)
+		{
+			csrfToken.getToken();
+		}
+
 		filterChain.doFilter(request, response);
 	}
 }
