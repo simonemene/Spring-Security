@@ -8,5 +8,7 @@ public interface IOrderService {
 	public ArticlesOrderDto orderArticles(ArticlesOrderDto articlesOrderDto)
 			throws OrderException;
 
+	public allOrderByUser(Integer id);
+
 
 }
