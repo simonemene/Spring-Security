@@ -56,11 +56,18 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	public void userFound() throws Exception {
 		//given
 		String username = "prova@gmail.com";
-		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
-				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		userEntity.setAuthoritiesList(Set.of(AuthoritiesEntity.builder().users(Set.of(userEntity)).authority(RoleConstants.USER.getRole()).build()));
+		AuthoritiesEntity userRole = AuthoritiesEntity.builder()
+				.authority(RoleConstants.USER.getRole())
+				.build();
+		authoritiesRepository.save(userRole);
+		UserEntity userEntity = UserEntity.builder()
+				.username("prova@gmail.com")
+				.age(21)
+				.password("1234")
+				.tmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0))
+				.authoritiesList(Set.of(userRole))
+				.build();
 		userRepository.save(userEntity);
-		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		//whe
 		//then
 		mockMvc.perform(get("/api/user/{username}",username))
@@ -79,10 +86,22 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		String username = "anakin@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		userEntity.setAuthoritiesList(
-				Set.of(AuthoritiesEntity.builder().authority(RoleConstants.USER.getRole()).users(Set.of(userEntity)).build()
-				));
-		userRepository.save(userEntity);
+		AuthoritiesEntity userRole = AuthoritiesEntity.builder()
+				.authority(RoleConstants.USER.getRole())
+				.build();
+		authoritiesRepository.save(userRole);
+
+		UserEntity userEntitySave = UserEntity.builder()
+				.username("prova@gmail.com")
+				.age(21)
+				.password("1234")
+				.tmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0))
+				.authoritiesList(Set.of(userRole))
+				.build();
+
+		// 3. Salva l’utente
+		userRepository.save(userEntitySave);
+
 		//when
 		//then
 		mockMvc.perform(get("/api/user/{username}",username))
@@ -98,12 +117,22 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	public void userNoAccessRole() throws Exception {
 		//given
 		String username = "prova@gmail.com";
-		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
-				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
-		userEntity.setAuthoritiesList(
-				Set.of(AuthoritiesEntity.builder().authority(RoleConstants.USER.getRole()).users(Set.of(userEntity)).build()
-				));
-		userRepository.save(userEntity);
+		AuthoritiesEntity userRole = AuthoritiesEntity.builder()
+				.authority(RoleConstants.USER.getRole())
+				.build();
+		authoritiesRepository.save(userRole);
+
+		UserEntity userEntityResult = UserEntity.builder()
+				.username("prova@gmail.com")
+				.age(21)
+				.password("1234")
+				.tmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0))
+				.authoritiesList(Set.of(userRole))
+				.build();
+
+		// 3. Salva l’utente
+		userRepository.save(userEntityResult);
+
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		String json = objectMapper.writeValueAsString(userDto);
 		//when
