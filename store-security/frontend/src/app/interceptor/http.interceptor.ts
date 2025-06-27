@@ -22,6 +22,13 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
      httpHeaders = httpHeaders.append('Authorization','Basic ' + window.btoa(user.username + ":" + user.password));
   }
 
+  let csrf = sessionStorage.getItem('XSRF-TOKEN');
+  if(csrf)
+  {
+      httpHeaders = httpHeaders.append('X-XSRF-TOKEN',csrf);
+  }
+  httpHeaders = httpHeaders.append('X-Requested-With','XMLHttpRequest');
+
   const handleHeader = req.clone(
    {
       headers:httpHeaders
@@ -34,7 +41,7 @@ export const httpInterceptor: HttpInterceptorFn = (req, next) => {
       {
          if(err instanceof HttpErrorResponse && err.status !== 401)
          {
-            router.navigate(['/error']);
+            router.navigate(['/login']);
          }
       }
    ));

@@ -5,11 +5,13 @@ import { UserDto } from '../../model/UserDto';
 import { HttpClientModule } from '@angular/common/http';
 import { StockService } from '../../service/stock.service';
 import { StockDto } from '../../model/StockDto';
+import { ROLE } from '../../constant/role.constants';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss'
 })
@@ -18,7 +20,7 @@ export class WelcomeComponent implements OnInit{
   username:UserDto = new UserDto();
   sessionStorageAuth = inject(SessionStorageService);
 
-  constructor()
+  constructor(private router:Router)
   {
       
   }
@@ -28,6 +30,11 @@ export class WelcomeComponent implements OnInit{
     {
       this.username = this.sessionStorageAuth.getUser()!;
     }
+  }
+
+  isAdmin():boolean
+  {
+    return this.username.authoritiesList.includes(ROLE.ADMIN);
   }
 
 }

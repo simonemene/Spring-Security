@@ -4,6 +4,7 @@ import { UserDto } from '../../model/UserDto';
 import { FormControl, FormGroup, NgForm, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Route, Router, RouterModule } from '@angular/router';
 import { SessionStorageService } from '../../service/session-storage.service';
+import { getCookie } from 'typescript-cookie';
 
 @Component({
   selector: 'app-login',
@@ -41,6 +42,8 @@ export class LoginComponent {
         {
           this.errorAuthentication=false;
           this.user = <any> responseData.body;
+          let csrf = getCookie("XSRF-TOKEN")!;
+          window.sessionStorage.setItem("XSRF-TOKEN",csrf);
           this.sessionStorageAuth.login(this.user);
           this.router.navigate(['/welcome']);
         },
