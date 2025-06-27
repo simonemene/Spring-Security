@@ -1,5 +1,6 @@
 package com.store.security.store_security.controller;
 
+import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,12 @@ public class UserController {
 	public ResponseEntity<UserDto> userDetails(@PathVariable("username") String username)
 	{
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findUser(username));
+	}
+
+	@GetMapping
+	public ResponseEntity<AllUserDto> allUser()
+	{
+		return ResponseEntity.status(HttpStatus.OK).body(userService.allUser());
 	}
 
 

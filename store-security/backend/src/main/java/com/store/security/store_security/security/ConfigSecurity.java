@@ -39,7 +39,8 @@ public class ConfigSecurity {
                         auth.requestMatchers("/api/article/addArticle",
                                         "/api/article/addArticle/**",
                                         "/api/article/deleteArticle/{id}",
-                                        "/api/article/decrementArticle").hasRole("ADMIN")
+                                        "/api/article/decrementArticle",
+                                        "/api/user").hasRole("ADMIN")
                                 .requestMatchers("/api/user/{username}").hasRole("USER")
                                 .requestMatchers("/api/orders").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()

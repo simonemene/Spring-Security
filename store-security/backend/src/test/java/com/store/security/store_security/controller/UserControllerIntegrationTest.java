@@ -1,17 +1,22 @@
 package com.store.security.store_security.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.UserRepository;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
@@ -34,6 +39,9 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Autowired
+	private UserMapper userMapper;
 
 	@Test
 	@WithMockUser(username = "prova@gmail.com", roles = "USER")
@@ -69,8 +77,6 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
 		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
 		userRepository.save(userEntity);
-		UserDto userDto = UserDto.builder().username(username).age(21).build();
-		String json = objectMapper.writeValueAsString(userDto);
 		//when
 		//then
 		mockMvc.perform(get("/api/user/{username}",username))
@@ -103,4 +109,28 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/prova@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
+
+	@Test
+	@WithMockUser(username = "prova@gmail.com", roles = "ADMIN")
+	public void allUser() throws Exception {
+		//given
+		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
+				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
+		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").user(userEntity).build();
+		userEntity.setAuthoritiesList(List.of(authoritiesEntity));
+		userRepository.save(userEntity);
+		//whe
+		//then
+		MvcResult result = mockMvc.perform(get("/api/user"))
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andReturn();
+		String json = result.getResponse().getContentAsString();
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		List<UserDto> users = objectMapper.readValue(json, new TypeReference<List<UserDto>>() {});
+		UserDto provagmail = users.stream().filter(user->user.getUsername().equals("prova@gmail.com")).findAny()
+				.get();
+		Assertions.assertThat(provagmail).usingRecursiveComparison().isEqualTo(userMapper.toDto(userEntity));
+	}
+
 }
