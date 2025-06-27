@@ -21,4 +21,9 @@ export class AuthenticationService {
     this.sessioneStorageAuth.login(user);
     return this.http.get(this.urlBase + URL.AUTH,{observe:'response',withCredentials:true});
   }
+
+  registration(user:UserDto):Observable<UserDto>
+  {
+    return this.http.post<UserDto>(this.urlBase + URL.REGISTRATION,user);
+  }
 }

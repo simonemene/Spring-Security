@@ -6,6 +6,7 @@ import { LogoutComponent } from './component/logout/logout.component';
 import { authenticationGuard } from './guard/authentication.guard';
 import { roleGuard } from './guard/role.guard';
 import { ROLE } from './constant/role.constants';
+import { RegisterComponent } from './component/register/register.component';
 
 export const routes: Routes = [
     {
@@ -23,6 +24,9 @@ export const routes: Routes = [
         path:'logout', component:LogoutComponent,
         canActivate:[authenticationGuard,roleGuard],
         data:{roles:[ROLE.USER,ROLE.ADMIN]}
+    },
+    {
+        path:'signup', component:RegisterComponent
     },
     {
         path:'**', component:HomeComponent
