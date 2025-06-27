@@ -66,14 +66,13 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		stockEntity = stockRepository.save(stockEntity);
 		stockArticleRepository.save(stockArticleEntity);
 		//when
-		AllStockDto allStockDto = stockService.getAllStock();
+		StockDto stock = stockService.getStock();
 
 		//then
-		Assertions.assertThat(allStockDto).isNotNull();
-		Assertions.assertThat(allStockDto.getStock()).hasSize(1);
+		Assertions.assertThat(stock).isNotNull();
 		stockEntity = stockRepository.findById(stockEntity.getId()).orElseThrow();
 		StockDto expectedDto = stockMapper.toDto(stockEntity);
-		Assertions.assertThat(allStockDto.getStock().getFirst()).usingRecursiveComparison()
+		Assertions.assertThat(stock).usingRecursiveComparison()
 				.isEqualTo(expectedDto);
 	}
 
@@ -83,7 +82,7 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		//when
 		//then
-		Assertions.assertThatThrownBy(()->stockService.getAllStock())
+		Assertions.assertThatThrownBy(()->stockService.getStock())
 				.isInstanceOf(StockException.class)
 				.hasMessageContaining("Stock not found");
 	}

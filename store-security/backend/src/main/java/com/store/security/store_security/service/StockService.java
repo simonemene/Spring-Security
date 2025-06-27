@@ -43,16 +43,17 @@ public class StockService implements IStockService{
 
 	@Transactional(readOnly = true)
 	@Override
-	public AllStockDto getAllStock() {
+	public StockDto getStock() {
 		Iterable<StockEntity> allStock  = stockRepository.findAll();
-		AllStockDto allStockDto = AllStockDto.builder().stock(new ArrayList<>()).build();
-        for (StockEntity stock : allStock) {
-			StockDto stockDto = stockMapper.toDto(stock);
-            allStockDto.getStock().add(stockDto);
-        }
-		if(!allStockDto.getStock().isEmpty())
+		StockEntity stockEntity = null;
+		if(allStock.iterator().hasNext())
 		{
-			return allStockDto;
+			stockEntity = allStock.iterator().next();
+
+		}
+		if(null != stockEntity)
+		{
+			return stockMapper.toDto(stockEntity);
 		}
 		throw new StockException("Stock not found");
 	}

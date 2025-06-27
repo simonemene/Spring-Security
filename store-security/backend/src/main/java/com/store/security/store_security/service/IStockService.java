@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface IStockService {
 
-	public AllStockDto getAllStock();
+	public StockDto getStock();
 
 	public StockDto getStockByArticle(Long idArticle);
 

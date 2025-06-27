@@ -29,8 +29,8 @@ public class StockController {
     }
 
     @GetMapping
-    public ResponseEntity<AllStockDto> getAllStock() {
-        return ResponseEntity.status(HttpStatus.OK).body(stockService.getAllStock());
+    public ResponseEntity<StockDto> getAllStock() {
+        return ResponseEntity.status(HttpStatus.OK).body(stockService.getStock());
     }
 
     @GetMapping("/{id}")
