@@ -1,9 +1,9 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.AllOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
-import com.store.security.store_security.dto.OrderDto;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.enums.StatusTrackEnum;
@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -47,35 +44,30 @@ public class OrderService implements IOrderService{
 	@Override
 	public ArticlesOrderDto orderArticles(ArticlesOrderDto articlesOrderDto)
 			throws OrderException {
-		Map<ArticleDto, Integer> result = new HashMap<>();
+		AllArticleOrderDto allArticleOrderDtos = AllArticleOrderDto.builder().build();
+		ArticlesOrderDto result = ArticlesOrderDto.builder().build();
 
-		for(Map.Entry<ArticleDto, Integer> article : articlesOrderDto.getArticles().entrySet()) {
-            if(null == article.getValue() || null == article.getKey() || article.getValue() <= 0)
+		for(AllArticleOrderDto article : articlesOrderDto.getArticles())
+		{
+			if(null == article || null == article.getArticleDto() || article.getQuantity() <= 0)
 			{
-				throw new OrderException(String.format("[ARTICLE: %s QUANTITY: %s] INVALID", article.getKey().getName(), article.getValue()));
+				throw new OrderException(String.format("INVALID QUANTITY"));
 			}
 		}
 
-		Map<ArticleDto, Integer> resultMap = articlesOrderDto.getArticles().entrySet().stream()
-				.map(entry -> {
-					ArticleEntity article = articleRepository.findByName(entry.getKey().getName());
-					if(article.getId() <= 0)
-					{
-						throw new ArticleException(String.format("[ARTICLE: %s] NOT FOUND",entry.getKey().getName()));
-					}
-					ArticleDto updatedDto = ArticleDto.builder()
-							.id(article.getId())
-							.name(article.getName())
-							.build();
-
-					return Map.entry(updatedDto, entry.getValue());
-				})
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-		articlesOrderDto.setArticles(resultMap);
-
-
-
+		for(AllArticleOrderDto articles : articlesOrderDto.getArticles())
+		{
+			ArticleEntity article = articleRepository.findByName(articles.getArticleDto().getName());
+			if(article.getId() <= 0)
+			{
+				throw new ArticleException(String.format("[ARTICLE: %s] NOT FOUND",articles.getArticleDto().getName()));
+			}
+			ArticleDto updatedDto = ArticleDto.builder()
+					.id(article.getId())
+					.name(article.getName())
+					.build();
+			allArticleOrderDtos.setArticleDto(updatedDto);
+		}
 
 		UserEntity user = userRepository.findByUsername(articlesOrderDto.getUsername())
 				.orElseThrow(()-> new UserException(String.format("[USER OBJECT %s USER SECURITY %s] NOT FOUND"
@@ -84,27 +76,31 @@ public class OrderService implements IOrderService{
 				LocalDateTime.now()).build();
 		order = orderRepository.save(order);
 
+
 		if(order.getId() <= 0)
 		{
 			List<String> codeArticle = new ArrayList<>();
-			for(Map.Entry<ArticleDto, Integer> article : articlesOrderDto.getArticles().entrySet()) {
-				codeArticle.add(article.getKey().getName());
+			for(AllArticleOrderDto articles : articlesOrderDto.getArticles()) {
+				codeArticle.add(articles.getArticleDto().getName());
 			}
 			throw new OrderException(String.format("[USER: %s ARTICLES: %s] ORDER NOT SAVED",articlesOrderDto.getUsername(),codeArticle));
 		}
+		result.setIdOrder(order.getId());
 
-		for(Map.Entry<ArticleDto, Integer> article : articlesOrderDto.getArticles().entrySet()) {
+		for(AllArticleOrderDto articles : articlesOrderDto.getArticles())
+		{
 			OrderLineKeyEmbeddable orderLineKeyEmbeddable = OrderLineKeyEmbeddable.builder()
-					.idOrder(order.getId()).idArticle(article.getKey().getId()).build();
-			OrderLineEntity orderLineEntity = OrderLineEntity.builder().id(orderLineKeyEmbeddable).article(articleMapper.toEntity(article.getKey()))
-					.order(order).quantity(article.getValue()).build();
+					.idOrder(order.getId()).idArticle(articles.getArticleDto().getId()).build();
+			OrderLineEntity orderLineEntity = OrderLineEntity.builder().id(orderLineKeyEmbeddable).article(articleMapper.toEntity(articles.getArticleDto()))
+					.order(order).quantity(articles.getQuantity()).build();
 			orderLineEntity = orderLineRepository.save(orderLineEntity);
 
 			if(orderLineEntity.getId().getIdOrder() <= 0 || orderLineEntity.getId().getIdArticle() <= 0)
 			{
-				throw new OrderException(String.format("[ORDER: %s ARTICLES: %s] ORDER LINE NOT SAVED",order.getId(),article.getKey().getName()));
+				throw new OrderException(String.format("[ORDER: %s ARTICLES: %s] ORDER LINE NOT SAVED",order.getId(),articles.getArticleDto().getName()));
 			}
-			result.put(ArticleDto.builder().id(orderLineEntity.getId().getIdArticle()).name(article.getKey().getName()).build(),orderLineEntity.getQuantity());
+			AllArticleOrderDto resultArticle = AllArticleOrderDto.builder().articleDto(ArticleDto.builder().id(orderLineEntity.getId().getIdArticle()).name(articles.getArticleDto().getName()).build()).quantity(orderLineEntity.getQuantity()).build();
+            result.addArticle(resultArticle);
 		}
 
 		TrackEntity trackEntity = TrackEntity.builder().order(order).status(
@@ -114,7 +110,7 @@ public class OrderService implements IOrderService{
 		{
 			throw new OrderException(String.format("[ORDER: %s] TRACK NOT SAVED",order.getId()));
 		}
-		return ArticlesOrderDto.builder().articles(result).username(SecurityContextHolder.getContext().getAuthentication().getName()).build();
+		return ArticlesOrderDto.builder().articles(result.getArticles()).username(SecurityContextHolder.getContext().getAuthentication().getName()).build();
 	}
 
 	@Override
@@ -122,18 +118,24 @@ public class OrderService implements IOrderService{
 		List<OrderEntity> orders = orderRepository.findByUserUsername(username);
 		AllOrderDto allOrderDto = AllOrderDto.builder().build();
 
+
+
 		for(OrderEntity order: orders)
 		{
 			ArticlesOrderDto articlesOrders = ArticlesOrderDto.builder().build();
 			List<OrderLineEntity> ordersLine = orderLineRepository.findByOrder_Id(order.getId());
-			Map<ArticleDto, Integer> mapOrders = new HashMap<>();
+
+
+
+			List<AllArticleOrderDto> allArticleOrderDtos = new ArrayList<>();
 			for(OrderLineEntity orderLine : ordersLine)
 			{
-				mapOrders.put(articleMapper.toDto(orderLine.getArticle()),orderLine.getQuantity());
+				AllArticleOrderDto  allArticleOrderDto = AllArticleOrderDto.builder().articleDto(articleMapper.toDto(orderLine.getArticle())).quantity(orderLine.getQuantity()).build();
+			    allArticleOrderDtos.add(allArticleOrderDto);
 			}
-			if(!mapOrders.isEmpty())
+			if(!allArticleOrderDtos.isEmpty())
 			{
-				articlesOrders.setArticles(mapOrders);
+				articlesOrders.setArticles(allArticleOrderDtos);
 				articlesOrders.setIdOrder(order.getId());
 				articlesOrders.setUsername(username);
 			}
