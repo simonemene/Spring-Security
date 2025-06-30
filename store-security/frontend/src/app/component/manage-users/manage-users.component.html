@@ -16,10 +16,10 @@
                 <p class="text-sm/6 font-semibold text-indigo-600">{{user.age}}</p>
                 <button class="border border-solid border-4 border-indigo-300 p-[2px] bg-blue-300 hover:bg-blue-200 cursor-pointer rounded-md text-shadow-sm font-sans text-sm font-bold text-neutral-600" (click)="openUser(user.username)">Profile</button>
                 <button class="border border-solid border-4 border-indigo-300 p-[2px] bg-blue-300 hover:bg-blue-200 cursor-pointer rounded-md text-shadow-sm font-sans text-sm font-bold text-neutral-600" (click)="openOrders()">Orders</button>
-                <router-outlet></router-outlet>
               </div>
             </div>
           </li>
+          <router-outlet></router-outlet>
        }
       }
     </ul>

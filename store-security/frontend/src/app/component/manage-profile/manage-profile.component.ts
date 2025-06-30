@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserDto } from '../../model/UserDto';
 import { UserService } from '../../service/user.service';
@@ -7,7 +7,7 @@ import { UserService } from '../../service/user.service';
 @Component({
   selector: 'app-manage-profile',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,FormsModule],
   templateUrl: './manage-profile.component.html',
   styleUrl: './manage-profile.component.scss'
 })
