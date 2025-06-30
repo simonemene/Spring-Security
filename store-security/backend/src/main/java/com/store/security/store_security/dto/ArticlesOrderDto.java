@@ -9,7 +9,9 @@ import java.util.Map;
 @Builder
 public class ArticlesOrderDto {
 
-	Map<ArticleDto, Integer> articles;
+	private Map<ArticleDto, Integer> articles;
+
+	private Long idOrder;
 
 	private String username;
 }

@@ -1,7 +1,9 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.AllOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
+import com.store.security.store_security.dto.OrderDto;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.enums.StatusTrackEnum;
@@ -9,6 +11,7 @@ import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
+import com.store.security.store_security.mapper.OrderMapper;
 import com.store.security.store_security.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -28,8 +30,6 @@ import java.util.stream.Collectors;
 public class OrderService implements IOrderService{
 
 	private final OrderRepository orderRepository;
-
-	private final StockArticleRepository stockArticleRepository;
 
 	private final TrackRepository trackRepository;
 
@@ -40,6 +40,8 @@ public class OrderService implements IOrderService{
 	private final ArticleMapper articleMapper;
 
 	private final ArticleRepository articleRepository;
+
+	private final OrderMapper orderMapper;
 
 	@Transactional
 	@Override
@@ -115,5 +117,32 @@ public class OrderService implements IOrderService{
 		return ArticlesOrderDto.builder().articles(result).username(SecurityContextHolder.getContext().getAuthentication().getName()).build();
 	}
 
+	@Override
+	public AllOrderDto allOrderByUser(String username) throws OrderException {
+		List<OrderEntity> orders = orderRepository.findByUserUsername(username);
+		AllOrderDto allOrderDto = AllOrderDto.builder().build();
+		int counter = 0;
 
+
+		for(OrderEntity order: orders)
+		{
+			counter++;
+			ArticlesOrderDto articlesOrders = ArticlesOrderDto.builder().build();
+			List<OrderLineEntity> ordersLine = orderLineRepository.findByOrder_Id(order.getId());
+			Map<ArticleDto, Integer> mapOrders = new HashMap<>();
+			for(OrderLineEntity orderLine : ordersLine)
+			{
+				mapOrders.put(articleMapper.toDto(orderLine.getArticle()),orderLine.getQuantity());
+				articlesOrders.setArticles(mapOrders);
+				articlesOrders.setIdOrder(order.getId());
+				articlesOrders.setUsername(username);
+			}
+			allOrderDto.addOrders(articlesOrders);
+			if(counter != orders.size())
+			{
+				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",username));
+			}
+		}
+		return allOrderDto;
+	}
 }

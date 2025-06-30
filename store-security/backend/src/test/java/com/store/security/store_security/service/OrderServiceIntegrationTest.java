@@ -2,10 +2,7 @@ package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
 import com.store.security.store_security.constants.RoleConstants;
-import com.store.security.store_security.dto.AllStockDto;
-import com.store.security.store_security.dto.ArticleDto;
-import com.store.security.store_security.dto.ArticlesOrderDto;
-import com.store.security.store_security.dto.StockDto;
+import com.store.security.store_security.dto.*;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.enums.StatusTrackEnum;
@@ -46,6 +43,9 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
 	private TrackRepository trackRepository;
+
+	@Autowired
+	private AuthoritiesRepository authoritiesRepository;
 
 
 	@Test
@@ -168,6 +168,58 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(order).hasSize(0);
 		Iterable<OrderLineEntity> orderLine = orderLineRepository.findAll();
 		Assertions.assertThat(orderLine).hasSize(0);
+	}
+
+	@Test
+	public void findAllOrder() throws OrderException {
+		//given
+		AuthoritiesEntity auth = AuthoritiesEntity.builder().authority(RoleConstants.USER.getRole()).build();
+		authoritiesRepository.save(auth);
+		UserEntity user = UserEntity.builder().authoritiesList(Set.of(auth)).username("username").password("1234")
+				.tmstInsert(LocalDateTime.of(2022,1,1,1,1)).authoritiesList(Set.of(auth)).build();
+		UserEntity user1 = UserEntity.builder().authoritiesList(Set.of(auth)).username("username1").password("1234")
+				.tmstInsert(LocalDateTime.of(2022,1,1,1,1)).authoritiesList(Set.of(auth)).build();
+		user = userRepository.save(user);
+		user1 =userRepository.save(user1);
+		//articles
+		ArticleEntity article = ArticleEntity.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1))
+				.description("test").price(new BigDecimal(10)).build();
+		ArticleEntity article1 = ArticleEntity.builder().name("table").tmstInsert(LocalDateTime.of(2022,1,1,1,1))
+				.description("test1").price(new BigDecimal(15)).build();
+		article = articleRepository.save(article);
+		article1 = articleRepository.save(article1);
+		//orders
+		OrderEntity order = OrderEntity.builder().user(user).tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
+		OrderEntity order2 = OrderEntity.builder().user(user1).tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
+		order = orderRepository.save(order);
+		order2 = orderRepository.save(order2);
+		//orderlines
+		OrderLineKeyEmbeddable orderLineKey = OrderLineKeyEmbeddable.builder().idArticle(article.getId()).idOrder(
+				order.getId()).build();
+		OrderLineKeyEmbeddable orderLineKey1 = OrderLineKeyEmbeddable.builder().idArticle(article1.getId()).idOrder(
+				order2.getId()).build();
+		OrderLineEntity orderLine = OrderLineEntity.builder().id(orderLineKey).article(article).order(order).quantity(3).build();
+		OrderLineEntity orderLine1 = OrderLineEntity.builder().id(orderLineKey1).article(article1).order(order2).quantity(31).build();
+		orderLineRepository.save(orderLine);
+		orderLineRepository.save(orderLine1);
+		//when
+		AllOrderDto orders = orderService.allOrderByUser("username");
+		//then
+		Assertions.assertThat(orders.getOrders()).hasSize(1);
+		ArticlesOrderDto articlesOrderDto = orders.getOrders().get(0);
+		Assertions.assertThat(articlesOrderDto).isNotNull();
+		Assertions.assertThat(articlesOrderDto.getUsername()).isEqualTo("username");
+		Assertions.assertThat(articlesOrderDto.getArticles()).hasSize(1);
+		Integer quantity = articlesOrderDto.getArticles().entrySet().iterator().next().getValue();
+		ArticleDto articleDto = articlesOrderDto.getArticles().entrySet().iterator().next().getKey();
+		Assertions.assertThat(quantity).isEqualTo(3);
+		Assertions.assertThat(articleDto).isNotNull();
+		Assertions.assertThat(articleDto.getName()).isEqualTo("car");
+		Assertions.assertThat(articleDto.getDescription()).isEqualTo("test");
+		Assertions.assertThat(articleDto.getPrice()).isEqualByComparingTo(
+				String.valueOf(10));
+
+
 	}
 
 

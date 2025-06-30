@@ -7,6 +7,7 @@ import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.mapper.ArticleMapper;
+import com.store.security.store_security.mapper.OrderMapper;
 import com.store.security.store_security.repository.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,9 +31,6 @@ public class OrderServiceUnitTest {
 	private OrderRepository orderRepository;
 
 	@Mock
-	private StockArticleRepository stockArticleRepository;
-
-	@Mock
 	private TrackRepository trackRepository;
 
 	@Mock
@@ -47,13 +45,16 @@ public class OrderServiceUnitTest {
 	@Mock
 	private ArticleRepository articleRepository;
 
+	@Mock
+	private OrderMapper orderMapper;
+
 	@BeforeEach
 	public void init()
 	{
 		MockitoAnnotations.openMocks(this);
-		orderService = new OrderService(orderRepository,stockArticleRepository,
+		orderService = new OrderService(orderRepository,
 				trackRepository,orderLineRepository,userRepository,
-				articleMapper,articleRepository);
+				articleMapper,articleRepository,orderMapper);
 	}
 
 	@Test
