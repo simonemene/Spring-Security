@@ -49,24 +49,22 @@ public class OrderService implements IOrderService{
 
 		for(AllArticleOrderDto article : articlesOrderDto.getArticles())
 		{
-			if(null == article || null == article.getArticleDto() || article.getQuantity() <= 0)
+			if(null == article || null == article.getArticleDto() || null == article.getQuantity() ||  article.getQuantity() <= 0)
 			{
-				throw new OrderException(String.format("INVALID QUANTITY"));
+				throw new OrderException("INVALID QUANTITY");
 			}
 		}
 
-		for(AllArticleOrderDto articles : articlesOrderDto.getArticles())
-		{
-			ArticleEntity article = articleRepository.findByName(articles.getArticleDto().getName());
-			if(article.getId() <= 0)
-			{
-				throw new ArticleException(String.format("[ARTICLE: %s] NOT FOUND",articles.getArticleDto().getName()));
+		for (int i = 0; i < articlesOrderDto.getArticles().size(); i++) {
+			ArticleEntity article = articleRepository.findByName(articlesOrderDto.getArticles().get(i).getArticleDto().getName());
+			if (article.getId() <= 0) {
+				throw new ArticleException(String.format("[ARTICLE: %s] NOT FOUND",articlesOrderDto.getArticles().get(i).getArticleDto().getName()));
 			}
 			ArticleDto updatedDto = ArticleDto.builder()
 					.id(article.getId())
 					.name(article.getName())
 					.build();
-			allArticleOrderDtos.setArticleDto(updatedDto);
+			articlesOrderDto.getArticles().get(i).setArticleDto(updatedDto);
 		}
 
 		UserEntity user = userRepository.findByUsername(articlesOrderDto.getUsername())

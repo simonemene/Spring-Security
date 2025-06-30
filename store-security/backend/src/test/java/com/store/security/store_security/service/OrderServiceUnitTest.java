@@ -1,9 +1,6 @@
 package com.store.security.store_security.service;
 
-import com.store.security.store_security.dto.AllOrderDto;
-import com.store.security.store_security.dto.ArticleDto;
-import com.store.security.store_security.dto.ArticlesOrderDto;
-import com.store.security.store_security.dto.OrderDto;
+import com.store.security.store_security.dto.*;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.ArticleException;
@@ -20,10 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class OrderServiceUnitTest {
 
@@ -64,7 +58,8 @@ public class OrderServiceUnitTest {
 	public void orderFailArticles() throws OrderException {
 		//given
 		ArticleDto articleDto = ArticleDto.builder().name("car").build();
-		Map<ArticleDto,Integer> articles = Map.of(articleDto,1);
+		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(1).articleDto(articleDto).build();
+		List<AllArticleOrderDto> articles = List.of(allArticleOrderDto);
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
 		Mockito.when(articleRepository.findByName(Mockito.anyString())).thenReturn(
 				ArticleEntity.builder().name("car").id(0L).build());
@@ -84,8 +79,8 @@ public class OrderServiceUnitTest {
 				Optional.ofNullable(user));
 
 		ArticleDto articleDto = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
-		Map<ArticleDto,Integer> articles = new HashMap<>();
-		articles.put(articleDto,2);
+		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(2).articleDto(articleDto).build();
+		List<AllArticleOrderDto> articles = List.of(allArticleOrderDto);
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
 		Mockito.when(articleRepository.findByName("car")).thenReturn(
 				ArticleEntity.builder().name("car").id(1L).build());
@@ -108,8 +103,8 @@ public class OrderServiceUnitTest {
 				Optional.ofNullable(user));
 
 		ArticleDto articleDto = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
-		Map<ArticleDto,Integer> articles = new HashMap<>();
-		articles.put(articleDto,2);
+		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(2).articleDto(articleDto).build();
+		List<AllArticleOrderDto> articles = List.of(allArticleOrderDto);
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
 		Mockito.when(articleRepository.findByName("car")).thenReturn(
 				ArticleEntity.builder().name("car").id(1L).build());
@@ -135,8 +130,8 @@ public class OrderServiceUnitTest {
 				Optional.ofNullable(user));
 
 		ArticleDto articleDto = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.of(2022,1,1,1,1)).build();
-		Map<ArticleDto,Integer> articles = new HashMap<>();
-		articles.put(articleDto,2);
+		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(2).articleDto(articleDto).build();
+		List<AllArticleOrderDto> articles = List.of(allArticleOrderDto);
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().username("username").articles(articles).build();
 		Mockito.when(articleRepository.findByName("car")).thenReturn(
 				ArticleEntity.builder().name("car").id(1L).build());

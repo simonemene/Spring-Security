@@ -57,16 +57,22 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(Set.of()).build();
 		userRepository.save(user);
 
-		Map<ArticleDto,Integer> articles = new HashMap<>();
+		List<AllArticleOrderDto> articles = new ArrayList<>();
 
 		ArticleDto article1 = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.now())
 				.description("test").price(new BigDecimal(10)).build();
 		ArticleDto article2 = ArticleDto.builder().name("table").tmstInsert(LocalDateTime.now())
 				.description("test1").price(new BigDecimal(15)).build();
-		articles.put(article1,3);
-		articles.put(article2,31);
+
+
 		articleRepository.save(articleMapper.toEntity(article1));
 		articleRepository.save(articleMapper.toEntity(article2));
+
+		AllArticleOrderDto articleOrderDto = AllArticleOrderDto.builder().articleDto(article1).quantity(3).build();
+		AllArticleOrderDto articleOrderDto1 = AllArticleOrderDto.builder().articleDto(article2).quantity(31).build();
+		articles.add(articleOrderDto1);
+		articles.add(articleOrderDto);
+
 
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articles).username("username").build();
 		//when
@@ -76,13 +82,13 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(articlesOrderDto.getArticles()).isNotNull();
 		Assertions.assertThat(articlesOrderDto.getArticles().size()).isEqualTo(2);
 
-		ArticleDto checkArticle1 = articlesOrderDto.getArticles().entrySet().stream()
-				.filter(value-> value.getValue() == 3)
-				.map(Map.Entry::getKey).findFirst().orElseThrow();
+		ArticleDto checkArticle1 = articlesOrderDto.getArticles().stream()
+				.filter(value-> value.getQuantity() == 3)
+				.findFirst().get().getArticleDto();
 
 		Assertions.assertThat(checkArticle1.getId()).isGreaterThan(0);
-		Assertions.assertThat(articles.entrySet().stream()
-				.filter(check-> check.getValue() == 3).findFirst().get().getKey())
+		Assertions.assertThat(articles.stream()
+				.filter(check-> check.getQuantity() == 3).findFirst().get().getArticleDto())
 				.usingRecursiveComparison().ignoringFields("price","id","description","tmstInsert").isEqualTo(checkArticle1);
 
 		Iterable<OrderEntity> order = orderRepository.findAll();
@@ -113,18 +119,25 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("username", "password"));
 
-		Map<ArticleDto,Integer> articles = new HashMap<>();
 
 		ArticleDto article1 = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.now())
 				.description("test").price(new BigDecimal(10)).build();
 		ArticleDto article2 = ArticleDto.builder().name("table").tmstInsert(LocalDateTime.now())
 				.description("test1").price(new BigDecimal(15)).build();
-		articles.put(article1,3);
-		articles.put(article2,31);
+
 		articleRepository.save(articleMapper.toEntity(article1));
 		articleRepository.save(articleMapper.toEntity(article2));
+		List<AllArticleOrderDto> articlesOrder = new ArrayList<>();
 
-		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articles).username("username").build();
+		AllArticleOrderDto articleOrderDto = AllArticleOrderDto.builder().articleDto(article1).quantity(3).build();
+		AllArticleOrderDto articleOrderDto1 = AllArticleOrderDto.builder().articleDto(article2).quantity(31).build();
+		articlesOrder.add(articleOrderDto1);
+		articlesOrder.add(articleOrderDto);
+
+		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articlesOrder).username("username").build();
+
+
+
 		//when
 		//then
 		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
@@ -146,23 +159,28 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 				.age(23).tmstInsert(LocalDateTime.now()).authoritiesList(Set.of()).build();
 		userRepository.save(user);
 
-		Map<ArticleDto,Integer> articles = new HashMap<>();
 
 		ArticleDto article1 = ArticleDto.builder().name("car").tmstInsert(LocalDateTime.now())
 				.description("test").price(new BigDecimal(10)).build();
 		ArticleDto article2 = ArticleDto.builder().name("table").tmstInsert(LocalDateTime.now())
 				.description("test1").price(new BigDecimal(15)).build();
-		articles.put(article1,null);
-		articles.put(article2,31);
+
 		articleRepository.save(articleMapper.toEntity(article1));
 		articleRepository.save(articleMapper.toEntity(article2));
 
-		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articles).username("username").build();
+		List<AllArticleOrderDto> articlesOrder = new ArrayList<>();
+
+		AllArticleOrderDto articleOrderDto = AllArticleOrderDto.builder().articleDto(article1).quantity(null).build();
+		AllArticleOrderDto articleOrderDto1 = AllArticleOrderDto.builder().articleDto(article2).quantity(31).build();
+		articlesOrder.add(articleOrderDto1);
+		articlesOrder.add(articleOrderDto);
+
+		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articlesOrder).username("username").build();
 		//when
 		//then
 		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
 				.isInstanceOf(OrderException.class)
-				.hasMessageContaining(String.format("[ARTICLE: %s QUANTITY: %s] INVALID","car",null));
+				.hasMessageContaining("INVALID QUANTITY");
 
 		Iterable<OrderEntity> order = orderRepository.findAll();
 		Assertions.assertThat(order).hasSize(0);
@@ -210,8 +228,8 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		Assertions.assertThat(articlesOrderDto).isNotNull();
 		Assertions.assertThat(articlesOrderDto.getUsername()).isEqualTo("username");
 		Assertions.assertThat(articlesOrderDto.getArticles()).hasSize(1);
-		Integer quantity = articlesOrderDto.getArticles().entrySet().iterator().next().getValue();
-		ArticleDto articleDto = articlesOrderDto.getArticles().entrySet().iterator().next().getKey();
+		Integer quantity = articlesOrderDto.getArticles().getFirst().getQuantity();
+		ArticleDto articleDto = articlesOrderDto.getArticles().getFirst().getArticleDto();
 		Assertions.assertThat(quantity).isEqualTo(3);
 		Assertions.assertThat(articleDto).isNotNull();
 		Assertions.assertThat(articleDto.getName()).isEqualTo("car");

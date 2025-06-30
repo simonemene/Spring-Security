@@ -241,9 +241,6 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 	public void saveArticleQuantity()
 	{
 		//given
-		AuthoritiesEntity authoritiesEntity = authoritiesRepository
-				.findByAuthority(RoleConstants.USER.getRole())
-				.orElseThrow(() -> new UserException("Authorization USER not found"));
 		StockEntity stockEntity = StockEntity.builder().build();
 		ArticleEntity articleEntity = ArticleEntity.builder().name("car").price(new BigDecimal(1)).description("card description")
 				.tmstInsert(LocalDateTime.of(2025,12,1,1,1)).build();

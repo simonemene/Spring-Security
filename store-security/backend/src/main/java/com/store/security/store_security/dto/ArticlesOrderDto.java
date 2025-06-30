@@ -3,6 +3,7 @@ package com.store.security.store_security.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,8 @@ public class ArticlesOrderDto {
 
 	public void addArticle(AllArticleOrderDto article) {
 		if(null == articles) {
-			articles = List.of(article);
+			articles = new ArrayList<>();
+			articles.add(article);
 		}else
 		{
 			articles.add(article);

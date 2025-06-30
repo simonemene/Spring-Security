@@ -2,6 +2,7 @@ package com.store.security.store_security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.store.security.store_security.controladvice.GenericExceptionHandler;
+import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.exceptions.OrderException;
@@ -33,6 +34,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 @WebMvcTest(OrderController.class)
@@ -52,13 +54,15 @@ public class OrderControllerUnitTest {
 	public void createOrderFailed() throws Exception {
 		//given
 		ObjectMapper objectMapper = new ObjectMapper();
-		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(Map.of(ArticleDto.builder()
-				.name("car").description("test").price(BigDecimal.TEN).tmstInsert(LocalDateTime.now()).id(1L).build(), 0))
-				.idOrder(1L)
-				.username("utente@gmail.com").build();
+		ArticleDto articleDto = ArticleDto.builder()
+				.name("car").description("test").price(BigDecimal.TEN).tmstInsert(LocalDateTime.now()).id(1L).build();
+		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(1).articleDto(articleDto).build();
+		List<AllArticleOrderDto> allArticleOrderDtos = List.of(allArticleOrderDto);
+		ArticlesOrderDto articles = ArticlesOrderDto.builder().idOrder(1L).articles(allArticleOrderDtos).username("admin@gmail.com").build();
+
 		Mockito.when(orderService.orderArticles(Mockito.any(ArticlesOrderDto.class)))
 				.thenThrow(new OrderException("order not found"));
-		String json = objectMapper.writeValueAsString(articlesOrderDto);
+		String json = objectMapper.writeValueAsString(articles);
 
 		//when
 		//then
