@@ -141,6 +141,7 @@ public class OrderService implements IOrderService{
 				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",username));
 			}
 				allOrderDto.addOrders(articlesOrders);
+
 		}
 		return allOrderDto;
 	}

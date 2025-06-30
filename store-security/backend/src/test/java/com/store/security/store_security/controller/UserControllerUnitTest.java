@@ -14,8 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-//TODO:not real UNIT TEST
-
 @WebMvcTest(UserController.class)
 @Import(GenericExceptionHandler.class)
 public class UserControllerUnitTest {
