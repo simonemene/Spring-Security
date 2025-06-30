@@ -8,6 +8,9 @@ import { roleGuard } from './guard/role.guard';
 import { ROLE } from './constant/role.constants';
 import { RegisterComponent } from './component/register/register.component';
 import { ManageUsersComponent } from './component/manage-users/manage-users.component';
+import { ManageProfileComponent } from './component/manage-profile/manage-profile.component';
+import { ManageOrdersComponent } from './component/manage-orders/manage-orders.component';
+import { ManageOrderComponent } from './component/manage-order/manage-order.component';
 
 export const routes: Routes = [
     {
@@ -30,9 +33,41 @@ export const routes: Routes = [
         path:'signup', component:RegisterComponent
     },
     {
-        path:'allusers',component:ManageUsersComponent,
+        path:'users',component:ManageUsersComponent,
         canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.ADMIN]}
+        data:{roles:[ROLE.ADMIN]},
+        children:[
+            {
+                path:':username',
+                component: ManageProfileComponent
+            }
+        ] 
+    },
+    {
+        path:'orders', component:ManageOrdersComponent,
+        canActivate:[authenticationGuard,roleGuard],
+        data:{roles:[ROLE.ADMIN]},
+        children:[
+            {
+                path:':order',
+                component:ManageOrderComponent,
+                canActivate:[authenticationGuard,roleGuard],
+                data:{roles:[ROLE.ADMIN]}
+            }
+        ]
+    },
+    {
+        path:'user-orders', component:ManageOrdersComponent,
+        canActivate:[authenticationGuard,roleGuard],
+        data:{roles:[ROLE.USER]},
+        children:[
+            {
+                path:':order',
+                component:ManageOrderComponent,
+                canActivate:[authenticationGuard,roleGuard],
+                data:{roles:[ROLE.USER]}
+            }
+        ]
     },
     {
         path:'**', component:HomeComponent
