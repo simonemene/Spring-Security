@@ -176,11 +176,10 @@ public class OrderServiceUnitTest {
 						.article(article2).order(order).build());
 		Mockito.when(orderLineRepository.findByOrder_Id(1L)).thenReturn(orderLines);
 		//when
+		//then
 		Assertions.assertThatThrownBy(()->orderService.allOrderByUser("username"))
 				.isInstanceOf(OrderException.class)
 				.hasMessageContaining("USER: username] ORDER NOT ADD");
-
-		//then
 	}
 
 }
