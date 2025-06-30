@@ -20,7 +20,7 @@ public class UserController {
 	private final IUserService userService;
 
 
-	@PreAuthorize("#username == authentication.name && hasRole('ROLE_USER')")
+	@PreAuthorize("(#username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
 	@GetMapping("/{username}")
 	public ResponseEntity<UserDto> userDetails(@PathVariable("username") String username)
 	{

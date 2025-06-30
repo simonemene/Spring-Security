@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -41,9 +42,6 @@ public class AuthenticationControllerIntegrationTest extends
 	@Test
 	public void registration() throws Exception {
 		//given
-		AuthoritiesEntity authoritiesEntity = authoritiesRepository
-				.findByAuthority(RoleConstants.USER.getRole())
-				.orElseThrow(() -> new UserException("Authorization USER not found"));
 		String json = "{"
 				+ "\"username\": \"username\","
 				+ "\"password\": \"1234\","
@@ -54,7 +52,8 @@ public class AuthenticationControllerIntegrationTest extends
 
 		//when
 		//then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration").contentType("application/json").content(json))
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration")
+						.contentType("application/json").content(json))
 				.andExpect(MockMvcResultMatchers.status().isCreated())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("username"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.password").doesNotExist())

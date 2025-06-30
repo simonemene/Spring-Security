@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AllUserDto } from '../../model/AllUserDto';
 import { UserService } from '../../service/user.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-manage-users',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './manage-users.component.html',
   styleUrl: './manage-users.component.scss'
 })
 export class ManageUsersComponent {
+
+  router = inject(Router);
 
   allUser!:AllUserDto;
 
@@ -24,6 +27,18 @@ export class ManageUsersComponent {
         error:(err)=>console.error(err)
       }
     )
+  }
+
+  openUser(username:string)
+  { 
+    console.log(username);
+    
+    this.router.navigate(['/users',username])
+  }
+
+  openOrders()
+  {
+     
   }
 
 

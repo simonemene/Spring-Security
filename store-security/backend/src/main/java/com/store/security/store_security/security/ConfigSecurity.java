@@ -50,7 +50,7 @@ public class ConfigSecurity {
                                         "/api/article/deleteArticle/{id}",
                                         "/api/article/decrementArticle",
                                         "/api/user").hasRole("ADMIN")
-                                .requestMatchers("/api/user/{username}").hasRole("USER")
+                                .requestMatchers("/api/user/{username}").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/orders","/api/orders/{username}").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()
                                 .requestMatchers("/api/auth/registration",
