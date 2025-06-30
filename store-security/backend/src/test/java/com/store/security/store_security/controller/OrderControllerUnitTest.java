@@ -58,7 +58,7 @@ public class OrderControllerUnitTest {
 				.name("car").description("test").price(BigDecimal.TEN).tmstInsert(LocalDateTime.now()).id(1L).build();
 		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(1).articleDto(articleDto).build();
 		List<AllArticleOrderDto> allArticleOrderDtos = List.of(allArticleOrderDto);
-		ArticlesOrderDto articles = ArticlesOrderDto.builder().idOrder(1L).articles(allArticleOrderDtos).username("admin@gmail.com").build();
+		ArticlesOrderDto articles = ArticlesOrderDto.builder().idOrder(1L).articles(allArticleOrderDtos).username("utente@gmail.com").build();
 
 		Mockito.when(orderService.orderArticles(Mockito.any(ArticlesOrderDto.class)))
 				.thenThrow(new OrderException("order not found"));
