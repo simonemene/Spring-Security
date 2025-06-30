@@ -6,25 +6,13 @@ import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.exceptions.OrderException;
-import com.store.security.store_security.repository.UserRepository;
 import com.store.security.store_security.service.OrderService;
-import org.aspectj.lang.annotation.Before;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -35,7 +23,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @WebMvcTest(OrderController.class)
 @Import(GenericExceptionHandler.class)
@@ -75,12 +62,16 @@ public class OrderControllerUnitTest {
 	}
 
 	@Test
-	public void getAllOrder()
-	{
+	@WithMockUser(username = "utente@gmail.com", roles = "USER")
+	public void getAllOrder() throws Exception {
 		//given
-
+		String username = "utente@gmail.com";
+		Mockito.when(orderService.allOrderByUser(username))
+				.thenThrow(new OrderException("order not found"));
 		//when
-
 		//then
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{username}",username))
+				.andExpect(MockMvcResultMatchers.status().isBadRequest())
+				.andExpect(MockMvcResultMatchers.content().string("order not found"));
 	}
 }
