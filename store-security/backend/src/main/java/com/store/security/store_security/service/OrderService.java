@@ -121,27 +121,26 @@ public class OrderService implements IOrderService{
 	public AllOrderDto allOrderByUser(String username) throws OrderException {
 		List<OrderEntity> orders = orderRepository.findByUserUsername(username);
 		AllOrderDto allOrderDto = AllOrderDto.builder().build();
-		int counter = 0;
-
 
 		for(OrderEntity order: orders)
 		{
-			counter++;
 			ArticlesOrderDto articlesOrders = ArticlesOrderDto.builder().build();
 			List<OrderLineEntity> ordersLine = orderLineRepository.findByOrder_Id(order.getId());
 			Map<ArticleDto, Integer> mapOrders = new HashMap<>();
 			for(OrderLineEntity orderLine : ordersLine)
 			{
 				mapOrders.put(articleMapper.toDto(orderLine.getArticle()),orderLine.getQuantity());
+			}
+			if(!mapOrders.isEmpty())
+			{
 				articlesOrders.setArticles(mapOrders);
 				articlesOrders.setIdOrder(order.getId());
 				articlesOrders.setUsername(username);
 			}
-			allOrderDto.addOrders(articlesOrders);
-			if(counter != orders.size())
-			{
+			else {
 				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",username));
 			}
+				allOrderDto.addOrders(articlesOrders);
 		}
 		return allOrderDto;
 	}

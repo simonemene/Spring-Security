@@ -1,7 +1,9 @@
 package com.store.security.store_security.service;
 
+import com.store.security.store_security.dto.AllOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
+import com.store.security.store_security.dto.OrderDto;
 import com.store.security.store_security.entity.*;
 import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.exceptions.ArticleException;
@@ -19,6 +21,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -151,6 +154,33 @@ public class OrderServiceUnitTest {
 		Assertions.assertThatThrownBy(()->orderService.orderArticles(articlesOrderDto))
 				.isInstanceOf(OrderException.class)
 				.hasMessageContaining(String.format("[ORDER: %s] TRACK NOT SAVED","1"));
+	}
+
+	@Test
+	public void getAllOrderFailed() throws OrderException {
+		//given
+		OrderEntity order = OrderEntity.builder().id(1L)
+				.user(UserEntity.builder().username("username").build())
+				.build();
+		OrderEntity order1 = OrderEntity.builder().id(2L)
+				.user(UserEntity.builder().username("username").build())
+				.build();
+		List<OrderEntity> orders = List.of(order,order1);
+        Mockito.when(orderRepository.findByUserUsername("username")).thenReturn(
+				orders);
+		ArticleEntity article1 = ArticleEntity.builder().name("car").id(1L).build();
+		ArticleEntity article2 = ArticleEntity.builder().name("table").id(2L).build();
+		List<OrderLineEntity> orderLines = List.of(
+				OrderLineEntity.builder().build(),
+				OrderLineEntity.builder().id(OrderLineKeyEmbeddable.builder().idArticle(2L).idOrder(1L).build())
+						.article(article2).order(order).build());
+		Mockito.when(orderLineRepository.findByOrder_Id(1L)).thenReturn(orderLines);
+		//when
+		Assertions.assertThatThrownBy(()->orderService.allOrderByUser("username"))
+				.isInstanceOf(OrderException.class)
+				.hasMessageContaining("USER: username] ORDER NOT ADD");
+
+		//then
 	}
 
 }
