@@ -7,13 +7,10 @@ import com.store.security.store_security.controladvice.GenericExceptionHandler;
 import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
-import com.store.security.store_security.entity.ArticleEntity;
-import com.store.security.store_security.entity.AuthoritiesEntity;
-import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.entity.*;
 import com.store.security.store_security.mapper.ArticleMapper;
-import com.store.security.store_security.repository.ArticleRepository;
-import com.store.security.store_security.repository.AuthoritiesRepository;
-import com.store.security.store_security.repository.UserRepository;
+import com.store.security.store_security.repository.*;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,6 +25,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @AutoConfigureMockMvc
 @Import(GenericExceptionHandler.class)
@@ -48,6 +47,15 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 	@Autowired
 	private AuthoritiesRepository authoritiesRepository;
 
+	@Autowired
+	private OrderRepository orderRepository;
+
+	@Autowired
+	private OrderLineRepository orderLineRepository;
+
+	@Autowired
+	private TrackRepository trackRepository;
+
 
 	@Test
 	@WithMockUser(username = "utente@gmail.com", roles = "USER")
@@ -59,11 +67,8 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 		authoritiesRepository.save(authorities);
 		UserEntity user = UserEntity.builder()
 				.tmstInsert(LocalDateTime.now())
-				.authoritiesList(Set.of(AuthoritiesEntity.builder()
-						.authority("ROLE_USER").build()))
+				.authoritiesList(Set.of(authorities))
 				.username("utente@gmail.com").age(21).build();
-
-
 		userRepository.save(user);
 
 
@@ -82,7 +87,20 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 		//when
 		mockMvc.perform(MockMvcRequestBuilders.post("/api/orders").contentType("application/json").content(json)
 						.with(SecurityMockMvcRequestPostProcessors.csrf()))
-				.andExpect(MockMvcResultMatchers.status().isOk());
+				.andExpect(MockMvcResultMatchers.status().isCreated());
 		//then
+		Iterable<OrderEntity> orders = orderRepository.findAll();
+		OrderEntity order = orders.iterator().next();
+		Assertions.assertThat(order.getUser().getUsername()).isEqualTo(articles.getUsername());
+		List<OrderLineEntity> orderLines = orderLineRepository.findByOrder_Id(order.getId());
+		Assertions.assertThat(orderLines.size()).isEqualTo(1);
+		Assertions.assertThat(orderLines.getFirst().getArticle().getName()).isEqualTo(article.getName());
+		Assertions.assertThat(orderLines.getFirst().getOrder().getUser().getUsername()).isEqualTo(articles.getUsername());
+		Iterable<TrackEntity> trackEntity = trackRepository.findAll();
+		Assertions.assertThat(trackEntity.iterator().next().getOrder().getId()).isEqualTo(order.getId());
+		List<TrackEntity> listTrack = StreamSupport.stream(trackEntity.spliterator(),false).toList();
+		Assertions.assertThat(listTrack.size()).isEqualTo(1);
+
+
 	}
 }
