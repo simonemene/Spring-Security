@@ -25,7 +25,7 @@ public class OrderController {
 	}
 
 	@PreAuthorize("(#username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
-	@GetMapping("{username}")
+	@GetMapping("/{username}")
 	public ResponseEntity<AllOrderDto> getAllOrders(@PathVariable("username") String username)
 			throws OrderException {
 		return ResponseEntity.status(HttpStatus.OK).body(orderService.allOrderByUser(username));
