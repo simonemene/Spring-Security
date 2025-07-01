@@ -34,6 +34,6 @@ export class AuthenticationService {
 
   expired()
   {
-    return this.http.get(`${this.urlBase}${URL.SESSIONEXPIRED}`,{withCredentials:true});  
+    return this.http.post(`${this.urlBase}${URL.SESSIONEXPIRED}`,{},{withCredentials:true});  
   }
 }
