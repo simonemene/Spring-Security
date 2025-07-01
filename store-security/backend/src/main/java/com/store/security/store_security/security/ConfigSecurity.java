@@ -4,6 +4,7 @@ import com.store.security.store_security.exceptionhandle.CustomAccessDeniedHandl
 import com.store.security.store_security.exceptionhandle.CustomAuthenticationEntryPoint;
 import com.store.security.store_security.filter.CsrfCustomFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +27,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
+@Slf4j
 @Configuration
 public class ConfigSecurity {
 
@@ -79,6 +81,12 @@ public class ConfigSecurity {
                     }
                 }
         ));
+
+        http.sessionManagement(session->session.maximumSessions(1).maxSessionsPreventsLogin(true));
+        http.logout(logout->
+                logout.deleteCookies("JSESSIONID")
+                        .logoutUrl("/api/auth/logout")
+                        .invalidateHttpSession(true));
 
         //authentication
         http.formLogin(Customizer.withDefaults());

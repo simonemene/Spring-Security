@@ -26,4 +26,14 @@ export class AuthenticationService {
   {
     return this.http.post<UserDto>(this.urlBase + URL.REGISTRATION,user);
   }
+
+  getUser():Observable<UserDto>
+  {
+    return this.http.get<UserDto>(`${this.urlBase}${URL.AUTH}`,{withCredentials:true});
+  }
+
+  expired()
+  {
+    return this.http.post(`${this.urlBase}${URL.SESSIONEXPIRED}`,{},{withCredentials:true});
+  }
 }

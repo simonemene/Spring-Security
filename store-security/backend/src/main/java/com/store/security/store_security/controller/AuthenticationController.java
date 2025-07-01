@@ -37,7 +37,4 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
-
-    //@GetMapping("/user") implementation for angular
-
 }
