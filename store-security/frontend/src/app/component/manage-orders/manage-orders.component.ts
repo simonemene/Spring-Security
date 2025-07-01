@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { OrderService } from '../../service/order.service';
+import { AllOrderDto } from '../../model/AllOrderDto';
 
 @Component({
   selector: 'app-manage-orders',
@@ -7,6 +10,37 @@ import { Component } from '@angular/core';
   templateUrl: './manage-orders.component.html',
   styleUrl: './manage-orders.component.scss'
 })
-export class ManageOrdersComponent {
+export class ManageOrdersComponent implements OnInit{
+
+  activatedRoute = inject(ActivatedRoute);
+  orderService = inject(OrderService);
+
+  username:string = '';
+  orders:AllOrderDto = new AllOrderDto();
+
+  constructor()
+  {}
+
+  ngOnInit(): void {
+    this.activatedRoute.params.subscribe(param=>
+      {
+        console.log("dentro");
+        
+        this.username = param['username'];
+        this.orderService.getAllOrderUser(this.username).subscribe(
+          {
+            next:(allorder:AllOrderDto)=>
+            {
+              console.log(allorder);
+              
+                this.orders = allorder; 
+            },
+            error:err=>console.error(err)
+            
+          }
+        )
+      }
+    )
+  }
 
 }

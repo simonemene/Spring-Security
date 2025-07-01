@@ -32,9 +32,7 @@ export class ManageProfileComponent implements OnInit {
           {
             next:(userDate:UserDto)=>
             {
-              this.userDto = userDate;
-              console.log(this.userDto);
-              
+              this.userDto = userDate;            
             },
             error:err=> console.error(err)
           }

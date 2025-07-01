@@ -40,6 +40,16 @@ export const routes: Routes = [
             {
                 path:':username',
                 component: ManageProfileComponent
+            },
+            {
+                path: ':orders',
+                component: ManageOrdersComponent,
+                children:[
+                    {
+                        path:':order',
+                        component: ManageOrderComponent
+                    }
+                ]
             }
         ] 
     },

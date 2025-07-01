@@ -4,5 +4,6 @@ export const URL=
     ALLSTOCK: "/api/v1/stock",
     ADDARTICLE: "/api/v1/stock",
     REGISTRATION: "/api/auth/registration",
-    ALLUSER: "/api/user"
+    ALLUSER: "/api/user",
+    ALLORDER: "/api/orders"
 }

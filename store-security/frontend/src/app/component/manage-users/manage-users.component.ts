@@ -31,14 +31,12 @@ export class ManageUsersComponent {
 
   openUser(username:string)
   { 
-    console.log(username);
-    
     this.router.navigate(['/users',username])
   }
 
-  openOrders()
+  openOrders(username:string)
   {
-     
+     this.router.navigate(['/orders',username])
   }
 
 
