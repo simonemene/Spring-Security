@@ -11,6 +11,7 @@ import { ManageUsersComponent } from './component/manage-users/manage-users.comp
 import { ManageProfileComponent } from './component/manage-profile/manage-profile.component';
 import { ManageOrdersComponent } from './component/manage-orders/manage-orders.component';
 import { ManageOrderComponent } from './component/manage-order/manage-order.component';
+import { UserProfilePageComponent } from './component/user-profile-page/user-profile-page.component';
 
 export const routes: Routes = [
     {
@@ -39,7 +40,8 @@ export const routes: Routes = [
         children:[
             {
                 path:':username',
-                component: ManageProfileComponent
+                component: ManageProfileComponent,
+                data:{admin:true}
             },
             {
                 path: ':orders',
@@ -54,30 +56,10 @@ export const routes: Routes = [
         ] 
     },
     {
-        path:'orders', component:ManageOrdersComponent,
+        path:'user-page',
+        component:ManageProfileComponent,
         canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.ADMIN]},
-        children:[
-            {
-                path:':order',
-                component:ManageOrderComponent,
-                canActivate:[authenticationGuard,roleGuard],
-                data:{roles:[ROLE.ADMIN]}
-            }
-        ]
-    },
-    {
-        path:'user-orders', component:ManageOrdersComponent,
-        canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.USER]},
-        children:[
-            {
-                path:':order',
-                component:ManageOrderComponent,
-                canActivate:[authenticationGuard,roleGuard],
-                data:{roles:[ROLE.USER]}
-            }
-        ]
+        data:{roles:[ROLE.USER], admin:false},
     },
     {
         path:'**', component:HomeComponent

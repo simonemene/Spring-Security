@@ -23,8 +23,8 @@ export class LogoutComponent {
       {
         next:(expired:any)=>
         {
+          window.sessionStorage.clear();
           this.sessionsStorageAuth.logout();
-          this.router.navigate(['/login']);
         },
         error:err=>console.error(err)
       }
