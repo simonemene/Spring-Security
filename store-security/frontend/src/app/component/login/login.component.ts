@@ -22,6 +22,7 @@ export class LoginComponent {
 
   constructor(private auth:AuthenticationService,private router:Router)
   {
+    window.sessionStorage.clear();
     this.user = new UserDto();
     this.storeForm = new FormGroup(
       {

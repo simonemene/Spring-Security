@@ -38,7 +38,6 @@ export class SessionStorageService {
 
    logout()
    {
-    window.sessionStorage.clear();
     this.user.set(null);
     this.router.navigate(['/login']);
    }
