@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/component/header/header.component';
 import { FooterComponent } from './shared/component/footer/footer.component';
@@ -12,4 +12,9 @@ import { FooterComponent } from './shared/component/footer/footer.component';
 })
 export class AppComponent {
   title = 'frontend';
+
+   @HostListener('window:beforeunload', ['$event'])
+  unloadNotification(event: any) {
+    navigator.sendBeacon('/logout'); 
+  }
 }
