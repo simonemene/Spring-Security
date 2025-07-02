@@ -14,6 +14,8 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -84,9 +86,13 @@ public class ConfigSecurity {
                 }
         ));
 
-        http.sessionManagement(session->session.maximumSessions(1).maxSessionsPreventsLogin(true));
+        http.sessionManagement(session->
+                session.maximumSessions(1)
+                        .maxSessionsPreventsLogin(true)
+                        .sessionRegistry(sessionRegistry())
+        );
         http.logout(logout->
-                logout.deleteCookies("JSESSIONID")
+                logout.deleteCookies("JSESSIONID","CSRF-TOKEN")
                         .logoutUrl("/api/auth/logout")
                         .invalidateHttpSession(true)
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
@@ -114,6 +120,11 @@ public class ConfigSecurity {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
 }

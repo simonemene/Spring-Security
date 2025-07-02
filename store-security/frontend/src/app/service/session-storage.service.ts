@@ -9,7 +9,11 @@ export class SessionStorageService {
 
   private readonly user = signal<UserDto | null>(null);
 
-  readonly isAuthenticated = computed(()=>this.user() != null);
+  readonly isAuthenticated = computed(() => {
+  const user = this.user();
+  return user != null && (user.password === undefined || user.password === '');
+});
+
 
   constructor(private router:Router)
    { 
