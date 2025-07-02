@@ -2,7 +2,7 @@ package com.store.security.store_security.controller;
 
 import com.store.security.store_security.controladvice.GenericExceptionHandler;
 import com.store.security.store_security.exceptions.UserException;
-import com.store.security.store_security.service.UserService;
+import com.store.security.store_security.service.impl.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

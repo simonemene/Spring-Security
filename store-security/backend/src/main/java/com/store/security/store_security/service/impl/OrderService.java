@@ -1,4 +1,4 @@
-package com.store.security.store_security.service;
+package com.store.security.store_security.service.impl;
 
 import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.AllOrderDto;
@@ -13,6 +13,7 @@ import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.OrderMapper;
 import com.store.security.store_security.repository.*;
+import com.store.security.store_security.service.IOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
 
 	private final OrderRepository orderRepository;
 

@@ -5,6 +5,7 @@ import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.UserRepository;
+import com.store.security.store_security.service.impl.UserService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

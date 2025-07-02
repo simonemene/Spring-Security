@@ -1,6 +1,5 @@
-package com.store.security.store_security.service;
+package com.store.security.store_security.service.impl;
 
-import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
@@ -15,18 +14,17 @@ import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
+import com.store.security.store_security.service.IStockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Service
-public class StockService implements IStockService{
+public class StockService implements IStockService {
 
 	private final StockRepository stockRepository;
 

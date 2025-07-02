@@ -1,4 +1,4 @@
-package com.store.security.store_security.service;
+package com.store.security.store_security.service.impl;
 
 import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
@@ -6,17 +6,17 @@ import com.store.security.store_security.entity.UserEntity;
 import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.UserRepository;
+import com.store.security.store_security.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements IUserService{
+public class UserService implements IUserService {
 
 	private final UserRepository userRepository;
 

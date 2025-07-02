@@ -1,18 +1,14 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.StoreSecurityApplicationTests;
-import com.store.security.store_security.constants.RoleConstants;
-import com.store.security.store_security.dto.AllStockDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.StockArticleDto;
 import com.store.security.store_security.dto.StockDto;
 import com.store.security.store_security.entity.ArticleEntity;
-import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.StockArticleEntity;
 import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.StockException;
-import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.StockArticleMapper;
 import com.store.security.store_security.mapper.StockMapper;
@@ -20,6 +16,7 @@ import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
+import com.store.security.store_security.service.impl.StockService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

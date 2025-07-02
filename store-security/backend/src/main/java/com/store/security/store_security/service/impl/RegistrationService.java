@@ -1,4 +1,4 @@
-package com.store.security.store_security.service;
+package com.store.security.store_security.service.impl;
 
 import com.store.security.store_security.constants.RoleConstants;
 import com.store.security.store_security.dto.UserDto;
@@ -8,15 +8,14 @@ import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.UserMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.UserRepository;
+import com.store.security.store_security.service.IRegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor

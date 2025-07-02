@@ -6,7 +6,7 @@ import com.store.security.store_security.dto.AllArticleOrderDto;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ArticlesOrderDto;
 import com.store.security.store_security.exceptions.OrderException;
-import com.store.security.store_security.service.OrderService;
+import com.store.security.store_security.service.impl.OrderService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;

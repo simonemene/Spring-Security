@@ -1,7 +1,6 @@
 package com.store.security.store_security.service;
 
 import com.store.security.store_security.entity.StockArticleEntity;
-import com.store.security.store_security.entity.StockEntity;
 import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.StockArticleMapper;
@@ -9,6 +8,7 @@ import com.store.security.store_security.mapper.StockMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.repository.StockArticleRepository;
 import com.store.security.store_security.repository.StockRepository;
+import com.store.security.store_security.service.impl.StockService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
