@@ -55,9 +55,9 @@ public class ConfigSecurity {
                                         "/api/article/addArticle/**",
                                         "/api/article/deleteArticle/{id}",
                                         "/api/article/decrementArticle",
-                                        "/api/user").hasRole("ADMIN")
-                                .requestMatchers("/api/user/{username}").hasAnyRole("USER","ADMIN")
-                                .requestMatchers("/api/orders","/api/orders/{username}").hasAnyRole("USER","ADMIN")
+                                        "/api/user",
+                                        "/api/v1/stock").hasRole("ADMIN")
+                                .requestMatchers("/api/orders","/api/orders/{username}","/api/user/{username}").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()
                                 .requestMatchers("/api/auth/registration",
                                        "/v3/api-docs",
