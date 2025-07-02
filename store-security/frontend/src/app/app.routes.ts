@@ -12,6 +12,7 @@ import { ManageProfileComponent } from './component/manage-profile/manage-profil
 import { ManageOrdersComponent } from './component/manage-orders/manage-orders.component';
 import { ManageOrderComponent } from './component/manage-order/manage-order.component';
 import { UserProfilePageComponent } from './component/user-profile-page/user-profile-page.component';
+import { ManageArticleComponent } from './component/manage-article/manage-article.component';
 
 export const routes: Routes = [
     {
@@ -54,6 +55,12 @@ export const routes: Routes = [
                 ]
             }
         ] 
+    },
+    {
+       path:'article',
+       component:ManageArticleComponent,
+       canActivate:[authenticationGuard,roleGuard],
+       data:{roles:[ROLE.ADMIN]}
     },
     {
         path:'user-page',
