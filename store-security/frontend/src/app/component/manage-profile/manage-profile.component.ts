@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { UserDto } from '../../model/UserDto';
 import { UserService } from '../../service/user.service';
@@ -8,7 +8,7 @@ import { AuthenticationService } from '../../service/authentication.service';
 @Component({
   selector: 'app-manage-profile',
   standalone: true,
-  imports: [ReactiveFormsModule,FormsModule],
+  imports: [ReactiveFormsModule, FormsModule],
   templateUrl: './manage-profile.component.html',
   styleUrl: './manage-profile.component.scss'
 })
@@ -18,49 +18,58 @@ export class ManageProfileComponent implements OnInit {
   userService = inject(UserService);
   authUser = inject(AuthenticationService);
 
-  username:string = '';
-  userDto:UserDto = new UserDto();
-  admin:boolean = false;
+  username: string = '';
+  userDto: UserDto = new UserDto();
+  admin: boolean = false;
+
+  profileForm!: FormGroup;
 
 
-  constructor()
-  {
+  constructor() {
+    this.profileForm = new FormGroup(
+      {
+        username: new FormControl(this.userDto.username, [Validators.email]),
+        age: new FormControl(this.userDto.age, [
+          Validators.pattern("^[0-9]*$"),
+          Validators.min(18),
+          Validators.max(99)
+        ])
+
+      }
+    )
     this.admin = this.activatedRoute.snapshot.data['admin'];
   }
 
   ngOnInit(): void {
-    if(this.admin)
-    {
+    if (this.admin) {
       this.activatedRoute.params.subscribe(
-        params=>
-        {
+        params => {
           this.username = params['username'];
           this.userService.getProfile(this.username).subscribe(
             {
-              next:(userDate:UserDto)=>
-              {
-                this.userDto = userDate;            
+              next: (userDate: UserDto) => {
+                this.userDto = userDate;
               },
-              error:err=> console.error(err)
+              error: err => console.error(err)
             }
           )
         }
       )
-    }else
-    {
-      console.log("qui");
-      
+    } else {
       this.authUser.getUser().subscribe(
         {
-          next:(user:UserDto)=>
-          {
+          next: (user: UserDto) => {
             this.userDto = user;
           },
-          error:err=>console.error(err)
-          
+          error: err => console.error(err)
+
         }
       )
     }
+  }
+
+  onSubmit() {
+        //fare una put
   }
 
 

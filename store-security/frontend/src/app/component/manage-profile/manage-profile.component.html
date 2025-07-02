@@ -1,4 +1,4 @@
-<form>
+<form  [formGroup]="profileForm" (ngSubmit)="onSubmit()">
     <div class="border-b border-gray-900/10 pb-12">
       <h2 class="text-base/7 font-semibold text-gray-900">Profile</h2>
 
@@ -9,27 +9,29 @@
         <div class="sm:col-span-3">
           <label for="first-name" class="block text-sm/6 font-medium text-gray-900">Username</label>
           <div class="mt-2">
-            <input [(ngModel)]="userDto.username" type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <input [value]="userDto.username" type="text" name="first-name" id="first-name" formControlName="username" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
           </div>
         </div>
 
         <div class="sm:col-span-3">
           <label for="last-name" class="block text-sm/6 font-medium text-gray-900">Age</label>
           <div class="mt-2">
-            <input [(ngModel)]="userDto.age" type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+            <input [value]="userDto.age" type="text" name="last-name" id="last-name" formControlName="age" autocomplete="family-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
           </div>
         </div>
 
-       
-        <div class="sm:col-span-4">
-          <label for="email" class="block text-sm/6 font-medium text-gray-900">Role</label>
-           @for(role of this.userDto.authoritiesList; track role)
-        {
-          <div class="mt-2">
-            <p id="role" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{role}}</p>
+       @if(admin)
+       {
+          <div class="sm:col-span-4">
+            <label for="email" class="block text-sm/6 font-medium text-gray-900">Role</label>
+            @for(role of this.userDto.authoritiesList; track role)
+          {
+            <div class="mt-2">
+              <p id="role" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{role}}</p>
+            </div>
+          }
           </div>
-        }
-        </div>
+       }
         
       </div>
     </div>
