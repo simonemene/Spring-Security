@@ -1,6 +1,8 @@
 package com.store.security.store_security.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,7 @@ public class ArticleDto {
 
     private String description;
 
+    @Digits(integer = 10,fraction = 2,message = "Price for article invalid")
     private BigDecimal price;
 
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
