@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -84,6 +85,7 @@ public class StockService implements IStockService {
 			throw new StockException("Stock not found");
 		}
 		ArticleEntity article = articleMapper.toEntity(articleDto);
+		article.setTmstInsert(LocalDateTime.now());
 		article = articleRepository.save(article);
 		if(article.getId()<=0)
 		{

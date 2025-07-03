@@ -16,6 +16,8 @@ export class ArticleService {
 
   addArticle(article:ArticleDto):Observable<ArticleDto>
   {
-    return this.http.post<ArticleDto>(this.baseUrl + URL.ADDARTICLE,{article},{withCredentials:true});
+    console.log(article);
+    
+    return this.http.post<ArticleDto>(this.baseUrl + URL.ADDARTICLE,article,{withCredentials:true});
   }
 }
