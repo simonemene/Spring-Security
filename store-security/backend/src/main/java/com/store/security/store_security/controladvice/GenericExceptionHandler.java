@@ -4,13 +4,19 @@ import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
 import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.exceptions.UserException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class GenericExceptionHandler {
+public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(OrderException.class)
 	public ResponseEntity<String> controlOrderFailed(OrderException orderException)
@@ -43,6 +49,13 @@ public class GenericExceptionHandler {
 	public ResponseEntity<String> genericException(Throwable throwable)
 	{
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(throwable.getCause().getMessage());
+	}
+
+
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+		return this.handleExceptionInternal(ex, (Object)null, headers, status, request);
 	}
 
 

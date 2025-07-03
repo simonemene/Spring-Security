@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.store.security.store_security.entity.AuthoritiesEntity;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,8 @@ public class UserDto {
 
     private Long id;
 
+    @NotNull
+    @NotBlank
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
