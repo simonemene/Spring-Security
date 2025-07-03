@@ -2,6 +2,8 @@ package com.store.security.store_security.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.store.security.store_security.entity.AuthoritiesEntity;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +26,8 @@ public class UserDto {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Min(value = 18,message = "Age for user invalid")
+    @Max(value = 99,message = "Age for user invalid")
     private int age;
 
     private List<String> authoritiesList;

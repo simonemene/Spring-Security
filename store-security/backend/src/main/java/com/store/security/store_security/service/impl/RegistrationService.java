@@ -35,15 +35,10 @@ public class RegistrationService implements IRegistrationService {
         log.info("registration {}", userDto.getUsername());
 
         UserEntity userRegister = null;
-
-
             if (userDto.getUsername() != null && userDto.getPassword() != null && !userDto.getUsername().isEmpty()) {
                 Optional<UserEntity> userCheck = userRepository.findByUsername(userDto.getUsername());
                 if (userCheck.isPresent() && userCheck.get().getId()>0) {
                     throw new UserException("User already exist");
-                }
-                if (userDto.getAge() < 18) {
-                    throw new UserException("User must be at least 18 years old");
                 }
                 userDto.setTmstInsert(LocalDateTime.now());
                 Optional<AuthoritiesEntity> authorities = authoritiesRepository.findByAuthority(RoleConstants.USER.getRole());

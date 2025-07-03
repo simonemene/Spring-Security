@@ -3,6 +3,7 @@ package com.store.security.store_security.controller;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.service.IRegistrationService;
 import com.store.security.store_security.service.IUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,7 @@ public class AuthenticationController {
     private final IUserService userService;
 
     @PostMapping("/registration")
-    public ResponseEntity<UserDto> registration(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> registration(@RequestBody @Valid UserDto userDto) {
         UserDto result = registrationService.registrationUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
 
