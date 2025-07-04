@@ -45,6 +45,7 @@ export class LoginComponent {
           let csrf = getCookie("XSRF-TOKEN")!;
           console.log(csrf);
           
+          
           window.sessionStorage.setItem("XSRF-TOKEN",csrf);
           this.sessionStorageAuth.login(this.user);
           this.router.navigate(['/welcome']);

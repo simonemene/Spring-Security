@@ -19,6 +19,8 @@ export class ManageArticleComponent implements OnInit{
   articleForm!:FormGroup;
   articleDto:ArticleDto = new ArticleDto();
 
+  saveArticle:boolean = false;
+
   constructor()
   {}
   
@@ -43,7 +45,10 @@ export class ManageArticleComponent implements OnInit{
       {
         next:(articleInsert:ArticleDto)=>
         {
-          console.log(articleInsert);
+          this.saveArticle = true;
+          this.articleForm.get('name')?.setValue('');
+          this.articleForm.get('description')?.setValue('');
+          this.articleForm.get('price')?.setValue('');
         },
         error:err=>console.error(err)
       }
