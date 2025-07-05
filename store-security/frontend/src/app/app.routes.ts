@@ -13,6 +13,7 @@ import { ManageOrdersComponent } from './component/manage-orders/manage-orders.c
 import { ManageOrderComponent } from './component/manage-order/manage-order.component';
 import { UserProfilePageComponent } from './component/user-profile-page/user-profile-page.component';
 import { ManageArticleComponent } from './component/manage-article/manage-article.component';
+import { ListArticleComponent } from './component/list-article/list-article.component';
 
 export const routes: Routes = [
     {
@@ -61,6 +62,13 @@ export const routes: Routes = [
        component:ManageArticleComponent,
        canActivate:[authenticationGuard,roleGuard],
        data:{roles:[ROLE.ADMIN]}
+    },
+    {
+       path:'articles',
+       component:ListArticleComponent,
+       canActivate:[authenticationGuard,roleGuard],
+       data:{roles:[ROLE.ADMIN]}
+
     },
     {
         path:'user-page',
