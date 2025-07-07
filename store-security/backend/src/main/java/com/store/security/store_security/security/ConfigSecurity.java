@@ -66,7 +66,8 @@ public class ConfigSecurity {
                                        "/v3/api-docs/**",
                                        "/swagger-ui/**",
                                        "/swagger-ui.html",
-                                       "/swagger-ui/index.html"
+                                       "/swagger-ui/index.html",
+                                        "/api/auth/logout"
                                        ).permitAll());
         //set custom filter
         http.addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
@@ -95,8 +96,9 @@ public class ConfigSecurity {
         http.logout(logout->
                 logout.deleteCookies("JSESSIONID","CSRF-TOKEN")
                         .logoutUrl("/api/auth/logout")
-                        .invalidateHttpSession(true)
-                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK)));
+                        .invalidateHttpSession(true).permitAll()
+                        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
+        );
 
         //authentication
         http.formLogin(Customizer.withDefaults());
