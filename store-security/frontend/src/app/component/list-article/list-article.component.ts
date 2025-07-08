@@ -22,7 +22,29 @@ export class ListArticleComponent {
 
   constructor()
   {
-    this.stockService.allArticleInStockWithQuantity().subscribe(
+    this.loadArticle();
+  }
+
+  quantity(id:number)
+  {  
+    this.stockService.addQuantityArticle(id).subscribe(
+      {
+         next:(result:AllStockDto)=>
+         {
+          this.loadArticle();
+         }
+      }
+    )
+  }
+
+  minus()
+  {
+
+  }
+
+  private loadArticle()
+  {
+     this.stockService.allArticleInStockWithQuantity().subscribe(
       {
         next:(artilces:StockArticleDto[])=>
         {
@@ -33,25 +55,6 @@ export class ListArticleComponent {
         error:err=>console.error(err) 
       }
     )
-  }
-
-  quantity(id:number)
-  {
-    console.log(id);
-    
-    this.stockService.addQuantityArticle(id).subscribe(
-      {
-         next:(result:AllStockDto)=>
-         {
-          console.log(result);
-         }
-      }
-    )
-  }
-
-  minus()
-  {
-
   }
 
 

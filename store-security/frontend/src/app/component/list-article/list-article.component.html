@@ -16,8 +16,8 @@
       <p class="mt-1 text-xs/5 text-gray-500">{{articleDto.quantity}}</p>
     </div>
     <div>
-      <div class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset" (click)="quantity(articleDto.article.id)">Add Quantity</div>
-      <div class="inline-flex items-center rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset" (click)="minus()">Remove Quantity</div>
+      <div class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset cursor-pointer hover:bg-gray-50" (click)="quantity(articleDto.article.id)">Add Quantity</div>
+      <div class="ml-[5px] inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset cursor-pointer hover:bg-gray-50" (click)="minus()">Remove Quantity</div>
     </div>
   </li>
 }
