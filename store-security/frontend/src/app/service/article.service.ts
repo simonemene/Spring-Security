@@ -11,17 +11,19 @@ import { ListArticleDto } from '../model/ListArticleDto';
 })
 export class ArticleService {
 
-  baseUrl:string = environment.apiBaseUrl;
+  baseUrl: string = environment.apiBaseUrl;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  addArticle(article:ArticleDto):Observable<ArticleDto>
-  {
-    return this.http.post<ArticleDto>(this.baseUrl + URL.ADDARTICLE,article,{withCredentials:true});
+  addArticle(article: ArticleDto): Observable<ArticleDto> {
+    return this.http.post<ArticleDto>(`${this.baseUrl}${URL.ADDARTICLE}`, article, { withCredentials: true });
   }
 
-  getAllArticle():Observable<ListArticleDto>
-  {
-    return this.http.get<ListArticleDto>(`${this.baseUrl}${URL.ALLARTICLE}`, {withCredentials:true});
+  getAllArticle(): Observable<ListArticleDto> {
+    return this.http.get<ListArticleDto>(`${this.baseUrl}${URL.ALLARTICLE}`, { withCredentials: true });
+  }
+
+  getInfoArticle(id:number): Observable<ArticleDto> {
+    return this.http.get<ArticleDto>(`${this.baseUrl}${URL.ALLARTICLE}/id`, { withCredentials: true });
   }
 }

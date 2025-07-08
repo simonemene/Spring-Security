@@ -57,6 +57,8 @@ public class ConfigSecurity {
                                         "/api/article/decrementArticle",
                                         "/api/user",
                                         "/api/v1/stock",
+                                        "/api/v1/stock/**",
+                                        "/api/v1/articles/**",
                                         "/api/v1/articles").hasRole("ADMIN")
                                 .requestMatchers("/api/orders","/api/orders/{username}","/api/user/{username}").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()

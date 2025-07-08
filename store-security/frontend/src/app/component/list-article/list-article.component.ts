@@ -1,6 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { ArticleService } from '../../service/article.service';
 import { ListArticleDto } from '../../model/ListArticleDto';
+import { StockDto } from '../../model/StockDto';
+import { StockService } from '../../service/stock.service';
+import { StockArticleDto } from '../../model/StockArticleDto';
+import { AllStockDto } from '../../model/AllStockDto';
 
 @Component({
   selector: 'app-list-article',
@@ -12,22 +16,42 @@ import { ListArticleDto } from '../../model/ListArticleDto';
 export class ListArticleComponent {
 
   articleService = inject(ArticleService);
-  articles:ListArticleDto = new ListArticleDto();
+  stockService = inject(StockService);
+  articles:StockArticleDto[] = [];
 
 
   constructor()
   {
-    this.articleService.getAllArticle().subscribe(
+    this.stockService.allArticleInStockWithQuantity().subscribe(
       {
-        next:(artilces:ListArticleDto)=>
+        next:(artilces:StockArticleDto[])=>
         {
-          this.articles = artilces;
-          console.log(this.articles);
+          console.log(artilces);
           
+          this.articles = artilces;
         },
         error:err=>console.error(err) 
       }
     )
+  }
+
+  quantity(id:number)
+  {
+    console.log(id);
+    
+    this.stockService.addQuantityArticle(id).subscribe(
+      {
+         next:(result:AllStockDto)=>
+         {
+          console.log(result);
+         }
+      }
+    )
+  }
+
+  minus()
+  {
+
   }
 
 

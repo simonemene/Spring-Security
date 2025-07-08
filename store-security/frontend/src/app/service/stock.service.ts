@@ -5,6 +5,7 @@ import { URL } from '../constant/url.constants';
 import { map, Observable } from 'rxjs';
 import { AllStockDto } from '../model/AllStockDto';
 import { StockDto } from '../model/StockDto';
+import { StockArticleDto } from '../model/StockArticleDto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,18 +14,37 @@ export class StockService {
 
   urlBase = environment.apiBaseUrl;
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  allArticleInStock():Observable<StockDto[]>
-  {
-    return this.http.get<AllStockDto>(this.urlBase + URL.ALLSTOCK,{withCredentials:true})
-    .pipe(
-      map(
-        allStock=>
-          {
-            return  allStock.stock
+  allArticleInStock(): Observable<StockDto[]> {
+    return this.http.get<AllStockDto>(this.urlBase + URL.ALLSTOCK, { withCredentials: true })
+      .pipe(
+        map(
+          allStock => {
+            return allStock.stock
           }
+        )
       )
-    )
+  }
+
+  allArticleInStockWithQuantity(): Observable<StockArticleDto[]> {
+    return this.http.get<StockDto>(this.urlBase + URL.ALLSTOCK, { withCredentials: true })
+      .pipe(
+        map(
+          allStock => {
+            return allStock.stockArticles;
+          }
+        )
+      )
+  }
+
+  addQuantityArticle(id: number) {
+    let add = 1;
+    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/${add}`, { withCredentials: true }); 
+  }
+
+  minusQuantityArticle(id: number) { 
+    let minus = 1;
+    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/decrement/${minus}`, { withCredentials: true }); 
   }
 }

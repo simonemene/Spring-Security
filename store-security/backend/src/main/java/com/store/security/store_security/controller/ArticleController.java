@@ -1,11 +1,13 @@
 package com.store.security.store_security.controller;
 
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.service.IArticleService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,5 +22,11 @@ public class ArticleController {
     public ResponseEntity<ListArticleDto> getAllArticles()
     {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.allArticle());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ArticleDto> getArticleById(@PathVariable("id") Long id)
+    {
+        return ResponseEntity.status(HttpStatus.OK).body(articleService.getArticle(id));
     }
 }

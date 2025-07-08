@@ -1,5 +1,6 @@
 package com.store.security.store_security.service.impl;
 
+import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
 import com.store.security.store_security.mapper.ArticleMapper;
@@ -24,5 +25,10 @@ public class ArticleService implements IArticleService {
         return ListArticleDto.builder().articles(
                 StreamSupport.stream(articles.spliterator(),false)
                         .map(articleMapper::toDto).toList()).build();
+    }
+
+    @Override
+    public ArticleDto getArticle(Long id) {
+        return articleRepository.findById(id).map(articleMapper::toDto).orElse(null);
     }
 }
