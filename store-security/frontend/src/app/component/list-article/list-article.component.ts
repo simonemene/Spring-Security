@@ -5,11 +5,12 @@ import { StockDto } from '../../model/StockDto';
 import { StockService } from '../../service/stock.service';
 import { StockArticleDto } from '../../model/StockArticleDto';
 import { AllStockDto } from '../../model/AllStockDto';
+import { AlertComponent } from '../../shared/component/alert/alert.component';
 
 @Component({
   selector: 'app-list-article',
   standalone: true,
-  imports: [],
+  imports: [AlertComponent],
   templateUrl: './list-article.component.html',
   styleUrl: './list-article.component.scss'
 })
@@ -18,6 +19,8 @@ export class ListArticleComponent {
   articleService = inject(ArticleService);
   stockService = inject(StockService);
   articles:StockArticleDto[] = [];
+  message:string = '';
+  modifyError:boolean=false;
 
 
   constructor()
@@ -32,14 +35,35 @@ export class ListArticleComponent {
          next:(result:AllStockDto)=>
          {
           this.loadArticle();
+          this.message = "ARTICLE MODIFY";
+          this.modifyError = false;
+         },
+         error:err=>
+         {
+            this.message = err.error;
+            this.modifyError = true;
          }
       }
     )
   }
 
-  minus()
+  minus(id:number)
   {
-
+    this.stockService.minusQuantityArticle(id).subscribe(
+      {
+        next:(result:AllStockDto)=>
+        {
+          this.loadArticle();
+          this.message = "ARTICLE MODIFY";
+          this.modifyError = false;
+        },
+         error:err=>
+         {
+            this.message = err.error;
+            this.modifyError = true;
+         }
+      }
+    )
   }
 
   private loadArticle()
