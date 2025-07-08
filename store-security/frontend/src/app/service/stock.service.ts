@@ -40,11 +40,11 @@ export class StockService {
 
   addQuantityArticle(id: number) {
     let add = 1;
-    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/${add}`, { withCredentials: true }); 
+    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/${add}`, null,{ withCredentials: true }); 
   }
 
   minusQuantityArticle(id: number) { 
     let minus = 1;
-    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/decrement/${minus}`, { withCredentials: true }); 
+    return this.http.patch<AllStockDto>(`${this.urlBase}${URL.ALLSTOCK}/${id}/decrement/${minus}`,null, { withCredentials: true }); 
   }
 }

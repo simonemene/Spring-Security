@@ -46,6 +46,7 @@ public class ConfigSecurity {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         CsrfTokenRequestAttributeHandler csrfTokenRequestAttributeHandler = new CsrfTokenRequestAttributeHandler();
+        csrfTokenRequestAttributeHandler.setCsrfRequestAttributeName("_csrf");
         http.csrf(csrf->csrf.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 .ignoringRequestMatchers("/api/auth/registration","/h2-console/**","/api/auth/logout")
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));

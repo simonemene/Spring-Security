@@ -107,7 +107,7 @@ public class StockService implements IStockService {
 		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
 				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
 		int calculatedQuantity = stockArticleEntity.getQuantity() - quantity;
-		if(stockArticleEntity.getQuantity() <= 0 || calculatedQuantity < 0)
+		if(stockArticleEntity.getQuantity() < 0 || calculatedQuantity < 0)
 		{
 			throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
 		}
@@ -126,7 +126,7 @@ public class StockService implements IStockService {
 		StockArticleEntity stockArticleEntity = stockArticleRepository.findByArticle_Id(id)
 				.orElseThrow(()->new ArticleException(String.format("[ARTICLE %s] Article not found",id)));
 		int calculatedQuantity = stockArticleEntity.getQuantity() + quantity;
-		if(stockArticleEntity.getQuantity() <= 0 || calculatedQuantity <= 0)
+		if(stockArticleEntity.getQuantity() < 0 || calculatedQuantity <= 0)
 		{
 			throw new StockException(String.format("[ARTICLE: %s QUANTITY: %s] Stock not updated",id,quantity));
 		}

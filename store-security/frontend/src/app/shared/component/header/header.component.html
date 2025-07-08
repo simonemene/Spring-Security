@@ -1,11 +1,21 @@
 <div class="grid grid-cols-8 bg-indingo-200 opacity-60 shadow-xl">
-    <div class="!opacity-100  col-start-1 text-gray-950 font-sans self-center ml-4">
+
+     @if(authenticated())
+     {
+           <div class="!opacity-100  col-start-1 text-gray-950 font-sans self-center ml-4">
+     <a routerLink="welcome">
+            <img class="h-10 w-auto object-cover" src="assets/shop.svg" alt="image">
+     </a>       
+    </div>
+     }
+   
+    @if(!authenticated())
+    {
+     <div class="!opacity-100  col-start-1 text-gray-950 font-sans self-center ml-4">
      <a routerLink="">
             <img class="h-10 w-auto object-cover" src="assets/shop.svg" alt="image">
      </a>       
     </div>
-    @if(!authenticated())
-    {
      <div class="col-start-4 text-gray-950 font-sans self-center font-bold cursor-pointer">
      <a routerLink="/signup">
          Sign up
@@ -26,6 +36,7 @@
     
     @if(authenticated())
     {
+    
      <div class="col-start-8 text-gray-950 font-sans self-center font-bold cursor-pointer">
      <a routerLink="/logout">
           <img class="h-10 w-auto object-cover" src="assets/logout.svg" alt="image">
