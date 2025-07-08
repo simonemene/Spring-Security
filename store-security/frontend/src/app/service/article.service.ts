@@ -22,8 +22,4 @@ export class ArticleService {
   getAllArticle(): Observable<ListArticleDto> {
     return this.http.get<ListArticleDto>(`${this.baseUrl}${URL.ALLARTICLE}`, { withCredentials: true });
   }
-
-  getInfoArticle(id:number): Observable<ArticleDto> {
-    return this.http.get<ArticleDto>(`${this.baseUrl}${URL.ALLARTICLE}/id`, { withCredentials: true });
-  }
 }
