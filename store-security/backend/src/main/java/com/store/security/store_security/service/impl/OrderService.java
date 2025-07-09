@@ -9,6 +9,7 @@ import com.store.security.store_security.entity.key.OrderLineKeyEmbeddable;
 import com.store.security.store_security.enums.StatusTrackEnum;
 import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.exceptions.OrderException;
+import com.store.security.store_security.exceptions.StockException;
 import com.store.security.store_security.exceptions.UserException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.OrderMapper;
@@ -41,6 +42,8 @@ public class OrderService implements IOrderService {
 
 	private final OrderMapper orderMapper;
 
+	private final StockService stockService;
+
 	@Transactional
 	@Override
 	public ArticlesOrderDto orderArticles(ArticlesOrderDto articlesOrderDto)
@@ -66,6 +69,11 @@ public class OrderService implements IOrderService {
 					.name(article.getName())
 					.build();
 			articlesOrderDto.getArticles().get(i).setArticleDto(updatedDto);
+			try {
+				stockService.decrementArticle(article.getId(), 1);
+			} catch (StockException e) {
+				throw new OrderException("Stock not sufficient for article: " + article.getName());
+			}
 		}
 
 		UserEntity user = userRepository.findByUsername(articlesOrderDto.getUsername())
@@ -100,6 +108,8 @@ public class OrderService implements IOrderService {
 			}
 			AllArticleOrderDto resultArticle = AllArticleOrderDto.builder().articleDto(ArticleDto.builder().id(orderLineEntity.getId().getIdArticle()).name(articles.getArticleDto().getName()).build()).quantity(orderLineEntity.getQuantity()).build();
             result.addArticle(resultArticle);
+
+
 		}
 
 		TrackEntity trackEntity = TrackEntity.builder().order(order).status(
@@ -109,6 +119,8 @@ public class OrderService implements IOrderService {
 		{
 			throw new OrderException(String.format("[ORDER: %s] TRACK NOT SAVED",order.getId()));
 		}
+
+
 		return ArticlesOrderDto.builder().articles(result.getArticles()).username(SecurityContextHolder.getContext().getAuthentication().getName()).build();
 	}
 

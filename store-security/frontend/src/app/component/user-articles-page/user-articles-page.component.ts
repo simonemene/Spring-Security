@@ -99,7 +99,18 @@ export class UserArticlesPageComponent {
     );
 
     dialogRef.afterClosed().subscribe(result => {
-       this.order = result;
+       if(result.checkout)
+       {
+        this.order = [];
+        this.modifyError=false;
+        this.successAddRemove = true;
+        this.messageSuccess = "ORDER COMPLETED"
+       }else
+       {
+        this.modifyError = false;
+        this.successAddRemove=false;
+        this.order = result.articles;
+       }
     });
   }
 }

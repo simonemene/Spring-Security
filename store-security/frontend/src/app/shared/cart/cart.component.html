@@ -96,5 +96,5 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button matButton mat-dialog-close>Exit</button>
-  <button matButton [mat-dialog-close]="true" class="block rounded-sm bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600" cdkFocusInitial>Checkout</button>
+  <button matButton [mat-dialog-close]="true" class="block rounded-sm bg-gray-700 px-5 py-3 text-sm text-gray-100 transition hover:bg-gray-600" cdkFocusInitial (click)="order()">Checkout</button>
 </mat-dialog-actions>

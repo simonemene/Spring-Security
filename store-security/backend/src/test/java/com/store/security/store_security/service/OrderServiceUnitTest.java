@@ -9,6 +9,7 @@ import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.mapper.OrderMapper;
 import com.store.security.store_security.repository.*;
 import com.store.security.store_security.service.impl.OrderService;
+import com.store.security.store_security.service.impl.StockService;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,13 +47,16 @@ public class OrderServiceUnitTest {
 	@Mock
 	private OrderMapper orderMapper;
 
+	@Mock
+	private StockService stockService;
+
 	@BeforeEach
 	public void init()
 	{
 		MockitoAnnotations.openMocks(this);
 		orderService = new OrderService(orderRepository,
 				trackRepository,orderLineRepository,userRepository,
-				articleMapper,articleRepository,orderMapper);
+				articleMapper,articleRepository,orderMapper,stockService);
 	}
 
 	@Test
