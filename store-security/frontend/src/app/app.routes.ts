@@ -15,6 +15,7 @@ import { UserProfilePageComponent } from './component/user-profile-page/user-pro
 import { ManageArticleComponent } from './component/manage-article/manage-article.component';
 import { ListArticleComponent } from './component/list-article/list-article.component';
 import { UserArticlesPageComponent } from './component/user-articles-page/user-articles-page.component';
+import { UserOrdersPageComponent } from './component/user-orders-page/user-orders-page.component';
 
 export const routes: Routes = [
     {
@@ -47,14 +48,8 @@ export const routes: Routes = [
                 data: { admin: true }
             },
             {
-                path: ':orders',
-                component: ManageOrdersComponent,
-                children: [
-                    {
-                        path: ':order',
-                        component: ManageOrderComponent
-                    }
-                ]
+                path: 'orders/:username',
+                component: ManageOrdersComponent
             }
         ]
     },
@@ -80,6 +75,12 @@ export const routes: Routes = [
     {
         path: 'user-article',
         component: UserArticlesPageComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.USER], admin: false },
+    },
+    {
+        path: 'user-orders-page',
+        component: UserOrdersPageComponent,
         canActivate: [authenticationGuard, roleGuard],
         data: { roles: [ROLE.USER], admin: false },
     },

@@ -36,7 +36,7 @@ export class ManageUsersComponent {
 
   openOrders(username:string)
   {
-     this.router.navigate(['/orders',username])
+     this.router.navigate(['/users/orders',username])
   }
 
 

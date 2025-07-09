@@ -1,9 +1,6 @@
 package com.store.security.store_security.controladvice;
 
-import com.store.security.store_security.exceptions.ArticleException;
-import com.store.security.store_security.exceptions.OrderException;
-import com.store.security.store_security.exceptions.StockException;
-import com.store.security.store_security.exceptions.UserException;
+import com.store.security.store_security.exceptions.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -50,12 +47,17 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userException.getMessage());
 	}
 
+	@ExceptionHandler(TrackException.class)
+	public ResponseEntity<String> controlTrackFailer(TrackException userException)
+	{
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userException.getMessage());
+	}
+
 	@ExceptionHandler(Throwable.class)
 	public ResponseEntity<String> genericException(Throwable throwable)
 	{
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(throwable.getCause().getMessage());
 	}
-
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(

@@ -12,106 +12,92 @@ import { SuccessComponent } from '../../shared/component/success/success.compone
 @Component({
   selector: 'app-user-articles-page',
   standalone: true,
-  imports: [AlertComponent,SuccessComponent],
+  imports: [AlertComponent, SuccessComponent],
   templateUrl: './user-articles-page.component.html',
-  styleUrl: './user-articles-page.component.scss'
+  styleUrl: './user-articles-page.component.scss',
 })
 export class UserArticlesPageComponent {
-
   stockService = inject(StockService);
-  articles:StockArticleDto[] = [];
-  message:string = '';
-  modifyError:boolean=false;
+  articles: StockArticleDto[] = [];
+  message: string = '';
+  modifyError: boolean = false;
   readonly dialog = inject(MatDialog);
 
-  messageSuccess:string = '';
-  successAddRemove:boolean = false;
+  messageSuccess: string = '';
+  successAddRemove: boolean = false;
 
-  order:StockArticleDto[] = [];
+  order: StockArticleDto[] = [];
 
-  constructor()
-  {
+  constructor() {
     this.loadArticle();
   }
 
-
-  private loadArticle()
-  {
-     this.stockService.allArticleInStockWithQuantity().subscribe(
-      {
-        next:(artilces:StockArticleDto[])=>
-        {         
-          console.log(artilces);
-          
-          for(let i=0; i< artilces.length; i++)
-          {             
-             if(artilces[i].quantity>0)
-             {
-              this.articles.push(artilces[i]);
-             }
-          }
-        },
-        error:err=>console.error(err) 
-      }
-    )
+  private loadArticle() {
+    this.stockService.allArticleInStockWithQuantity().subscribe({
+      next: (artilces: StockArticleDto[]) => {
+        this.articles = artilces.filter((article) => article.quantity > 0);
+      },
+      error: (err) => console.error(err),
+    });
   }
 
-  add(article:StockArticleDto)
-  {    
+  add(article: StockArticleDto) {
     let index = this.order.indexOf(article);
-    if(index>=0)
-    {
-      this.modifyError=true;
+    if (index >= 0) {
+      this.modifyError = true;
       this.successAddRemove = false;
-      this.message="You can only order one item";
-    }else
-    {
-      this.modifyError=false;
+      this.message = 'You can only order one item';
+    } else {
+      this.modifyError = false;
       this.successAddRemove = true;
-       this.order.push(article);
-       this.messageSuccess='Add article';
-    }
-   
-  }
-
-  remove(article:StockArticleDto)
-  {
-    let index = this.order.indexOf(article);
-    if(index>=0)
-    {
-      this.modifyError=false;
-      this.successAddRemove = true;
-      this.order.splice(index,1);
-      this.messageSuccess='Remove article';
-    }else
-    {
-      this.modifyError=true;
-      this.successAddRemove = false;
-      this.message="Article not added";
+      this.order.push(article);
+      this.messageSuccess = 'Add article';
     }
   }
 
-  openDialog() {   
-    const dialogRef = this.dialog.open(CartComponent,
-      {
-        data:this.order
-      }
-    );
+  remove(article: StockArticleDto) {
+    let index = this.order.indexOf(article);
+    if (index >= 0) {
+      this.modifyError = false;
+      this.successAddRemove = true;
+      this.order.splice(index, 1);
+      this.messageSuccess = 'Remove article';
+    } else {
+      this.modifyError = true;
+      this.successAddRemove = false;
+      this.message = 'Article not added';
+    }
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-       if(result.checkout)
-       {
-        this.order = [];
-        this.modifyError=false;
-        this.successAddRemove = true;
-        this.messageSuccess = "ORDER COMPLETED"
-       }else
-       {
-        this.modifyError = false;
-        this.successAddRemove=false;
-        this.order = result.articles;
-       }
+  checkoutArticle() {
+    if (this.order.length > 0) {
+      this.openDialog();
+    } else {
+      this.modifyError = true;
+      this.message = 'ADD ARTICLE';
+      this.successAddRemove = false;
+    }
+  }
+
+  private openDialog() {
+    const dialogRef = this.dialog.open(CartComponent, {
+      data: this.order,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        if (result.checkout) {
+          this.order = [];
+          this.modifyError = false;
+          this.successAddRemove = true;
+          this.messageSuccess = 'ORDER COMPLETED';
+          this.loadArticle();
+        } else {
+          this.modifyError = false;
+          this.successAddRemove = false;
+          this.order = result.articles;
+        }
+      }
     });
   }
 }
-
