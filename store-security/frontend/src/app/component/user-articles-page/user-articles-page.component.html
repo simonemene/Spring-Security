@@ -1,6 +1,21 @@
-
+<div class="grid" [class.single-column]="order.length===0">
 @if(this.articles.length > 0)
 {
+    @if(order.length>0)
+    {
+         <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end position">
+      <p class="text-sm/6 text-gray-900">ORDER</p>
+ @for(orderArticle of order; track orderArticle)
+{
+   
+      <p class="mt-1 text-xs/5 text-gray-500">{{orderArticle.article.name}}</p>
+
+}
+    </div>
+    }
+    
+
+<div class="positionList">
 <ul role="list" class="divide-y divide-gray-100 p-8">
   
  @if(modifyError)
@@ -10,7 +25,7 @@
 
 @if(successAddRemove)
 {
-    <app-success [message]=messageSuccess [messageSuccess]=messageSuccessText></app-success>
+    <app-success [message]=messageSuccess></app-success>
 }
 
   @for(articleDto of articles; track articleDto)
@@ -38,9 +53,14 @@
       <div class="ml-[5px] inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-gray-500/10 ring-inset cursor-pointer hover:bg-gray-50" (click)="openDialog()">Go to CART</div>
 
 </ul>
+</div>
 }
 @else
 {
     <h1>NO ARTICLES</h1>
 }
+
+</div>
+
+
 

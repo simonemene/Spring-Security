@@ -1,9 +1,9 @@
-<mat-dialog-content class="mat-typography">
+<mat-dialog-content class="color mat-typography">
 <section>
   <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     <div class="mx-auto max-w-3xl">
       <header class="text-center">
-        <h1 class="text-xl font-bold text-gray-200 sm:text-3xl">Cart</h1>
+        <h1 class="text-xl font-bold text-gray-800 sm:text-3xl">Cart</h1>
       </header>
 
       <div class="mt-8">
@@ -20,14 +20,14 @@
             <div>
               <h3 class="text-sm text-gray-900">{{article.article.name}}</h3>
 
-              <dl class="mt-0.5 space-y-px text-[10px] text-gray-600">
+              <dl class="mt-0.5 space-y-px text-[10px] text-gray-800">
                 <div>
-                  <dt class="inline">Description</dt>
+                  <dt class="inline">Description </dt>
                   <dd class="inline">{{article.article.description}}</dd>
                 </div>
 
                 <div>
-                  <dt class="inline">Price</dt>
+                  <dt class="inline">Price </dt>
                   <dd class="inline">{{article.article.price}}</dd>
                 </div>
               </dl>
@@ -35,7 +35,7 @@
 
             <div class="flex flex-1 items-center justify-end gap-2">
 
-              <button class="text-gray-600 transition hover:text-red-600 cursor-pointer">
+              <button class="text-gray-600 transition hover:text-red-600 cursor-pointer" (click)="removeItem(article)">
                 <span class="sr-only">Remove item</span>
 
                 <svg

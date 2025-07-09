@@ -25,7 +25,6 @@ export class UserArticlesPageComponent {
   readonly dialog = inject(MatDialog);
 
   messageSuccess:string = '';
-  messageSuccessText:string = '';
   successAddRemove:boolean = false;
 
   order:StockArticleDto[] = [];
@@ -71,7 +70,6 @@ export class UserArticlesPageComponent {
       this.successAddRemove = true;
        this.order.push(article);
        this.messageSuccess='Add article';
-       this.messageSuccessText='Add article success';
     }
    
   }
@@ -85,7 +83,6 @@ export class UserArticlesPageComponent {
       this.successAddRemove = true;
       this.order.splice(index,1);
       this.messageSuccess='Remove article';
-       this.messageSuccessText='Remove article success';
     }else
     {
       this.modifyError=true;
@@ -102,7 +99,7 @@ export class UserArticlesPageComponent {
     );
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+       this.order = result;
     });
   }
 }
