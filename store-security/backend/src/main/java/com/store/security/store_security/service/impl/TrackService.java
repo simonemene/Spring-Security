@@ -29,7 +29,10 @@ public class TrackService implements ITrackService {
 
 	@Override
 	public TrackDto setTrack(Long idOrder,TrackDto trackDto) {
-		TrackEntity trackEntity = trackRepository.save(trackMapper.toEntity(trackDto));
+		TrackEntity track = trackMapper.toEntity(trackDto);
+		TrackEntity trackEntity = trackRepository.findByOrder_Id(idOrder);
+		track.setId(trackEntity.getId());
+		trackEntity = trackRepository.save(track);
 		if(trackEntity.getId() <= 0)
 		{
 			throw new TrackException(String.format("[ORDER: %s] Track not saved",idOrder));
