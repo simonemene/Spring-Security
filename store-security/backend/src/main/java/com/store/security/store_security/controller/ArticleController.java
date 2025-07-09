@@ -3,6 +3,8 @@ package com.store.security.store_security.controller;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.service.IArticleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,14 @@ public class ArticleController {
 
     private final IArticleService articleService;
 
+    @Operation(
+            summary = "Get all articles",
+            description = "REST API to get all articles"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description  = "HTTP Status 200 : OK"
+    )
     @GetMapping
     public ResponseEntity<ListArticleDto> getAllArticles()
     {
