@@ -7,11 +7,12 @@ import { ArticlesOrderDto } from '../../model/ArticlesOrderDto';
 import { MatDialog } from '@angular/material/dialog';
 import { CartComponent } from '../../shared/cart/cart.component';
 import { AlertComponent } from '../../shared/component/alert/alert.component';
+import { SuccessComponent } from '../../shared/component/success/success.component';
 
 @Component({
   selector: 'app-user-articles-page',
   standalone: true,
-  imports: [AlertComponent],
+  imports: [AlertComponent,SuccessComponent],
   templateUrl: './user-articles-page.component.html',
   styleUrl: './user-articles-page.component.scss'
 })
@@ -22,6 +23,10 @@ export class UserArticlesPageComponent {
   message:string = '';
   modifyError:boolean=false;
   readonly dialog = inject(MatDialog);
+
+  messageSuccess:string = '';
+  messageSuccessText:string = '';
+  successAddRemove:boolean = false;
 
   order:StockArticleDto[] = [];
 
@@ -37,11 +42,13 @@ export class UserArticlesPageComponent {
       {
         next:(artilces:StockArticleDto[])=>
         {         
+          console.log(artilces);
+          
           for(let i=0; i< artilces.length; i++)
-          {
-             if(this.articles[i].quantity>0)
+          {             
+             if(artilces[i].quantity>0)
              {
-              this.articles.push(this.articles[i]);
+              this.articles.push(artilces[i]);
              }
           }
         },
@@ -51,8 +58,22 @@ export class UserArticlesPageComponent {
   }
 
   add(article:StockArticleDto)
-  {
-    this.order.push(article);
+  {    
+    let index = this.order.indexOf(article);
+    if(index>=0)
+    {
+      this.modifyError=true;
+      this.successAddRemove = false;
+      this.message="You can only order one item";
+    }else
+    {
+      this.modifyError=false;
+      this.successAddRemove = true;
+       this.order.push(article);
+       this.messageSuccess='Add article';
+       this.messageSuccessText='Add article success';
+    }
+   
   }
 
   remove(article:StockArticleDto)
@@ -60,17 +81,23 @@ export class UserArticlesPageComponent {
     let index = this.order.indexOf(article);
     if(index>=0)
     {
+      this.modifyError=false;
+      this.successAddRemove = true;
       this.order.splice(index,1);
+      this.messageSuccess='Remove article';
+       this.messageSuccessText='Remove article success';
     }else
     {
+      this.modifyError=true;
+      this.successAddRemove = false;
       this.message="Article not added";
     }
   }
 
-  openDialog() {
+  openDialog() {   
     const dialogRef = this.dialog.open(CartComponent,
       {
-        data:this.articles
+        data:this.order
       }
     );
 
@@ -78,8 +105,5 @@ export class UserArticlesPageComponent {
       console.log(`Dialog result: ${result}`);
     });
   }
-
-
-
 }
 
