@@ -71,9 +71,7 @@ export class ListArticleComponent {
      this.stockService.allArticleInStockWithQuantity().subscribe(
       {
         next:(artilces:StockArticleDto[])=>
-        {
-          console.log(artilces);
-          
+        {         
           this.articles = artilces;
         },
         error:err=>console.error(err) 

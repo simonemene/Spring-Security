@@ -4,11 +4,12 @@ import { passwordMatcher } from '../../validators/validators';
 import { UserDto } from '../../model/UserDto';
 import { AuthenticationService } from '../../service/authentication.service';
 import { Router } from '@angular/router';
+import { AlertComponent } from '../../shared/component/alert/alert.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,AlertComponent],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
@@ -62,7 +63,6 @@ export class RegisterComponent {
       {
         next:(user:UserDto)=>
         {
-          console.log("registration successful for: "+user.username);
            this.router.navigate(['/login']);
         },
         error:(err)=>

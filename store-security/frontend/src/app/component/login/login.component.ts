@@ -5,11 +5,12 @@ import { FormControl, FormGroup, NgForm, ReactiveFormsModule, Validators } from 
 import { Route, Router, RouterModule } from '@angular/router';
 import { SessionStorageService } from '../../service/session-storage.service';
 import { getCookie } from 'typescript-cookie';
+import { AlertComponent } from '../../shared/component/alert/alert.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,AlertComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
@@ -19,6 +20,7 @@ export class LoginComponent {
   storeForm!:FormGroup;
   errorAuthentication:boolean=false;
   sessionStorageAuth = inject(SessionStorageService);
+  errorMessage:string = 'Username or Password incorrect';
 
   constructor(private auth:AuthenticationService,private router:Router)
   {
@@ -42,10 +44,7 @@ export class LoginComponent {
         {
           this.errorAuthentication=false;
           this.user = <any> responseData.body;
-          let csrf = getCookie("XSRF-TOKEN")!;
-          console.log(csrf);
-          
-          
+          let csrf = getCookie("XSRF-TOKEN")!;          
           window.sessionStorage.setItem("XSRF-TOKEN",csrf);
           this.sessionStorageAuth.login(this.user);
           this.router.navigate(['/welcome']);
@@ -54,7 +53,6 @@ export class LoginComponent {
         {
           if(err.status === 401)
           {
-            console.log("Authentication error");
             this.errorAuthentication=true;
           }
         }

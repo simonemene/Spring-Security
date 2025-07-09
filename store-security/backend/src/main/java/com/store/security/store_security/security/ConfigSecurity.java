@@ -57,11 +57,11 @@ public class ConfigSecurity {
                                         "/api/article/deleteArticle/{id}",
                                         "/api/article/decrementArticle",
                                         "/api/user",
-                                        "/api/v1/stock",
-                                        "/api/v1/stock/**",
                                         "/api/v1/articles/**",
                                         "/api/v1/articles").hasRole("ADMIN")
-                                .requestMatchers("/api/orders","/api/orders/{username}","/api/user/{username}").hasAnyRole("USER","ADMIN")
+                                .requestMatchers("/api/orders","/api/orders/{username}","/api/user/{username}",
+                                        "/api/v1/stock",
+                                        "/api/v1/stock/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers("/api/auth/user").authenticated()
                                 .requestMatchers("/api/auth/registration",
                                        "/v3/api-docs",

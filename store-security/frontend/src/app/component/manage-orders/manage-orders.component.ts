@@ -23,16 +23,12 @@ export class ManageOrdersComponent implements OnInit{
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(param=>
-      {
-        console.log("dentro");
-        
+      {      
         this.username = param['username'];
         this.orderService.getAllOrderUser(this.username).subscribe(
           {
             next:(allorder:AllOrderDto)=>
-            {
-              console.log(allorder);
-              
+            {              
                 this.orders = allorder; 
             },
             error:err=>console.error(err)

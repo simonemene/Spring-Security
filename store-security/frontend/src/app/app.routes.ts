@@ -14,69 +14,76 @@ import { ManageOrderComponent } from './component/manage-order/manage-order.comp
 import { UserProfilePageComponent } from './component/user-profile-page/user-profile-page.component';
 import { ManageArticleComponent } from './component/manage-article/manage-article.component';
 import { ListArticleComponent } from './component/list-article/list-article.component';
+import { UserArticlesPageComponent } from './component/user-articles-page/user-articles-page.component';
 
 export const routes: Routes = [
     {
-        path:'', component:HomeComponent, pathMatch:'full'
+        path: '', component: HomeComponent, pathMatch: 'full'
     },
     {
-        path:'welcome',component:WelcomeComponent,
-        canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.USER,ROLE.ADMIN]}
+        path: 'welcome', component: WelcomeComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.USER, ROLE.ADMIN] }
     },
     {
-        path:'login', component:LoginComponent
+        path: 'login', component: LoginComponent
     },
     {
-        path:'logout', component:LogoutComponent,
-        canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.USER,ROLE.ADMIN]}
+        path: 'logout', component: LogoutComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.USER, ROLE.ADMIN] }
     },
     {
-        path:'signup', component:RegisterComponent
+        path: 'signup', component: RegisterComponent
     },
     {
-        path:'users',component:ManageUsersComponent,
-        canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.ADMIN]},
-        children:[
+        path: 'users', component: ManageUsersComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.ADMIN] },
+        children: [
             {
-                path:':username',
+                path: ':username',
                 component: ManageProfileComponent,
-                data:{admin:true}
+                data: { admin: true }
             },
             {
                 path: ':orders',
                 component: ManageOrdersComponent,
-                children:[
+                children: [
                     {
-                        path:':order',
+                        path: ':order',
                         component: ManageOrderComponent
                     }
                 ]
             }
-        ] 
+        ]
     },
     {
-       path:'article',
-       component:ManageArticleComponent,
-       canActivate:[authenticationGuard,roleGuard],
-       data:{roles:[ROLE.ADMIN]}
+        path: 'article',
+        component: ManageArticleComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.ADMIN] }
     },
     {
-       path:'articles',
-       component:ListArticleComponent,
-       canActivate:[authenticationGuard,roleGuard],
-       data:{roles:[ROLE.ADMIN]}
+        path: 'articles',
+        component: ListArticleComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.ADMIN] }
 
     },
     {
-        path:'user-page',
-        component:ManageProfileComponent,
-        canActivate:[authenticationGuard,roleGuard],
-        data:{roles:[ROLE.USER], admin:false},
+        path: 'user-page',
+        component: ManageProfileComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.USER], admin: false },
     },
     {
-        path:'**', component:HomeComponent
+        path: 'user-article',
+        component: UserArticlesPageComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.USER], admin: false },
+    },
+    {
+        path: '**', component: HomeComponent
     }
 ];
