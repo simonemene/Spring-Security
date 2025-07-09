@@ -59,6 +59,10 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 	private TrackRepository trackRepository;
 
 
+	@Autowired
+	private StockArticleRepository stockArticleRepository;
+
+
 	@Test
 	@WithMockUser(username = "utente@gmail.com", roles = "USER")
 	public void createOrder() throws Exception {
@@ -81,6 +85,9 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 				.description(articleDto.getDescription()).price(articleDto.getPrice())
 				.tmstInsert(articleDto.getTmstInsert()).build();
 		articleRepository.save(article);
+		StockArticleEntity articleEntity = StockArticleEntity.builder().article(article).quantity(1).build();
+		stockArticleRepository.save(articleEntity);
+
 		AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().quantity(1).articleDto(articleDto).build();
 		List<AllArticleOrderDto> allArticleOrderDtos = List.of(allArticleOrderDto);
 		ArticlesOrderDto articles = ArticlesOrderDto.builder().idOrder(1L).articles(allArticleOrderDtos).username("utente@gmail.com").build();

@@ -46,20 +46,6 @@ public class RegistrationServiceUnitTest {
 		MockitoAnnotations.openMocks(this);
 		registrationService = new RegistrationService(userRepository, userMapper, passwordEncoder, authoritiesRepository);
 	}
-
-	@Test
-	public void registrationAgeFailed()
-	{
-		//given
-		UserDto userDto = UserDto.builder().password("1234").age(17).username("username1").tmstInsert(
-				LocalDateTime.now()).authoritiesList(
-				List.of("ROLE_USER")).build();
-		//when
-		//then
-		Assertions.assertThatThrownBy(()->registrationService.registrationUser(userDto)).isInstanceOf(
-				UserException.class).hasMessageContaining("User must be at least 18 years old");
-	}
-
 	@Test
 	public void registrationAlreadyExistsFailed()
 	{

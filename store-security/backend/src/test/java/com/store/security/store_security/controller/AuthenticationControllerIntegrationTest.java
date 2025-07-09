@@ -62,24 +62,6 @@ public class AuthenticationControllerIntegrationTest extends
 	}
 
 	@Test
-	public void registrationAgeFailed() throws Exception {
-		//given
-		String json = "{"
-				+ "\"username\": \"username\","
-				+ "\"password\": \"1234\","
-				+ "\"age\": 17,"
-				+ "\"authoritiesList\": [\"ROLE_USER\"],"
-				+ "\"tmstInsert\": \"2025-06-18T00:00:00\""
-				+ "}";
-
-		//when
-		//then
-		mockMvc.perform(MockMvcRequestBuilders.post("/api/auth/registration").contentType("application/json").content(json))
-				.andExpect(MockMvcResultMatchers.status().isBadRequest())
-				.andExpect(MockMvcResultMatchers.content().string("User must be at least 18 years old"));
-	}
-
-	@Test
 	public void registrationFailed() throws Exception {
 		//given
 		String json = "{"

@@ -47,6 +47,12 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 	@Autowired
 	private AuthoritiesRepository authoritiesRepository;
 
+	@Autowired
+	private StockRepository stockRepository;
+
+	@Autowired
+	private StockArticleRepository stockArticleRepository;
+
 
 	@Test
 	public void addOrder() throws OrderException {
@@ -65,13 +71,24 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 				.description("test1").price(new BigDecimal(15)).build();
 
 
-		articleRepository.save(articleMapper.toEntity(article1));
-		articleRepository.save(articleMapper.toEntity(article2));
+		ArticleEntity articleResult = articleRepository.save(articleMapper.toEntity(article1));
+		ArticleEntity articleResult1 = articleRepository.save(articleMapper.toEntity(article2));
+
+
 
 		AllArticleOrderDto articleOrderDto = AllArticleOrderDto.builder().articleDto(article1).quantity(3).build();
 		AllArticleOrderDto articleOrderDto1 = AllArticleOrderDto.builder().articleDto(article2).quantity(31).build();
 		articles.add(articleOrderDto1);
 		articles.add(articleOrderDto);
+
+
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleResult).quantity(10).build();
+		StockArticleEntity stockArticleEntity2 = StockArticleEntity.builder().article(articleResult1).quantity(10).build();
+		StockEntity stockEntity = StockEntity.builder().stockArticles(List.of(stockArticleEntity,stockArticleEntity2)).build();
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		stockArticleRepository.save(stockArticleEntity2);
+
 
 
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articles).username("username").build();
@@ -125,8 +142,10 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		ArticleDto article2 = ArticleDto.builder().name("table").tmstInsert(LocalDateTime.now())
 				.description("test1").price(new BigDecimal(15)).build();
 
-		articleRepository.save(articleMapper.toEntity(article1));
-		articleRepository.save(articleMapper.toEntity(article2));
+		ArticleEntity articleResult = articleRepository.save(articleMapper.toEntity(article1));
+		ArticleEntity articleResult1 = articleRepository.save(articleMapper.toEntity(article2));
+
+
 		List<AllArticleOrderDto> articlesOrder = new ArrayList<>();
 
 		AllArticleOrderDto articleOrderDto = AllArticleOrderDto.builder().articleDto(article1).quantity(3).build();
@@ -135,6 +154,13 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		articlesOrder.add(articleOrderDto);
 
 		ArticlesOrderDto articlesOrderDto = ArticlesOrderDto.builder().articles(articlesOrder).username("username").build();
+
+		StockArticleEntity stockArticleEntity = StockArticleEntity.builder().article(articleResult).quantity(10).build();
+		StockArticleEntity stockArticleEntity2 = StockArticleEntity.builder().article(articleResult1).quantity(10).build();
+		StockEntity stockEntity = StockEntity.builder().stockArticles(List.of(stockArticleEntity,stockArticleEntity2)).build();
+		stockRepository.save(stockEntity);
+		stockArticleRepository.save(stockArticleEntity);
+		stockArticleRepository.save(stockArticleEntity2);
 
 
 

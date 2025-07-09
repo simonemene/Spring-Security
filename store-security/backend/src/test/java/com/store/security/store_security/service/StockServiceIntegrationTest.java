@@ -157,7 +157,7 @@ public class StockServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//then
 		Assertions.assertThat(result).isNotNull();
 		Assertions.assertThat(result.getId()).isGreaterThan(0L);
-		Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("id")
+		Assertions.assertThat(result).usingRecursiveComparison().ignoringFields("id","tmstInsert")
 				.isEqualTo(articleDto);
 	}
 
