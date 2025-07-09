@@ -6,5 +6,5 @@ public interface ITrackService {
 
 	public TrackDto getTrackByOrder(Long idOrder);
 
-	public TrackDto setTrack(TrackDto trackDto);
+	public TrackDto setTrack(Long idOrder, TrackDto trackDto);
 }
