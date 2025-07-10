@@ -4,16 +4,18 @@ import { AllOrderDto } from '../../model/AllOrderDto';
 import { AuthenticationService } from '../../service/authentication.service';
 import { UserDto } from '../../model/UserDto';
 import { AlertComponent } from '../../shared/component/alert/alert.component';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-user-orders-page',
   standalone: true,
-  imports: [AlertComponent],
+  imports: [AlertComponent,RouterOutlet],
   templateUrl: './user-orders-page.component.html',
   styleUrl: './user-orders-page.component.scss',
 })
 export class UserOrdersPageComponent implements OnInit {
   orderService = inject(OrderService);
+  router = inject(Router);
   order: AllOrderDto = new AllOrderDto();
   authService = inject(AuthenticationService);
   message: string = '';
@@ -41,5 +43,10 @@ export class UserOrdersPageComponent implements OnInit {
         this.message = 'ORDER NOT FOUND';
       },
     });
+  }
+
+  track(idOrder:number)
+  {
+    this.router.navigate(['user-orders-page',idOrder, 'track']);
   }
 }

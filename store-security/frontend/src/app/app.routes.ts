@@ -16,6 +16,8 @@ import { ManageArticleComponent } from './component/manage-article/manage-articl
 import { ListArticleComponent } from './component/list-article/list-article.component';
 import { UserArticlesPageComponent } from './component/user-articles-page/user-articles-page.component';
 import { UserOrdersPageComponent } from './component/user-orders-page/user-orders-page.component';
+import { ManageTrackComponent } from './component/manage-track/manage-track.component';
+import { TrackOrdersPageComponent } from './component/track-orders-page/track-orders-page.component';
 
 export const routes: Routes = [
     {
@@ -49,7 +51,14 @@ export const routes: Routes = [
             },
             {
                 path: 'orders/:username',
-                component: ManageOrdersComponent
+                component: ManageOrdersComponent,
+                children:
+                [
+                    {
+                        path: ':idOrder/track',
+                        component:ManageTrackComponent
+                    }
+                ]
             }
         ]
     },
@@ -83,6 +92,13 @@ export const routes: Routes = [
         component: UserOrdersPageComponent,
         canActivate: [authenticationGuard, roleGuard],
         data: { roles: [ROLE.USER], admin: false },
+        children:
+        [
+            {
+                path:':idOrder/track',
+                component:ManageTrackComponent
+            }
+        ]
     },
     {
         path: '**', component: HomeComponent

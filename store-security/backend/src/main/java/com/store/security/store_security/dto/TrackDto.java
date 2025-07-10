@@ -1,6 +1,5 @@
 package com.store.security.store_security.dto;
 
-import com.store.security.store_security.entity.OrderEntity;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +9,7 @@ public class TrackDto {
 
 	private long id;
 
-	private OrderEntity order;
+	private OrderDto order;
 
 	private String status;
 }

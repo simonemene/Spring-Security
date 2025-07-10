@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { OrderService } from '../../service/order.service';
 import { AllOrderDto } from '../../model/AllOrderDto';
 import { AlertComponent } from '../../shared/component/alert/alert.component';
@@ -7,13 +7,14 @@ import { AlertComponent } from '../../shared/component/alert/alert.component';
 @Component({
   selector: 'app-manage-orders',
   standalone: true,
-  imports: [AlertComponent],
+  imports: [AlertComponent,RouterOutlet],
   templateUrl: './manage-orders.component.html',
   styleUrl: './manage-orders.component.scss',
 })
 export class ManageOrdersComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
   orderService = inject(OrderService);
+  router = inject(Router);
 
   username: string = '';
   orders: AllOrderDto = new AllOrderDto();
@@ -26,10 +27,6 @@ export class ManageOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((param) => {
       this.username = param['username'];
-      console.log(this.username);
-      console.log(param['username']);
-      
-      
       this.orderService.getAllOrderUser(this.username).subscribe({
         next: (orders: AllOrderDto) => {
           this.orders = orders;
@@ -41,5 +38,10 @@ export class ManageOrdersComponent implements OnInit {
         },
       });
     });
+  }
+
+  track(idOrder:number)
+  {
+    this.router.navigate(['/users', 'orders', this.username, idOrder, 'track']);
   }
 }
