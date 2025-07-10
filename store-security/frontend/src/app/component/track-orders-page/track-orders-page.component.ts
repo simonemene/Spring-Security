@@ -9,11 +9,12 @@ import { AllTrackDto } from '../../model/AllTrackDto';
 import { TrackUsersDto } from '../../model/TrackUsersDto';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SuccessComponent } from '../../shared/component/success/success.component';
 
 @Component({
   selector: 'app-track-orders-page',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule,SuccessComponent],
   templateUrl: './track-orders-page.component.html',
   styleUrl: './track-orders-page.component.scss',
 })
@@ -25,6 +26,9 @@ export class TrackOrdersPageComponent {
   allUser: AllUserDto = new AllUserDto();
   allOrder: AllOrderDto = new AllOrderDto();
   allTrack: TrackUsersDto = new TrackUsersDto();
+
+  successModTrack: boolean = false;
+  messageSuccess: string = '';
 
   status: string = '';
 
@@ -48,7 +52,8 @@ export class TrackOrdersPageComponent {
     if (idOrder) {
       this.trackService.setTrack(idOrder, track).subscribe({
         next: (result: TrackDto) => {
-          console.log('modificato');
+          this.successModTrack = true;
+          this.messageSuccess = `Success modify ORDER: ${idOrder}`
           this.getAllTrack();
         },
       });
