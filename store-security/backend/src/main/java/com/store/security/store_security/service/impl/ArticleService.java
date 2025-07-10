@@ -3,12 +3,14 @@ package com.store.security.store_security.service.impl;
 import com.store.security.store_security.dto.ArticleDto;
 import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.entity.ArticleEntity;
+import com.store.security.store_security.exceptions.ArticleException;
 import com.store.security.store_security.mapper.ArticleMapper;
 import com.store.security.store_security.repository.ArticleRepository;
 import com.store.security.store_security.service.IArticleService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @AllArgsConstructor
@@ -29,6 +31,7 @@ public class ArticleService implements IArticleService {
 
     @Override
     public ArticleDto getArticle(Long id) {
-        return articleRepository.findById(id).map(articleMapper::toDto).orElse(null);
+        ArticleEntity articleEntity =  articleRepository.findById(id).orElseThrow(()->new ArticleException("Article not found"));
+        return articleMapper.toDto(articleEntity);
     }
 }
