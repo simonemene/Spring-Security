@@ -24,7 +24,7 @@ public class OrderController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(orderService.orderArticles(articlesOrderDto));
 	}
 
-	@PreAuthorize("(#username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
+	@PreAuthorize("(#username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN') || hasRole('ROLE_TRACK')")
 	@GetMapping("/{username}")
 	public ResponseEntity<AllOrderDto> getAllOrders(@PathVariable("username") String username)
 			throws OrderException {

@@ -7,7 +7,8 @@ import lombok.Getter;
 public enum RoleConstants {
 
     USER("ROLE_USER"),
-    ADMIN("ROLE_ADMIN");
+    ADMIN("ROLE_ADMIN"),
+    TRACK("ROLE_TRACK");
 
     private final String role;
 

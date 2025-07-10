@@ -42,10 +42,24 @@ public class DataConfigInit implements CommandLineRunner {
         stockRepository.save(stock);
         userRepository.save(user);
 
-        // Altra autorità USER
+        // USER
         AuthoritiesEntity authoritiesUser = new AuthoritiesEntity();
         authoritiesUser.setAuthority(RoleConstants.USER.getRole());
         authoritiesRepository.save(authoritiesUser);
+        // TRACK
+        AuthoritiesEntity authoritiesTrack = new AuthoritiesEntity();
+        authoritiesTrack.setAuthority(RoleConstants.TRACK.getRole());
+        authoritiesTrack = authoritiesRepository.save(authoritiesTrack);
+
+        UserEntity tracker = new UserEntity();
+        tracker.setUsername("tracker@gmail.com");
+        tracker.setPassword(
+                "{bcrypt}$2a$12$jl2ifkyae8I/Tkg9OvnaK.rc.qkjX.N9CXrRkrOJmcW8BG5LAWJwq");
+        tracker.setAge(20);
+        tracker.setTmstInsert(LocalDateTime.now());
+        tracker.setAuthoritiesList(Set.of(authoritiesTrack));
+
+        userRepository.save(tracker);
     }
 }
 

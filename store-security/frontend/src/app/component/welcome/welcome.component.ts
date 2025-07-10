@@ -37,4 +37,14 @@ export class WelcomeComponent implements OnInit{
     return this.username.authoritiesList.includes(ROLE.ADMIN);
   }
 
+  isUser():boolean
+  {
+    return this.username.authoritiesList.includes(ROLE.USER);
+  }
+
+   isTrack():boolean
+  {
+    return this.username.authoritiesList.includes(ROLE.TRACK);
+  }
+
 }

@@ -26,7 +26,7 @@ export const routes: Routes = [
     {
         path: 'welcome', component: WelcomeComponent,
         canActivate: [authenticationGuard, roleGuard],
-        data: { roles: [ROLE.USER, ROLE.ADMIN] }
+        data: { roles: [ROLE.USER, ROLE.ADMIN,ROLE.TRACK] }
     },
     {
         path: 'login', component: LoginComponent
@@ -101,6 +101,12 @@ export const routes: Routes = [
         ]
     },
     {
-        path: '**', component: HomeComponent
+        path:'track',
+        component:TrackOrdersPageComponent,
+        canActivate: [authenticationGuard, roleGuard],
+        data: { roles: [ROLE.TRACK]}
+    },
+    {
+        path: '**', component: WelcomeComponent
     }
 ];
