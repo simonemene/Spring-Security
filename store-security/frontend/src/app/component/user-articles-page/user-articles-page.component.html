@@ -5,7 +5,7 @@
 }
 <div class="grid" [class.single-column]="order.length === 0">
   @if(this.articles.length > 0) { @if(order.length>0) {
-  <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end position">
+  <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end position pr-8">
     <p class="text-sm/6 text-gray-900">ORDER</p>
     @for(orderArticle of order; track orderArticle) {
 
