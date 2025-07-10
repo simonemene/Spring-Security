@@ -26,6 +26,7 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -50,7 +51,7 @@ public class ConfigSecurity {
         http.csrf(csrf->csrf.csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 .ignoringRequestMatchers("/api/auth/registration","/h2-console/**","/api/auth/logout")
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()));
-        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+        http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         http.authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/article/addArticle",
                                         "/api/article/addArticle/**",
@@ -104,7 +105,7 @@ public class ConfigSecurity {
         );
 
         //authentication
-        http.formLogin(Customizer.withDefaults());
+        http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
@@ -131,6 +132,11 @@ public class ConfigSecurity {
     @Bean
     public SessionRegistry sessionRegistry() {
         return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public static HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 
 }

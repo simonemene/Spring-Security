@@ -14,7 +14,7 @@ public class StoreSecurityListener {
     @EventListener
     public void onAuthenticationSuccessEvent(AuthenticationSuccessEvent success)
     {
-        log.info("Authentication success");
+        log.info("Authentication success for: {}",success.getAuthentication().getName());
     }
 
     @EventListener

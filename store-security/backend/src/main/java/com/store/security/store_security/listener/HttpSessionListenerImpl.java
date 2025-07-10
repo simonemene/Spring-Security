@@ -1,4 +1,4 @@
-package com.store.security.store_security.listener;
+/*package com.store.security.store_security.listener;
 
 import jakarta.servlet.http.HttpSessionEvent;
 import jakarta.servlet.http.HttpSessionListener;
@@ -17,5 +17,5 @@ public class HttpSessionListenerImpl implements HttpSessionListener {
 		System.out.println("Session destroyed: " + se.getSession().getId());
 		sessionRegistry.removeSessionInformation(se.getSession().getId());
 	}
-}
+}*/
 
