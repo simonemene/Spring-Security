@@ -5,6 +5,7 @@ import com.store.security.store_security.dto.ListArticleDto;
 import com.store.security.store_security.service.IArticleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,26 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.allArticle());
     }
 
+    @Operation(
+            summary = "Get article by id user",
+            description =  "REST API to get article by id user"
+    )
+    @ApiResponses(
+            value =
+                    {
+                            @ApiResponse
+                                    (
+                                            responseCode = "200",
+                                                description = "GET Article by id"
+                                    ),
+                            @ApiResponse
+                                    (
+                                            responseCode = "400",
+                                            description = "Article not found"
+                                    )
+
+                    }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<ArticleDto> getArticleById(@PathVariable("id") Long id)
     {
