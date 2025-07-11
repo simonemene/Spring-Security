@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { AllUserDto } from '../model/AllUserDto';
 import { URL } from '../constant/url.constants';
@@ -10,6 +10,17 @@ import { UserDto } from '../model/UserDto';
   providedIn: 'root'
 })
 export class UserService {
+
+   private _user = signal(false);
+
+   setRealoadUser(value:boolean)
+   {
+    this._user.set(value);
+   }
+
+   get reloadUsers() {
+    return this._user;
+  }
 
   baseUrl:string = environment.apiBaseUrl;
 
@@ -25,5 +36,10 @@ export class UserService {
     let params = new HttpParams();
     params.append("username",username);
     return this.http.get<UserDto>(`${this.baseUrl}${URL.ALLUSER}/${username}`,{params,withCredentials:true});
+  }
+
+  updateProfile(id:number,user:UserDto)
+  {
+    return this.http.put<UserDto>(`${this.baseUrl}${URL.ALLUSER}/${id}`,user,{withCredentials:true});
   }
 }

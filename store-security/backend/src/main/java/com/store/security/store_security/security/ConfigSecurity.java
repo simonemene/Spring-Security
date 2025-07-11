@@ -57,6 +57,7 @@ public class ConfigSecurity {
                                         "/api/v1/articles/**",
                                         "/api/v1/articles").hasRole("ADMIN")
                                 .requestMatchers("/api/user/{username}",
+                                        "/api/user/{id}",
                                         "/api/v1/stock",
                                         "/api/v1/stock/**").hasAnyRole("USER","ADMIN")
                                 .requestMatchers(

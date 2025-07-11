@@ -58,9 +58,10 @@ public class UserService implements IUserService {
 		UserEntity update = UserEntity.builder().build();
 		if(userCheck.isPresent() && userCheck.get().getId()>0)
 		{
-			userEntity.setUsername(userDto.getUsername());
-			userEntity.setAge(userDto.getAge());
-			update = userRepository.save(userEntity);
+			update = userCheck.get();
+			update.setUsername(userDto.getUsername());
+			update.setAge(userDto.getAge());
+			update = userRepository.save(update);
 		}else
 		{
 			throw new UserException(String.format("User %s not updated",userDto.getUsername()));

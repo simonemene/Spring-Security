@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { AllUserDto } from '../../model/AllUserDto';
 import { UserService } from '../../service/user.service';
 import { Router, RouterModule } from '@angular/router';
@@ -8,38 +8,36 @@ import { Router, RouterModule } from '@angular/router';
   standalone: true,
   imports: [RouterModule],
   templateUrl: './manage-users.component.html',
-  styleUrl: './manage-users.component.scss'
+  styleUrl: './manage-users.component.scss',
 })
 export class ManageUsersComponent {
-
   router = inject(Router);
 
-  allUser!:AllUserDto;
+  allUser!: AllUserDto;
 
-  constructor(private userService:UserService)
-  {
-    this.userService.allUser().subscribe(
-      {
-        next:(allUser:AllUserDto)=>
-        {
-          this.allUser = allUser;
-        },
-        error:(err)=>console.error(err)
+  constructor(private userService: UserService) {
+    effect(() => {
+      if (this.userService.reloadUsers()) {
+        this.loadUser();
       }
-    )
+    });
+    this.loadUser();
   }
 
-  openUser(username:string)
-  { 
-    this.router.navigate(['/users',username])
+  openUser(username: string) {
+    this.router.navigate(['/users', username]);
   }
 
-  openOrders(username:string)
-  {
-     this.router.navigate(['/users/orders',username])
+  openOrders(username: string) {
+    this.router.navigate(['/users/orders', username]);
   }
 
-
-
-
+  loadUser() {
+    this.userService.allUser().subscribe({
+      next: (allUser: AllUserDto) => {
+        this.allUser = allUser;
+      },
+      error: (err) => console.error(err),
+    });
+  }
 }
