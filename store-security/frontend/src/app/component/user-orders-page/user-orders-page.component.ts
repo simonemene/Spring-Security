@@ -5,11 +5,12 @@ import { AuthenticationService } from '../../service/authentication.service';
 import { UserDto } from '../../model/UserDto';
 import { AlertComponent } from '../../shared/component/alert/alert.component';
 import { Router, RouterOutlet } from '@angular/router';
+import { UserTrackPageComponent } from '../user-track-page/user-track-page.component';
 
 @Component({
   selector: 'app-user-orders-page',
   standalone: true,
-  imports: [AlertComponent,RouterOutlet],
+  imports: [AlertComponent, UserTrackPageComponent],
   templateUrl: './user-orders-page.component.html',
   styleUrl: './user-orders-page.component.scss',
 })
@@ -20,6 +21,8 @@ export class UserOrdersPageComponent implements OnInit {
   authService = inject(AuthenticationService);
   message: string = '';
   modifyError: boolean = false;
+
+  selectedOrderId: number | null = null;
 
   constructor() {}
 
@@ -45,8 +48,7 @@ export class UserOrdersPageComponent implements OnInit {
     });
   }
 
-  track(idOrder:number)
-  {
-    this.router.navigate(['user-orders-page',idOrder, 'track']);
+  track(idOrder: number) {
+    this.selectedOrderId = idOrder;
   }
 }
