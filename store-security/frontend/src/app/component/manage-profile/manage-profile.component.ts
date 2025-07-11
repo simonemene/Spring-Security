@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UserDto } from '../../model/UserDto';
 import { UserService } from '../../service/user.service';
 import { AuthenticationService } from '../../service/authentication.service';
@@ -34,8 +34,20 @@ export class ManageProfileComponent implements OnInit {
   successUpdate: boolean = false;
 
   profileForm!: FormGroup;
+  
 
-  constructor(private location: Location) {
+  constructor(private location: Location, private router:Router) {
+
+
+    effect(() => {
+      console.log("dentro");
+      
+      if (this.userService.reloadUsers()) {
+        this.userService.setRealoadUser(false);
+        router.navigate(['/logout']);
+      }
+    }, { allowSignalWrites: true });
+
     this.profileForm = new FormGroup({
       username: new FormControl(this.userDto.username, [Validators.email]),
       age: new FormControl(this.userDto.age, [

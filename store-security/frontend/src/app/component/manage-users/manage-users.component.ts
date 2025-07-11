@@ -21,7 +21,7 @@ export class ManageUsersComponent {
         this.loadUser();
         this.userService.setRealoadUser(false);
       }
-    });
+    }, { allowSignalWrites: true });
     this.loadUser();
   }
 
