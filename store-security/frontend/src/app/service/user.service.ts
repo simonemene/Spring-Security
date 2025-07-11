@@ -13,6 +13,8 @@ export class UserService {
 
    private _user = signal(false);
 
+   private _singleUser = signal(false);
+
    setRealoadUser(value:boolean)
    {
     this._user.set(value);
@@ -20,6 +22,15 @@ export class UserService {
 
    get reloadUsers() {
     return this._user;
+  }
+
+  setRealoadUserSingle(value:boolean)
+   {
+    this._singleUser.set(value);
+   }
+
+   get reloadUsersSingle() {
+    return this._singleUser;
   }
 
   baseUrl:string = environment.apiBaseUrl;

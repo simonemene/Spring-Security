@@ -19,6 +19,7 @@ export class ManageUsersComponent {
     effect(() => {
       if (this.userService.reloadUsers()) {
         this.loadUser();
+        this.userService.setRealoadUser(false);
       }
     });
     this.loadUser();

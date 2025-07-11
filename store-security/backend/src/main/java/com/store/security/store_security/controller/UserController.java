@@ -30,7 +30,6 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.allUser());
 	}
 
-	@PreAuthorize("(#userDto.username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id,@RequestBody UserDto userDto)
 	{

@@ -81,6 +81,7 @@ export class ManageProfileComponent implements OnInit {
         this.successUpdate = true;
         this.messageSuccess = 'UPDATE PROFILE';
         this.userService.setRealoadUser(true);
+        this.location.back();
         this.userService.getProfile(this.userDto.username).subscribe({
           next: (userDate: UserDto) => {
             this.userDto = userDate;
