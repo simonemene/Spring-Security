@@ -8,4 +8,6 @@ public interface IUserService {
 	public UserDto findUser(String username);
 
 	public AllUserDto allUser();
+
+	public UserDto updateUser(Long id,UserDto userDto);
 }

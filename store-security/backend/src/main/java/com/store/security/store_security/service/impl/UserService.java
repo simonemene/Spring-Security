@@ -50,4 +50,27 @@ public class UserService implements IUserService {
 		return allUser;
 	}
 
+	@Transactional
+	@Override
+	public UserDto updateUser(Long id,UserDto userDto) {
+		UserEntity userEntity = userMapper.toEntity(userDto);
+		Optional<UserEntity> userCheck = userRepository.findById(id);
+		UserEntity update = UserEntity.builder().build();
+		if(userCheck.isPresent() && userCheck.get().getId()>0)
+		{
+			userEntity.setUsername(userDto.getUsername());
+			userEntity.setAge(userDto.getAge());
+			update = userRepository.save(userEntity);
+		}else
+		{
+			throw new UserException(String.format("User %s not updated",userDto.getUsername()));
+		}
+
+		if(update.getId() <= 0)
+		{
+			throw new UserException(String.format("User %s not updated",userDto.getUsername()));
+		}
+		return userMapper.toDto(update);
+	}
+
 }

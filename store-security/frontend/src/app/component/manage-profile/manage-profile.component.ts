@@ -69,7 +69,7 @@ export class ManageProfileComponent implements OnInit {
   }
 
   onSubmit() {
-        //fare una put
+      console.log(this.profileForm);
   }
 
 

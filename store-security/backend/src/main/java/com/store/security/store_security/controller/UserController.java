@@ -30,11 +30,11 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.OK).body(userService.allUser());
 	}
 
-	@PutMapping
-	public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto)
+	@PreAuthorize("(#userDto.username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
+	@PutMapping("/{id}")
+	public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long id,@RequestBody UserDto userDto)
 	{
-		//TODO:IMPLEMENTS SERVICE
-		return null;
+		return ResponseEntity.status(HttpStatus.OK).body(userService.updateUser(id,userDto));
 	}
 
 
