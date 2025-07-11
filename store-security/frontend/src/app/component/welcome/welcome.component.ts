@@ -26,7 +26,6 @@ export class WelcomeComponent implements OnInit {
       if (this.userService.reloadUsers()) {
         this.userService.setRealoadUser(false);
         router.navigate(['/logout']);
-        
       }
     });
   }
