@@ -9,7 +9,7 @@ public interface IOrderService {
 	public ArticlesOrderDto orderArticles(ArticlesOrderDto articlesOrderDto)
 			throws OrderException;
 
-	public AllOrderDto allOrderByUser(String username) throws OrderException;
+	public AllOrderDto allOrderByUser(Long id) throws OrderException;
 
 
 }

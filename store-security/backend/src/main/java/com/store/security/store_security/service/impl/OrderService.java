@@ -125,8 +125,8 @@ public class OrderService implements IOrderService {
 	}
 
 	@Override
-	public AllOrderDto allOrderByUser(String username) throws OrderException {
-		List<OrderEntity> orders = orderRepository.findByUserUsername(username);
+	public AllOrderDto allOrderByUser(Long id) throws OrderException {
+		List<OrderEntity> orders = orderRepository.findByUserId(id);
 		AllOrderDto allOrderDto = AllOrderDto.builder().build();
 
 
@@ -148,10 +148,10 @@ public class OrderService implements IOrderService {
 			{
 				articlesOrders.setArticles(allArticleOrderDtos);
 				articlesOrders.setIdOrder(order.getId());
-				articlesOrders.setUsername(username);
+				articlesOrders.setUsername(order.getUser().getUsername());
 			}
 			else {
-				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",username));
+				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",order.getUser().getUsername()));
 			}
 				allOrderDto.addOrders(articlesOrders);
 

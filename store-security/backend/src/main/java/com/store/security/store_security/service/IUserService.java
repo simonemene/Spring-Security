@@ -5,7 +5,7 @@ import com.store.security.store_security.dto.UserDto;
 
 public interface IUserService {
 
-	public UserDto findUser(String username);
+	public UserDto findUser(Long id);
 
 	public AllUserDto allUser();
 

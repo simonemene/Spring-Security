@@ -24,13 +24,13 @@ public class UserService implements IUserService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public UserDto findUser(String username) {
-		Optional<UserEntity> userEntity = userRepository.findByUsername(username);
+	public UserDto findUser(Long id) {
+		Optional<UserEntity> userEntity = userRepository.findById(id);
 		if(userEntity.isPresent())
 		{
 			return userMapper.toDto(userEntity.get());
 		}
-		throw new UserException(String.format("User %s not found", username));
+		throw new UserException(String.format("User %s not found", id));
 	}
 
 	@Transactional(readOnly = true)

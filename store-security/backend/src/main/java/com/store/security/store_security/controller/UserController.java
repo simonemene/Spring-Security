@@ -17,9 +17,9 @@ public class UserController {
 	private final IUserService userService;
 
 
-	@PreAuthorize("(#username == authentication.name && hasRole('ROLE_USER')) || hasRole('ROLE_ADMIN')")
-	@GetMapping("/{username}")
-	public ResponseEntity<UserDto> userDetails(@PathVariable("username") String username)
+	@PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
+	@GetMapping("/{id}")
+	public ResponseEntity<UserDto> userDetails(@PathVariable("id") Long username)
 	{
 		return ResponseEntity.status(HttpStatus.OK).body(userService.findUser(username));
 	}
