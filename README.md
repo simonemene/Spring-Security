@@ -57,9 +57,9 @@ This demo should **not be used in production** as-is. For more secure authentica
 
 ### Prerequisites
 
-- Java 11+  
+- Java 17+  
 - Maven or Gradle  
-- A configured relational database (MySQL, PostgreSQL, etc.)
+- A configured relational database (MySQL, H2)
 
 ### Running the Application
 
