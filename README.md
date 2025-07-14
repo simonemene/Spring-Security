@@ -1,4 +1,4 @@
-# Simple Store Authentication Demo
+# BASIC AUTH STORE
 
 A demo project showcasing **Spring Security** Basic Authentication using **JSESSIONID** for session management. This is a simple online store where users can register, authenticate, and purchase articles.
 
@@ -65,4 +65,4 @@ This demo should **not be used in production** as-is. For more secure authentica
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/yourusername/store-auth-demo.git
+   git clone https://github.com/yourusername/basic-auth-store.git
