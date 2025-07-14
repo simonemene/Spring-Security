@@ -30,7 +30,7 @@ public class AuthenticationController {
     public ResponseEntity<UserDto> userAuth()
     {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        UserDto userDto = userService.findUser(username);
+        UserDto userDto = userService.findUserByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 

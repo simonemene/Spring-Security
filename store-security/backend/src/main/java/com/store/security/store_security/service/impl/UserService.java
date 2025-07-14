@@ -35,6 +35,19 @@ public class UserService implements IUserService {
 
 	@Transactional(readOnly = true)
 	@Override
+	public UserDto findUserByUsername(String username) {
+		Optional<UserEntity> userEntity = userRepository.findByUsername(username);
+		if(userEntity.isPresent())
+		{
+			return userMapper.toDto(userEntity.get());
+		}
+		throw new UserException(String.format("User %s not found", username));
+	}
+
+
+
+	@Transactional(readOnly = true)
+	@Override
 	public AllUserDto allUser() {
 		List<UserEntity> users = userRepository.findAll();
 		AllUserDto allUser = AllUserDto.builder().build();
