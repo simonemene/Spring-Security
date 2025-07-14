@@ -71,7 +71,7 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		userRepository.save(userEntity);
 
 		//when
-		UserDto user = userService.findUser(userEntity.getUsername());
+		UserDto user = userService.findUser(userEntity.getId());
 		//then
 		Assertions.assertThat(user.getPassword()).isEqualTo(userEntity.getPassword());
 		Assertions.assertThat(user.getUsername()).isEqualTo(userEntity.getUsername());
@@ -91,13 +91,13 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//given
 
 
-		UserEntity userEntity = UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
+		UserEntity userEntity = UserEntity.builder().id(1L).username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
 		AuthoritiesEntity authoritiesEntity = AuthoritiesEntity.builder().authority("ROLE_USER").users(Set.of(userEntity)).build();
 		userEntity.setAuthoritiesList(Set.of(authoritiesEntity));
 		//when
 		//then
-		Assertions.assertThatThrownBy(()->userService.findUser(userEntity.getUsername()))
+		Assertions.assertThatThrownBy(()->userService.findUser(userEntity.getId()))
 				.isInstanceOf(UserException.class)
 				.hasMessageContaining("User username not found");
 	}

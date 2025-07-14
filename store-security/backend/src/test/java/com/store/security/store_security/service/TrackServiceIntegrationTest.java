@@ -6,6 +6,7 @@ import com.store.security.store_security.entity.AuthoritiesEntity;
 import com.store.security.store_security.entity.OrderEntity;
 import com.store.security.store_security.entity.TrackEntity;
 import com.store.security.store_security.entity.UserEntity;
+import com.store.security.store_security.mapper.OrderMapper;
 import com.store.security.store_security.repository.AuthoritiesRepository;
 import com.store.security.store_security.repository.OrderRepository;
 import com.store.security.store_security.repository.TrackRepository;
@@ -30,6 +31,9 @@ public class TrackServiceIntegrationTest extends StoreSecurityApplicationTests {
 
 	@Autowired
 	private UserRepository	userRepository;
+
+	@Autowired
+	private OrderMapper orderMapper;
 
 	@Autowired
 	private AuthoritiesRepository authoritiesRepository;
@@ -77,7 +81,7 @@ public class TrackServiceIntegrationTest extends StoreSecurityApplicationTests {
 		TrackEntity track = TrackEntity.builder().order(order).status("status").build();
 		trackRepository.save(track);
 		//when
-		TrackDto trackDto = trackService.setTrack(order.getId(),TrackDto.builder().order(order).status("PREPARED").build());
+		TrackDto trackDto = trackService.setTrack(order.getId(),TrackDto.builder().order(orderMapper.toDto(order)).status("PREPARED").build());
 		//then
 		Assertions.assertThat(trackDto).isNotNull();
 		Assertions.assertThat(trackDto.getId()).isEqualTo(track.getId());

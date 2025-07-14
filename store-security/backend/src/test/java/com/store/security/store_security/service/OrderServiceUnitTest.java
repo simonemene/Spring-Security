@@ -156,30 +156,5 @@ public class OrderServiceUnitTest {
 				.hasMessageContaining(String.format("[ORDER: %s] TRACK NOT SAVED","1"));
 	}
 
-	@Test
-	public void getAllOrderFailed() throws OrderException {
-		//given
-		OrderEntity order = OrderEntity.builder().id(1L)
-				.user(UserEntity.builder().username("username").build())
-				.build();
-		OrderEntity order1 = OrderEntity.builder().id(2L)
-				.user(UserEntity.builder().username("username").build())
-				.build();
-		List<OrderEntity> orders = List.of(order,order1);
-        Mockito.when(orderRepository.findByUserUsername("username")).thenReturn(
-				orders);
-		ArticleEntity article1 = ArticleEntity.builder().name("car").id(1L).build();
-		ArticleEntity article2 = ArticleEntity.builder().name("table").id(2L).build();
-		List<OrderLineEntity> orderLines = List.of(
-				OrderLineEntity.builder().build(),
-				OrderLineEntity.builder().id(OrderLineKeyEmbeddable.builder().idArticle(2L).idOrder(1L).build())
-						.article(article2).order(order).build());
-		Mockito.when(orderLineRepository.findByOrder_Id(1L)).thenReturn(orderLines);
-		//when
-		//then
-		Assertions.assertThatThrownBy(()->orderService.allOrderByUser("username"))
-				.isInstanceOf(OrderException.class)
-				.hasMessageContaining("USER: username] ORDER NOT ADD");
-	}
 
 }

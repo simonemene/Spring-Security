@@ -129,33 +129,34 @@ public class OrderService implements IOrderService {
 		List<OrderEntity> orders = orderRepository.findByUserId(id);
 		AllOrderDto allOrderDto = AllOrderDto.builder().build();
 
+		if(!orders.isEmpty()) {
 
 
-		for(OrderEntity order: orders)
-		{
-			ArticlesOrderDto articlesOrders = ArticlesOrderDto.builder().build();
-			List<OrderLineEntity> ordersLine = orderLineRepository.findByOrder_Id(order.getId());
+			for (OrderEntity order : orders) {
+				ArticlesOrderDto articlesOrders = ArticlesOrderDto.builder().build();
+				List<OrderLineEntity> ordersLine = orderLineRepository.findByOrder_Id(order.getId());
 
 
-
-			List<AllArticleOrderDto> allArticleOrderDtos = new ArrayList<>();
-			for(OrderLineEntity orderLine : ordersLine)
-			{
-				AllArticleOrderDto  allArticleOrderDto = AllArticleOrderDto.builder().articleDto(articleMapper.toDto(orderLine.getArticle())).quantity(orderLine.getQuantity()).build();
-			    allArticleOrderDtos.add(allArticleOrderDto);
-			}
-			if(!allArticleOrderDtos.isEmpty())
-			{
-				articlesOrders.setArticles(allArticleOrderDtos);
-				articlesOrders.setIdOrder(order.getId());
-				articlesOrders.setUsername(order.getUser().getUsername());
-			}
-			else {
-				throw new OrderException(String.format("[USER: %s] ORDER NOT ADD",order.getUser().getUsername()));
-			}
+				List<AllArticleOrderDto> allArticleOrderDtos = new ArrayList<>();
+				for (OrderLineEntity orderLine : ordersLine) {
+					AllArticleOrderDto allArticleOrderDto = AllArticleOrderDto.builder().articleDto(articleMapper.toDto(orderLine.getArticle())).quantity(orderLine.getQuantity()).build();
+					allArticleOrderDtos.add(allArticleOrderDto);
+				}
+				if (!allArticleOrderDtos.isEmpty()) {
+					articlesOrders.setArticles(allArticleOrderDtos);
+					articlesOrders.setIdOrder(order.getId());
+					articlesOrders.setUsername(order.getUser().getUsername());
+				} else {
+					throw new OrderException(String.format("[USER: %s] ORDER NOT ADD", order.getUser().getUsername()));
+				}
 				allOrderDto.addOrders(articlesOrders);
 
+			}
+		}else
+		{
+			throw new OrderException(String.format("[USER: %s] ORDER NOT ADD", SecurityContextHolder.getContext().getAuthentication().getName()));
 		}
 		return allOrderDto;
 	}
+
 }

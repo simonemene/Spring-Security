@@ -65,12 +65,11 @@ public class OrderControllerUnitTest {
 	@WithMockUser(username = "utente@gmail.com", roles = "USER")
 	public void getAllOrder() throws Exception {
 		//given
-		String username = "utente@gmail.com";
-		Mockito.when(orderService.allOrderByUser(username))
+		Mockito.when(orderService.allOrderByUser(1L))
 				.thenThrow(new OrderException("order not found"));
 		//when
 		//then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{username}",username))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{id}",1L))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().string("order not found"));
 	}

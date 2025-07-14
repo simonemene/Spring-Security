@@ -247,7 +247,7 @@ public class OrderServiceIntegrationTest extends StoreSecurityApplicationTests {
 		orderLineRepository.save(orderLine);
 		orderLineRepository.save(orderLine1);
 		//when
-		AllOrderDto orders = orderService.allOrderByUser("username");
+		AllOrderDto orders = orderService.allOrderByUser(user.getId());
 		//then
 		Assertions.assertThat(orders.getOrders()).hasSize(1);
 		ArticlesOrderDto articlesOrderDto = orders.getOrders().get(0);

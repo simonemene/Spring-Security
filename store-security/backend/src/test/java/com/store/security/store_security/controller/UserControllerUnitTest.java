@@ -29,11 +29,10 @@ public class UserControllerUnitTest {
 	@WithMockUser(username = "admin@gmail.com", roles = "USER")
 	public void userNotFound() throws Exception {
 		//given
-		String username = "admin@gmail.com";
-		Mockito.when(userService.findUser(username)).thenThrow(new UserException("User admin not found"));
+		Mockito.when(userService.findUser(1L)).thenThrow(new UserException("User admin not found"));
 		//when
 		//then
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{username}",username))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{id}",1L))
 				.andExpect(MockMvcResultMatchers.status().isBadRequest())
 				.andExpect(MockMvcResultMatchers.content().string("User admin not found"));
 	}

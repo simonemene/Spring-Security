@@ -42,13 +42,13 @@ public class UserUnitTest {
 	public void userFound()
 	{
 		//given
-		Optional<UserEntity> userEntity = Optional.of(UserEntity.builder().username("username").age(21).password("1234").tmstInsert(
+		Optional<UserEntity> userEntity = Optional.of(UserEntity.builder().id(1L).username("username").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build());
-		Mockito.when(userRepository.findByUsername("username")).thenReturn(userEntity);
+		Mockito.when(userRepository.findById(1L)).thenReturn(userEntity);
 		UserDto userDto = UserDto.builder().username("username").age(21).password("1234").build();
 		Mockito.when(userMapper.toDto(userEntity.get())).thenReturn(userDto);
 		//when
-		UserDto result = userService.findUser("username");
+		UserDto result = userService.findUser(1L);
 		//then
 		Assertions.assertThat(userDto).usingRecursiveComparison().isEqualTo(result);
 	}
@@ -57,12 +57,12 @@ public class UserUnitTest {
 	public void userNotFound()
 	{
 		//given
-		Mockito.when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
+		Mockito.when(userRepository.findById(1L)).thenReturn(Optional.empty());
 		//when
 		//then
-		Assertions.assertThatThrownBy(()->userService.findUser("username"))
+		Assertions.assertThatThrownBy(()->userService.findUser(1L))
 				.isInstanceOf(UserException.class)
-				.hasMessageContaining("User username not found");
+				.hasMessageContaining("User 1 not found");
 	}
 
 	@Test
