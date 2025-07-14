@@ -105,7 +105,7 @@ public class ConfigSecurity {
 
         http.requiresChannel(channel->channel.anyRequest().requiresSecure());
         //authentication
-        http.formLogin(login->login.loginPage("/api/auth/login"));
+        http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();

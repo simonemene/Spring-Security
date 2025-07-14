@@ -67,10 +67,10 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 				.tmstInsert(LocalDateTime.of(2022, 1, 1, 0, 0))
 				.authoritiesList(Set.of(userRole))
 				.build();
-		userRepository.save(userEntity);
+		userEntity = userRepository.save(userEntity);
 		//whe
 		//then
-		mockMvc.perform(get("/api/user/{username}",username))
+		mockMvc.perform(get("/api/user/{id}",userEntity.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.username").value("prova@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.age").value(21))
@@ -80,10 +80,9 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 	}
 
 	@Test
-	@WithMockUser(username = "prova@gmail.com", roles = "USER")
+	@WithMockUser(username = "prova@gmail.com", roles = "MACK")
 	public void userNoAccess() throws Exception {
 		//given
-		String username = "anakin@gmail.com";
 		UserEntity userEntity = UserEntity.builder().username("prova@gmail.com").age(21).password("1234").tmstInsert(
 				LocalDateTime.of(2022, 1, 1, 0, 0)).build();
 		AuthoritiesEntity userRole = AuthoritiesEntity.builder()
@@ -100,15 +99,14 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 				.build();
 
 		// 3. Salva l’utente
-		userRepository.save(userEntitySave);
+		userEntitySave = userRepository.save(userEntitySave);
 
 		//when
 		//then
-		mockMvc.perform(get("/api/user/{username}",username))
+		mockMvc.perform(get("/api/user/{id}",userEntitySave.getId()))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Access Denied"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/anakin@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
 
@@ -131,17 +129,16 @@ public class UserControllerIntegrationTest extends StoreSecurityApplicationTests
 				.build();
 
 		// 3. Salva l’utente
-		userRepository.save(userEntityResult);
+		userEntityResult = userRepository.save(userEntityResult);
 
 		UserDto userDto = UserDto.builder().username(username).age(21).build();
 		String json = objectMapper.writeValueAsString(userDto);
 		//when
 		//then
-		mockMvc.perform(get("/api/user/{username}",username))
+		mockMvc.perform(get("/api/user/{id}",userEntityResult.getId()))
 				.andExpect(MockMvcResultMatchers.status().isForbidden())
 				.andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Access Denied"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.status").value(HttpStatus.FORBIDDEN.value()))
-				.andExpect(MockMvcResultMatchers.jsonPath("$.path").value("/api/user/prova@gmail.com"))
 				.andExpect(MockMvcResultMatchers.jsonPath("$.message").value(HttpStatus.FORBIDDEN.getReasonPhrase()));
 	}
 

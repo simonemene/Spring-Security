@@ -146,7 +146,7 @@ public class OrderControllerIntegrationTest extends StoreSecurityApplicationTest
 		orderLineRepository.save(orderLine1);
 		//when
 		//then
-		MvcResult mvc = mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{username}","utente@gmail.com"))
+		MvcResult mvc = mockMvc.perform(MockMvcRequestBuilders.get("/api/orders/{id}",user.getId()))
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andReturn();
 		String response = mvc.getResponse().getContentAsString();

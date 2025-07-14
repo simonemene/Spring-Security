@@ -99,6 +99,6 @@ public class UserServiceIntegrationTest extends StoreSecurityApplicationTests {
 		//then
 		Assertions.assertThatThrownBy(()->userService.findUser(userEntity.getId()))
 				.isInstanceOf(UserException.class)
-				.hasMessageContaining("User username not found");
+				.hasMessageContaining("User 1 not found");
 	}
 }
