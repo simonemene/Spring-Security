@@ -14,9 +14,9 @@ export class OrderService {
 
   constructor(private http:HttpClient) { }
 
-  getAllOrderUser(username:string)
+  getAllOrderUser(id:string)
   {
-     return this.http.get<AllOrderDto>(`${this.urlBase}${URL.ALLORDER}/${username}`,{withCredentials:true});
+     return this.http.get<AllOrderDto>(`${this.urlBase}${URL.ALLORDER}/${id}`,{withCredentials:true});
   }
 
   order(articles:ArticlesOrderDto)

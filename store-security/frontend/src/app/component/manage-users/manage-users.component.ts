@@ -25,12 +25,12 @@ export class ManageUsersComponent {
     this.loadUser();
   }
 
-  openUser(username: string) {
-    this.router.navigate(['/users', username]);
+  openUser(id: string) {
+    this.router.navigate(['/users', id]);
   }
 
-  openOrders(username: string) {
-    this.router.navigate(['/users/orders', username]);
+  openOrders(id: string) {
+    this.router.navigate(['/users/orders', id]);
   }
 
   loadUser() {

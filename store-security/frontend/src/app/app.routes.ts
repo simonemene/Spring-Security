@@ -45,12 +45,12 @@ export const routes: Routes = [
         data: { roles: [ROLE.ADMIN] },
         children: [
             {
-                path: ':username',
+                path: ':id',
                 component: ManageProfileComponent,
                 data: { admin: true }
             },
             {
-                path: 'orders/:username',
+                path: 'orders/:id',
                 component: ManageOrdersComponent,
                 children:
                 [

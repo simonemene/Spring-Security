@@ -39,9 +39,7 @@ export class ManageProfileComponent implements OnInit {
   constructor(private location: Location, private router:Router) {
 
 
-    effect(() => {
-      console.log("dentro");
-      
+    effect(() => {      
       if (this.userService.reloadUsers()) {
         this.userService.setRealoadUser(false);
         router.navigate(['/logout']);
@@ -62,8 +60,8 @@ export class ManageProfileComponent implements OnInit {
   ngOnInit(): void {
     if (this.admin) {
       this.activatedRoute.params.subscribe((params) => {
-        this.username = params['username'];
-        this.userService.getProfile(this.username).subscribe({
+        this.username = params['id'];
+        this.userService.getProfile(Number(this.username)).subscribe({
           next: (userDate: UserDto) => {
             this.userDto = userDate;
           },
@@ -94,7 +92,7 @@ export class ManageProfileComponent implements OnInit {
         this.messageSuccess = 'UPDATE PROFILE';
         this.userService.setRealoadUser(true);
         this.location.back();
-        this.userService.getProfile(this.userDto.username).subscribe({
+        this.userService.getProfile(this.userDto.id).subscribe({
           next: (userDate: UserDto) => {
             this.userDto = userDate;
           },
