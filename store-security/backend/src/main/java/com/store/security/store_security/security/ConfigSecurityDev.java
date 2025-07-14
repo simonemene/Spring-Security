@@ -15,17 +15,16 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
-import org.springframework.security.web.session.SessionManagementFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -33,8 +32,8 @@ import java.util.List;
 
 @Slf4j
 @Configuration
-@Profile("!dev")
-public class ConfigSecurity {
+@Profile("dev")
+public class ConfigSecurityDev {
 
     @Value("${store.security.allowed-origin}")
     private String origin;
@@ -79,8 +78,7 @@ public class ConfigSecurity {
                                        ).permitAll());
         //set custom filter
         http.addFilterAfter(new CsrfCustomFilter(), BasicAuthenticationFilter.class);
-
-
+        http.headers(AbstractHttpConfigurer::disable); //H2
         http.cors(cors->cors.configurationSource(
                 new CorsConfigurationSource() {
                     @Override
@@ -96,6 +94,7 @@ public class ConfigSecurity {
                     }
                 }
         ));
+
         http.logout(logout->
                 logout.deleteCookies("JSESSIONID","CSRF-TOKEN")
                         .logoutUrl("/api/auth/logout")
@@ -103,16 +102,13 @@ public class ConfigSecurity {
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
         );
 
-        http.requiresChannel(channel->channel.anyRequest().requiresSecure());
         //authentication
-        http.formLogin(login->login.loginPage("/api/auth/login"));
+        http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(httpbasic->httpbasic.authenticationEntryPoint(new CustomAuthenticationEntryPoint()));
         http.exceptionHandling(exception->exception.accessDeniedHandler(new CustomAccessDeniedHandler()));
         return http.build();
 
     }
-
-
 
     /**
      * Bean responsible for verifying whether a password has been exposed
@@ -131,14 +127,9 @@ public class ConfigSecurity {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-
     @Bean
     public static HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
     }
-
-
-
-
 
 }
