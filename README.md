@@ -46,10 +46,9 @@ It serves as a foundational example for building authentication in real-world ap
 - Credentials are sent with every request (risk of interception if not using HTTPS)  
 - Challenges around secure credential storage and transmission between frontend and backend  
 
-This demo should **not be used in production** as-is. For more secure authentication, consider:  
-
-- JWT (JSON Web Tokens)  
-- OAuth 2 / OpenID Connect  
+This demo should not be used in production as-is. For more secure authentication, consider: 
+JWT (JSON Web Tokens), OAuth 2 / OpenID Connect
+— but it's a great starting point.
 
 ---
 
