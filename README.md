@@ -64,4 +64,4 @@ JWT (JSON Web Tokens), OAuth 2 / OpenID Connect
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/yourusername/basic-auth-store.git
+   git clone https://github.com/simonemene/basic-auth-store.git
