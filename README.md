@@ -21,7 +21,7 @@ A demo project showcasing **Spring Security** Basic Authentication using **JSESS
 | Role  | Description                         | Email               | Password |
 |-------|-----------------------------------|---------------------|----------|
 | USER  | Regular users who must register    | -                   | -        |
-| ADMIN | Administrator with full privileges | admin@prova.it      | admin    |
+| ADMIN | Administrator with full privileges | admin@example.it      | admin    |
 | TRACK | Order tracking operator            | track@example.it    | track    |
 
 ---
