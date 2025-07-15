@@ -9,6 +9,8 @@
         {
           @for(user of this.allUser.users; track user)
           {
+            @if(!user.username.includes('track') && !user.username.includes('admin'))
+            {
             <li>
               <div class="flex items-center gap-x-6">
                 <img class="size-16 rounded-full" src="assets/person.svg" alt="" />
@@ -20,6 +22,7 @@
                 </div>
               </div>
             </li>
+          }
           }
         }
       </ul>
