@@ -65,3 +65,23 @@ JWT (JSON Web Tokens), OAuth 2 / OpenID Connect
 1. Clone the repository:  
    ```bash
    git clone https://github.com/simonemene/basic-auth-store.git
+
+2.  Run the Spring Boot backend:
+  ./mvnw spring-boot:run
+  Or, if Maven is installed globally:
+    'mvn spring-boot:run'
+    
+4. Run the Angular frontend:
+Navigate to the frontend directory:
+  cd frontend
+  npm install
+  npm start
+
+🐳 Option 2: Run with Docker Compose
+
+Make sure Docker and Docker Compose are installed.
+From the root of the project, run (docker-compose.yml):
+docker compose up --build
+
+Feel free to open issues or submit pull requests if you have suggestions or improvements!
+
