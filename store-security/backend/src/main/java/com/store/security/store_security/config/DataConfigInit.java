@@ -10,12 +10,14 @@ import com.store.security.store_security.repository.StockRepository;
 import com.store.security.store_security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class DataConfigInit implements CommandLineRunner {
