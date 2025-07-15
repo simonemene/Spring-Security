@@ -11,7 +11,7 @@ A demo project showcasing **Spring Security** Basic Authentication using **JSESS
 - Custom `AuthenticationProvider` using database-backed user tables  
 - Three user roles with different privileges:  
   - **USER**: Registered customers  
-  - **ADMIN**: Fixed admin account (`admin@prova.it` / `admin`)  
+  - **ADMIN**: Fixed admin account (`admin@example.it` / `admin`)  
   - **TRACK**: Responsible for order tracking (`track@example.it` / `track`)
 
 ---
