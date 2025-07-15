@@ -70,7 +70,7 @@ export class TrackOrdersPageComponent {
           userTracker.username = this.allUser.users[i].username;
 
           this.orderService
-            .getAllOrderUser(this.allUser.users[i].username)
+            .getAllOrderUser(this.allUser.users[i].id)
             .subscribe({
               next: (orders: AllOrderDto) => {
                 this.allOrder = orders;

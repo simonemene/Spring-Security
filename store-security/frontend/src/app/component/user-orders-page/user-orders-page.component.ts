@@ -29,7 +29,7 @@ export class UserOrdersPageComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getUser().subscribe({
       next: (user: UserDto) => {
-        this.orderService.getAllOrderUser(user.username).subscribe({
+        this.orderService.getAllOrderUser(user.id).subscribe({
           next: (orders: AllOrderDto) => {
             this.order = orders;
           },

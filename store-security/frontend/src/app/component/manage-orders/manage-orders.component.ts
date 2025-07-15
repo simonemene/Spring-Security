@@ -27,7 +27,7 @@ export class ManageOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((param) => {
       this.username = param['id'];
-      this.orderService.getAllOrderUser(this.username).subscribe({
+      this.orderService.getAllOrderUser(Number(this.username)).subscribe({
         next: (orders: AllOrderDto) => {
           this.orders = orders;
         },
