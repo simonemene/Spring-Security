@@ -68,7 +68,8 @@ export class TrackOrdersPageComponent {
         for (let i = 0; i < this.allUser.users.length; i++) {
           let userTracker = new AllTrackDto();
           userTracker.username = this.allUser.users[i].username;
-
+          if(!this.allUser.users[i].username.includes("track") && !this.allUser.users[i].username.includes("admin") )
+          {
           this.orderService
             .getAllOrderUser(this.allUser.users[i].id)
             .subscribe({
@@ -93,7 +94,8 @@ export class TrackOrdersPageComponent {
             });
           allTrackCopy.allTrack.push(userTracker);
         }
-      },
+      }
+    },
     });
     this.allTrack = allTrackCopy;
   }
