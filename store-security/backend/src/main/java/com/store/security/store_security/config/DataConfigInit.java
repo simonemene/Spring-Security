@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-@Profile("dev")
 @Component
 @RequiredArgsConstructor
 public class DataConfigInit implements CommandLineRunner {
