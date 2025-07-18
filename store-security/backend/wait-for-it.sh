@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
-# wait-for-it.sh from https://github.com/vishnubob/wait-for-it
 
 set -e
 
-host="$1"
-port="$2"
-shift 2
-cmd="$@"
+HOST_PORT="$1"
+shift
+CMD="$@"
 
-until nc -z "$host" "$port"; do
-  echo "Waiting for $host:$port..."
+# Estrae host e porta (es. mysql:3306 → mysql + 3306)
+HOST=$(echo "$HOST_PORT" | cut -d':' -f1)
+PORT=$(echo "$HOST_PORT" | cut -d':' -f2)
+
+echo "Waiting for $HOST:$PORT..."
+
+# Tenta connessione fino a quando MySQL è pronto
+until nc -z "$HOST" "$PORT"; do
+  echo "Waiting for $HOST:$PORT..."
   sleep 1
 done
 
-exec $cmd
+echo "MySQL is up — executing command"
+exec $CMD
