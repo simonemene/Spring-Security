@@ -1,5 +1,6 @@
 package com.store.security.store_security.service.impl;
 
+import com.store.security.store_security.annotation.LogExecutionTime;
 import com.store.security.store_security.dto.AllUserDto;
 import com.store.security.store_security.dto.UserDto;
 import com.store.security.store_security.entity.UserEntity;
@@ -63,6 +64,7 @@ public class UserService implements IUserService {
 		return allUser;
 	}
 
+	@LogExecutionTime
 	@Transactional
 	@Override
 	public UserDto updateUser(Long id,UserDto userDto) {
