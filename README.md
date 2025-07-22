@@ -79,9 +79,13 @@ Navigate to the frontend directory:
 
 🐳 Option 2: Run with Docker Compose
 
-Make sure Docker and Docker Compose are installed.
-From the root of the project, run (docker-compose.yml):
-docker compose up --build
+Build the backend JAR file: cd backend ./mvnw clean package
+
+Build the frontend production bundle: cd ../frontend npm install npm run build
+
+Start the application stack with Docker Compose: docker compose up --build
+
+This will build and start the backend, MySQL database, and frontend containers.
 
 Feel free to open issues or submit pull requests if you have suggestions or improvements!
 
