@@ -39,7 +39,7 @@ services:
     ports:
       - "4200:80"
     volumes:
-      - ./frontend/dist/frontend:/usr/share/nginx/html:ro
+      - ./frontend/dist/frontend/browser:/usr/share/nginx/html:ro
     networks:
       - store-network
 
